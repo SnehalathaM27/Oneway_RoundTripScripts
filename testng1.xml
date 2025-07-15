@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite" thread-count="5" parallel="tests">
+ <!-- You can change this to "firefox" or others -->
+  <test name="test">
+  <parameter name="browser" value="chrome"/>
+     <classes>
+     
+     
+      <class name="com.tripgain.testscripts.TC_119_OneWay_OneWaySearch"/>
+      <!--<class name="com.tripgain.testscripts.TC_120_OnewayFlightSearch"/>
+      <class name="com.tripgain.testscripts.TC_121_DateselectionFunctionality"/>
+      <class name="com.tripgain.testscripts.TC_122_TravelerSelectionFunctionality"/>
+      <class name="com.tripgain.testscripts.TC_123_TravelerMaxLimit"/>
+      <class name="com.tripgain.testscripts.TC_124_OnewaySearchwithInternationaldestination"/>
+      <class name="com.tripgain.testscripts.TC_125_VerifyHorizontaldatepickerisVisible"/>
+      <class name="com.tripgain.testscripts.TC_126_VerifysuggestedHorizontalDatesAreDisplayed"/>
+       <class name="com.tripgain.testscripts.TC_127_VerifyDefaultPriceRange"/>
+       <class name="com.tripgain.testscripts.TC_128_PricefilteradjustMinValue"/>
+       <class name="com.tripgain.testscripts.TC_129_PricefilteradjustMaxValue"/>
+       <class name="com.tripgain.testscripts.TC_130_VerifyclearFiltersFunctionality"/>
+        <class name="com.tripgain.testscripts.TC_131_VerifyAirlineSorting"/>
+        <class name="com.tripgain.testscripts.TC_132_VerifyDepatureTimeSorting"/>
+        <class name="com.tripgain.testscripts.TC_133_VerifyDurationSorting"/>
+<class name="com.tripgain.testscripts.TC_134_VerifyArrivalTimeSorting"/>
+        <class name="com.tripgain.testscripts.TC_135_VerifyPriceSorting"/>
+               <class name="com.tripgain.testscripts.TC_136_VerifyDefaultCurrencySelection"/>
+       <class name="com.tripgain.testscripts.TC_137_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_138_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_139_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_140_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_143_VerifyCheckinBaggageFilterSelection"/>
+        <class name="com.tripgain.testscripts.TC_144_VerifyUncheckingCheckinBaggageFilter"/>
+       <class name="com.tripgain.testscripts.TC_145_VerifyRefundableFareFilterSelection"/>
+       <class name="com.tripgain.testscripts.TC_146_VerifyUncheckingRefundableFareFilterSelection"/>
+       <class name="com.tripgain.testscripts.TC_147_VerifyStopsFilter_0StopsSelection"/>
+              <class name="com.tripgain.testscripts.TC_148_VerifyStopsFilter_1StopSelection"/>
+       <class name="com.tripgain.testscripts.TC_149_VerifyStopsFilter_2StopSelection"/>
+       <class name="com.tripgain.testscripts.TC_150_VerifyOnwardDepartTime00_06Selection"/>
+              <class name="com.tripgain.testscripts.TC_151_VerifyOnwardDepartTime06_12Selection"/>
+       <class name="com.tripgain.testscripts.TC_152_VerifyOnwardDepartTime12_18Selection"/>
+       <class name="com.tripgain.testscripts.TC_153_VerifyOnwardDepartTime18_00Selection"/>
+       <class name="com.tripgain.testscripts.TC_154_VerifyResetofAllFilters"/>
+       <class name="com.tripgain.testscripts.TC_155_VerifyAirlineFilterSelection_SingleAirline"/>
+       <class name="com.tripgain.testscripts.TC_156_VerifyAirlineFilterSelection_MultipleAirlines"/>
+       <class name="com.tripgain.testscripts.TC_157_VerifyAirlineFilterDeselection"/>
+      <class name="com.tripgain.testscripts.TC_158_VerifySelectingSMECorporateFareOnly"/>
+      <class name="com.tripgain.testscripts.TC_159_VerifyUnSelectingSMECorporateFareOnly"/>
+       <class name="com.tripgain.testscripts.TC_160_VerifySelectingPolicyFilter"/>
+        <class name="com.tripgain.testscripts.TC_161_VerifyUncheckingPolicyFilter"/>
+       <class name="com.tripgain.testscripts.TC_162_VerifyResetofAllFilters"/>
+       <class name="com.tripgain.testscripts.TC_163_ModifySearch"/>
+       <class name="com.tripgain.testscripts.TC_164_SwapSearch"/>
+       <class name="com.tripgain.testscripts.TC_165_SuccessfulLogin"/>
+       <class name="com.tripgain.testscripts.TC_166_Bookingprocessofoneway"/>
+       <class name="com.tripgain.testscripts.TC_167_Bookingprocessofoneway"/>
+       <class name="com.tripgain.testscripts.TC_168_BookingusingFutureyears"/>
+       <class name="com.tripgain.testscripts.TC_169_FlightSearchFilteringSortingandBooking"/>
+     <class name="com.tripgain.testscripts.TC_170_FlightSearchAndSearchFunctionality"/>
+     <class name="com.tripgain.testscripts.TC_171_FlightSearchAndSearchFunctionality"/>
+     <class name="com.tripgain.testscripts.TC_172_validatingRegistrationPage"/>
+     <class name="com.tripgain.testscripts.TC_173_VerifyOnwardArrivalTime00_06Selection"/>
+          <class name="com.tripgain.testscripts.TC_174_VerifyOnwardArrivalTime06_12Selection"/>
+          <class name="com.tripgain.testscripts.TC_175_VerifyOnwardArrivalTime12_18Selection"/>
+          <class name="com.tripgain.testscripts.TC_176_VerifyOnwardArrivalTime18_00Selection"/>
+          <class name="com.tripgain.testscripts.TC_177_VerifyLayoverAirports"/>
+              <class name="com.tripgain.testscripts.TC_178_TypesOfFareForOneway"/>
+             <class name="com.tripgain.testscripts.TC_179_FareRulesForOneWay"/>
+             <class name="com.tripgain.testscripts.TC_181_VerifyAirportChange"/>
+              <class name="com.tripgain.testscripts.TC_184_verifyBackToSearchResultFunctionality"/>
+                     <class name="com.tripgain.testscripts.TC_186_verifyBlankFirstName"/>
+                     <class name="com.tripgain.testscripts.TC_187_verifyBlankLastName"/>
+                             <class name="com.tripgain.testscripts.TC_188_verifyBlankEmail"/>
+                     <class name="com.tripgain.testscripts.TC_189_VerifyBlankMobileNumber"/>
+                     <class name="com.tripgain.testscripts.TC_190_ValidateBlankTitle"/>
+                     <class name="com.tripgain.testscripts.TC_179_FareRulesForOneWay"/>
+          <class name="com.tripgain.testscripts.TC_186_verifyBlankFirstName"/>
+          <class name="com.tripgain.testscripts.TC_187_verifyBlankLastName"/>
+          <class name="com.tripgain.testscripts.TC_188_verifyBlankEmail"/>
+          <class name="com.tripgain.testscripts.TC_189_VerifyBlankMobileNumber"/>
+          <class name="com.tripgain.testscripts.TC_190_ValidateBlankTitle"/>
+          <class name="com.tripgain.testscripts.TC_191_ValidateApprovalPage"/>
+          <class name="com.tripgain.testscripts.TC_192_VerifyUserIsAbleToBookFlights"/>
+          <class name="com.tripgain.testscripts.TC_193_VerifyClearData"/>
+          <class name="com.tripgain.testscripts.TC_194_VerifySearchFunctionalityForOneWayWithDifferentFilters"/>
+          <class name="com.tripgain.testscripts.TC_195_VerifyUserAbleToSelectFlightAndSendApproval"/>
+          <class name="com.tripgain.testscripts.TC_196_TripgainRegisteration"/>
+           <class name="com.tripgain.testscripts.TC_197_ValidateAllErrorMessageOnRegisterScreen"/>
+          <class name="com.tripgain.testscripts.TC_198_VerifyFirstNameErrorMsgOnRegisterScreen"/>
+          <class name="com.tripgain.testscripts.TC_199_VerifyLastNameErrorMsgOnRegisterScreen"/>
+          <class name="com.tripgain.testscripts.TC_200_VerifyMobileNumberFieldErrorMsgOnRegisterScreen"/>
+          <class name="com.tripgain.testscripts.TC_201_VerifyPasswordFieldErrorMsgOnRegisterScreen"/>
+          <class name="com.tripgain.testscripts.TC_202_VerifyWorkEmailFieldErrorMsgOnRegisterScreen"/>
+          <class name="com.tripgain.testscripts.TC_203_TripGainInvalidLoginPassword"/>
+          <class name="com.tripgain.testscripts.TC_204_TripGainInvalidLoginUserName"/>
+          <class name="com.tripgain.testscripts.TC_205_TripgainLogin"/>
+          <class name="com.tripgain.testscripts.TC_206_TripgainLoginAndLogOut"/>
+          <class name="com.tripgain.testscripts.TC_207_VerifyFromFieldErrorMessageOnHomeScreen"/>
+          <class name="com.tripgain.testscripts.TC_208_VerifyClearCalenderDefaultTextErrorMessageOnHomeScreen"/-->
+
+            <class name="com.tripgain.testscripts.TC_178_TypesOfFareForOneway"/>
+          
+          
+                                        <!--Round Trip-->
+ 
+           <!--class name="com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_9_VerifyWithLocalAndInternationalDestinations"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_10_VerifyWithInternationalAndInternationalDestinations"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_11_VerifyWithInternationalAndLocalDestinations"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_12_VerifytheSearchButtonFunctionality"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_13_VerifyDefaultPricerange"/>
+      <class name="com.tripgain.testscripts.RoundTrip.TC_14_VerifyPriceFilterAdjustment_MinValue"/>
+       <class name="com.tripgain.testscripts.RoundTrip.TC_15_VerifyPriceFilterAdjustment_MaxValue"/>
+       <class name="com.tripgain.testscripts.RoundTrip.TC_16_VerifyClearFiltersFunctionality"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_18_VerifyDepartureTimeSorting"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_19_VerifyDurationTimeSorting"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_20_VerifyArrivalTimeSorting"/>
+                <class name="com.tripgain.testscripts.RoundTrip.TC_21_VerifyPriceTimeSorting"/>
+                  <class name="com.tripgain.testscripts.RoundTrip.TC_22_verifyDefaultCurrency"/>
+   <class name="com.tripgain.testscripts.RoundTrip.TC_23_verifyCurrencyChange"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_24_verifyCurrencyChange"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_25_VerifyCurrencyPersistenceAcrossPages"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_26_VerifyCheckInBaggageFilterSelection"/>
+           <class name="com.tripgain.testscripts.RoundTrip.TC_27_VerifyUnCheckInBaggageFilterSelection"/>
+   <class name="com.tripgain.testscripts.RoundTrip.TC_28_VerifyRefundableFareFilterSelection"/>
+   <class name="com.tripgain.testscripts.RoundTrip.TC_29_VerifyUnCheckInRefundableFareFilterSelection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_30_VerifyOnwardsStopsFilter_0StopsSelection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_31_VerifyOnwardsStopsFilter_1StopSelection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_32_VerifyOnwardsStopsFilter_2StopSelection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_33_VerifyOnwardsStopsFilterDeselection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_34_VerifyOnwardDepartTime00_06Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_35_VerifyOnwardDepartTime06_12Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_36_VerifyOnwardDepartTime12_18Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_37_VerifyOnwardDepartTime18_00Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_38_VerifyOnwardDepartTimeFilterDeselection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_39_VerifyOnwardArivalTime00_06Selection"/>
+       <class name="com.tripgain.testscripts.RoundTrip.TC_40_VerifyOnwardArivalTime06_12Selection"/>
+    <class name="com.tripgain.testscripts.RoundTrip.TC_41_VerifyOnwardArivalTime12_18Selection"/>
+          <class name="com.tripgain.testscripts.RoundTrip.TC_42_VerifyOnwardArrivalTime18_00Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_43_VerifyOnwardArrivalTimeFilterDeselection"/>
+            <class name="com.tripgain.testscripts.RoundTrip.TC_44_VerifyReturnStopsFilter_0StopsSelection"/>
+    <class name="com.tripgain.testscripts.RoundTrip.TC_45_VerifyReturnStopsFilter_1StopsSelection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_46_VerifyReturnStopsFilter_2StopsSelection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_47_VerifyReturnstopsfilterDeselection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_48_VerifyReturnDepartTime00_06Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_49_VerifyReturnDepartTime06_12Selection"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_50_VerifyReturnDepartTime12_18Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_51_VerifyReturnDepartTime18_00Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_52_VerifyReturndepartTimeFilterDeselection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_53_VerifyReturnArivalTime00_06Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_54_VerifyReturnArivalTime06_12Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_55_VerifyReturnArivalTime12_18Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_56_VerifyReturnArivalTime18_00Selection"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_57_VerifyReturnArrivalTimeFilterDeselection"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_58_VerifyResetofAllFilters"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_59_VerifyAirlineFilterSelection_SingleAirline"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_60_VerifyAirlineFilterSelection_MultipleAirline"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_61_verifyAirlineFilterDeselection"/>
+                <class name="com.tripgain.testscripts.RoundTrip.TC_62_VerifySelectingSME_CorporateFareOnly"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_63_VerifyUnSelectingSME_CorporateFareOnly"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_64_verifySelectingPolicyFilter"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_65_verifyUnSelectingPolicyFilter"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_66_VerifyResetofAllFilters"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_67_ModifySearch"/>
+           <class name="com.tripgain.testscripts.RoundTrip.TC_68_SwapSearch"/>
+                               <class name="com.tripgain.testscripts.RoundTrip.TC_69_Modifysearch"/>
+                        <class name="com.tripgain.testscripts.RoundTrip.TC_70_VerifyCheckInBaggageFilterSelection"/>       
+              <class name="com.tripgain.testscripts.RoundTrip.TC_71_CheckingLocationdetailsFromResultpgToBookingpg"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_72_VerifyingPriceFromResultpgToBookingpg"/>
+                    <class name="com.tripgain.testscripts.RoundTrip.TC_74_ValidateDifferentFaresPrices"/>
+             <class name="com.tripgain.testscripts.RoundTrip.TC_75_FarerulesforRoundtrip"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_76_BookingpageforOneway"/>
+         <class name="com.tripgain.testscripts.RoundTrip.TC_78_Verifyproceedtobuttonfuntionality"/>
+                 <class name="com.tripgain.testscripts.RoundTrip.TC_80_Verifybacktosearchresultfunctionality"/>
+               <class name="com.tripgain.testscripts.RoundTrip.TC_82_verifyBlankFirstName"/>
+               <class name="com.tripgain.testscripts.RoundTrip.TC_83_verifyBlankLastName"/>
+               <class name="com.tripgain.testscripts.RoundTrip.TC_84_ValidateBlankEmail"/>
+               <class name="com.tripgain.testscripts.RoundTrip.TC_85_Validateblankmobilenumber"/>
+               <class name="com.tripgain.testscripts.RoundTrip.TC_86_Validateblanktitle"/>
+               <class name="com.tripgain.testscripts.RoundTrip.TC_87_Validatepickingseats"/>
+             <class name="com.tripgain.testscripts.RoundTrip.TC_88_verifySelectingOutOfPolicyFilter"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_89_ValidateChoosingMealPreference"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_90_ValidateChoosingBaggagePreference"/>
+        <class name="com.tripgain.testscripts.RoundTrip.TC_91_ValidateProjectDetails"/>
+                <class name="com.tripgain.testscripts.RoundTrip.TC_92_EntireTestcasesCode1"/>       
+        <class name="com.tripgain.testscripts.RoundTrip.TC_93_EntireTestcasesCode2"/-->
+        
+        
+               
+            
+                      <!--Grades-->
+                                          
+ <!--class name="L1_L1GRADE.TC_021_L1_L1Grade_InPolicy"/>
+  <class name="L1_L1GRADE.TC_022_L1_L1Grade_OutOfPolicy"/>
+    <class name="L1_L1GRADE.TC_023_L1_L1Grade_OutOfPolicy"/>
+    <class name="L1_L1GRADE.TC_024_L1_L1Grade_OutOfPolicy"/>
+    
+     <class name="L2_L2GRADE_ROUNDTRIP.TC_053_L2_L2Grade_InPolicy"/>
+  <class name="L2_L2GRADE_ROUNDTRIP.TC_054_L2_L2Grade_InPolicy"/>
+ <class name="L2_L2GRADE_ROUNDTRIP.TC_055_L2_L2Grade_InPolicy"/>
+ <class name="L2_L2GRADE_ROUNDTRIP.TC_056_L2_L2Grade_InPolicy"/-->
+ 
+
+     </classes>
+  </test> <!-- Test -->
+ 
+
+ <test name="test1">
+   <parameter name="browser" value="edge"/>
+   
+    <classes>
+        <!--class name="com.tripgain.testscripts.TC_119_OnewayFlightSearch"/>
+      <class name="com.tripgain.testscripts.TC_120_OnewayFlightSearch"/>
+      <class name="com.tripgain.testscripts.TC_121_DateselectionFunctionality"/>
+      <class name="com.tripgain.testscripts.TC_122_TravelerSelectionFunctionality"/>
+      <class name="com.tripgain.testscripts.TC_123_TravelerMaxLimit"/>
+      <class name="com.tripgain.testscripts.TC_124_OnewaySearchwithInternationaldestination"/>
+      <class name="com.tripgain.testscripts.TC_125_VerifyHorizontaldatepickerisVisible"/>
+      <class name="com.tripgain.testscripts.TC_126_VerifysuggestedHorizontalDatesAreDisplayed"/>
+       <class name="com.tripgain.testscripts.TC_127_VerifyDefaultPriceRange"/>
+       <class name="com.tripgain.testscripts.TC_128_PricefilteradjustMinValue"/>
+       <class name="com.tripgain.testscripts.TC_129_PricefilteradjustMaxValue"/>
+       <class name="com.tripgain.testscripts.TC_130_VerifyclearFiltersFunctionality"/>
+        <class name="com.tripgain.testscripts.TC_131_VerifyAirlineSorting"/>
+        <class name="com.tripgain.testscripts.TC_132_VerifyDepatureTimeSorting"/>
+        <class name="com.tripgain.testscripts.TC_133_VerifyDurationSorting"/>
+        <class name="com.tripgain.testscripts.TC_134_VerifyArrivalTimeSorting"/>
+        <class name="com.tripgain.testscripts.TC_135_VerifyPriceSorting"/>
+       <class name="com.tripgain.testscripts.TC_136_VerifyDefaultCurrencySelection"/>
+       <class name="com.tripgain.testscripts.TC_137_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_138_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_139_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_140_VerifyByChangingCurrency"/>
+       <class name="com.tripgain.testscripts.TC_143_VerifyCheckinBaggageFilterSelection"/>
+        <class name="com.tripgain.testscripts.TC_144_VerifyUncheckingCheckinBaggageFilter"/>
+       <class name="com.tripgain.testscripts.TC_145_VerifyRefundableFareFilterSelection"/>
+       <class name="com.tripgain.testscripts.TC_146_VerifyUncheckingRefundableFareFilterSelection"/>
+       <class name="com.tripgain.testscripts.TC_147_VerifyStopsFilter_0StopsSelection"/>
+       <class name="com.tripgain.testscripts.TC_148_VerifyStopsFilter_1StopSelection"/>
+       <class name="com.tripgain.testscripts.TC_149_VerifyStopsFilter_2StopSelection"/>
+       <class name="com.tripgain.testscripts.TC_150_VerifyOnwardDepartTime00_06Selection"/>
+       <class name="com.tripgain.testscripts.TC_151_VerifyOnwardDepartTime06_12Selection"/>
+       <class name="com.tripgain.testscripts.TC_152_VerifyOnwardDepartTime12_18Selection"/>
+       <class name="com.tripgain.testscripts.TC_153_VerifyOnwardDepartTime18_00Selection"/>
+       <class name="com.tripgain.testscripts.TC_154_VerifyResetofAllFilters"/>
+       <class name="com.tripgain.testscripts.TC_155_VerifyAirlineFilterSelection_SingleAirline"/>
+       <class name="com.tripgain.testscripts.TC_156_VerifyAirlineFilterSelection_MultipleAirlines"/>
+       <class name="com.tripgain.testscripts.TC_157_VerifyAirlineFilterDeselection"/>
+       <class name="com.tripgain.testscripts.TC_158_VerifySelectingSMECorporateFareOnly"/>
+       <class name="com.tripgain.testscripts.TC_159_VerifyUnSelectingSMECorporateFareOnly"/>
+       <class name="com.tripgain.testscripts.TC_160_VerifySelectingPolicyFilter"/>
+        <class name="com.tripgain.testscripts.TC_161_VerifyUncheckingPolicyFilter"/>
+       <class name="com.tripgain.testscripts.TC_162_VerifyResetofAllFilters"/>
+       <class name="com.tripgain.testscripts.TC_163_ModifySearch"/>
+       <class name="com.tripgain.testscripts.TC_164_SwapSearch"/>
+       <class name="com.tripgain.testscripts.TC_165_SuccessfulLogin"/>
+       <class name="com.tripgain.testscripts.TC_166_Bookingprocessofoneway"/>
+       <class name="com.tripgain.testscripts.TC_167_Bookingprocessofoneway"/>
+       <class name="com.tripgain.testscripts.TC_168_BookingusingFutureyears"/>
+       <class name="com.tripgain.testscripts.TC_169_FlightSearchFilteringSortingandBooking"/>
+     <class name="com.tripgain.testscripts.TC_170_FlightSearchAndSearchFunctionality"/>
+     <class name="com.tripgain.testscripts.TC_171_FlightSearchAndSearchFunctionality"/>
+     <class name="com.tripgain.testscripts.TC_172_validatingRegistrationPage"/-->
+
+
+    </classes>
+  </test>
+</suite>

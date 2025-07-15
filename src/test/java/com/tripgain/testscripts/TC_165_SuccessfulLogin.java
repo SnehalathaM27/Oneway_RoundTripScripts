@@ -1,0 +1,95 @@
+package com.tripgain.testscripts;
+
+import java.awt.AWTException;
+import java.io.IOException;
+import java.io.ObjectInputFilter.Status;
+import java.text.ParseException;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.tripgain.collectionofpages.Tripgain_Login;
+import com.tripgain.collectionofpages.Tripgain_homepage;
+import com.tripgain.common.DataProviderUtils;
+import com.tripgain.common.ExtantManager;
+import com.tripgain.common.GenerateDates;
+import com.tripgain.common.Getdata;
+import com.tripgain.common.Log;
+import com.tripgain.common.ScreenShots;
+
+@Listeners(com.tripgain.common.TestListener.class)
+public class TC_165_SuccessfulLogin extends BaseClass {
+
+	WebDriver driver;    
+	ExtentReports extent;
+    ExtentTest test;
+    String className = "";
+    Log Log;  // Declare Log object
+    ScreenShots screenShots;  // Declare Log object
+    ExtantManager extantManager;
+    int number=1;
+
+    private WebDriverWait wait;
+
+    @Test(dataProvider = "sheetBasedData", dataProviderClass = DataProviderUtils.class)
+    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException {
+        System.out.println("Running test with: " + excelData);  String[] data = Getdata.getexceldata();
+        String userName = data[0]; 
+        String password = data[1];
+        
+    number++;
+        
+        
+        // Login to TripGain Application
+        Tripgain_homepage tripgainhomepage = new Tripgain_homepage(driver);
+        Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+        tripgainLogin.enterUserName(userName);
+        tripgainLogin.enterPasswordName(password);
+        tripgainLogin.clickButton(); 
+		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
+		Thread.sleep(2000);
+		screenShots.takeScreenShot1();
+
+        
+		
+         driver.quit();
+         
+       }
+	
+    @BeforeMethod
+    @Parameters("browser")
+    public void launchApplication(String browser)
+    {
+       extantManager=new ExtantManager();
+       extantManager.setUpExtentReporter(browser);
+       className = this.getClass().getSimpleName();
+       String testName=className+"_"+number;
+       extantManager.createTest(testName);  // Get the ExtentTest instance
+       test=ExtantManager.getTest();
+       extent=extantManager.getReport();
+       //test.log(Status.INFO, "Execution Started Successful"); 
+       driver=launchBrowser(browser);      
+       Log = new Log(driver, test);
+       screenShots=new ScreenShots(driver, test);
+    }
+
+    @AfterMethod
+    public void tearDown() {
+       if (driver != null) {
+          driver.quit();
+          extantManager.flushReport();
+       }
+    }
+	
+	
+}
