@@ -66,15 +66,8 @@ public class TC_210_ComplexTestCase1_Oneway extends BaseClass {
        String stops1 = excelData.get("Stops1");
        String numberofstops1 = excelData.get("NumberOfStops1");
        int selectflightbasedindex = Integer.parseInt(excelData.get("SelectFlightBasedIndex"));  
-       String times = excelData.get("Times");
-       int flightStartHour = Integer.parseInt(excelData.get("FlightStartHour"));
-       int flightStartMinute = Integer.parseInt(excelData.get("FlightStartMinute"));
-       int flightEndHour = Integer.parseInt(excelData.get("FlightEndHour"));
-       int flightEndMinute = Integer.parseInt(excelData.get("FlightEndMinute"));
-       String filtername = excelData.get("FilterName");
-       String order1 = excelData.get("Order1");
-       String order2 = excelData.get("Order2");
-       String currencyCode2 = excelData.get("CurrencyCode2");
+      
+       int policyIndex = Integer.parseInt(excelData.get("PolicyIndex"));
 
 
         // Login to TripGain Application
@@ -102,6 +95,7 @@ public class TC_210_ComplexTestCase1_Oneway extends BaseClass {
             Thread.sleep(3000);
           tripgainresultspage.validateAirlines(Log, screenShots, airlines);
           
+          System.out.println("AIRLINES DONE");
           //Method to click and validate refundable fare 
           tripgainresultspage.clickOnRefundableFare();
           Thread.sleep(3000);        
@@ -109,15 +103,21 @@ public class TC_210_ComplexTestCase1_Oneway extends BaseClass {
           tripgainresultspage.clickFlightCardSelectButtonBasedOnindex(selectflightbasedindex);
           tripgainresultspage.validateRefundableFareInsideCards(Log, screenShots);
         
+          System.out.println("REFUNDABLE DONE");
+
           //Function to click and validate Policy Filter
           tripgainresultspage.clickOnPolicy();
           Thread.sleep(3000);
-          tripgainresultspage.validatePolicyFilterOneWay(3, Log, screenShots);
+          tripgainresultspage.validatePolicyFilterOneWay(policyIndex, Log, screenShots);
+
+          System.out.println("POLICY DONE");
 
           //method to click and validate stops 
           tripgainresultspage.clickOnStops(stops1);
           Thread.sleep(3000); 
    tripgainresultspage.validateFlightsStopsOnResultScreen(numberofstops1, Log, screenShots);
+
+   System.out.println("STOPS DONE");
 
   
 	

@@ -3,6 +3,7 @@ package com.tripgain.testscripts;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
@@ -47,7 +48,7 @@ public class TC_120_OnewayFlightSearch extends BaseClass {
     private WebDriverWait wait;
 
     @Test(dataProvider = "sheetBasedData", dataProviderClass = DataProviderUtils.class)
-    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException {
+    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException, ParseException {
         System.out.println("Running test with: " + excelData);
 	    String[] data = Getdata.getexceldata();
         String userName = data[0]; 
@@ -84,14 +85,9 @@ public class TC_120_OnewayFlightSearch extends BaseClass {
         tripgainhomepage.searchFlightsOnHomePage(origin, destination, fromDate, fromMonthYear, travelClass, adults, Log, screenShots);
         Thread.sleep(3000); 
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
-       tripgainresultspage.validateFlightsResults(Log, screenShots);
-        tripgainresultspage.validateFlightDetailsOnResultScreen(Log, screenShots);
+        String[] userInput = tripgainresultspage.userEnterData();
+        String resultScreenValidationResults[] =tripgainresultspage.validateResultsInResultPage(userInput[0], userInput[1], userInput[2], 1, Log, screenShots);
         
-        tripgainresultspage.selectFlightBasedOnIndex(selectflightbasedindex);
-        Thread.sleep(3000);
-
-        tripgainresultspage.validateDataAfterSelectingFlight(Log, screenShots, depatureindex, arrivalindex, priceindex);
-Thread.sleep(3000);
         //Function to Logout from Application
   		//tripgainhomepage.logOutFromApplication(Log, screenShots);
   		driver.quit();

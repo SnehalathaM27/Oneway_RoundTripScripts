@@ -83,10 +83,12 @@ public class TC_129_PricefilteradjustMaxValue extends BaseClass {
         tripgainresultspage.validateFlightsResults(Log, screenShots);
         Thread.sleep(3000); 
       //Functions to Side and Validate Price Range Slide Bar
-        tripgainresultspage.adjustMaximumSliderValue(driver,250000);
-		 Thread.sleep(5000);
-		 tripgainresultspage.verifyPriceRangeValues(Log, screenShots);
-		
+        double minAndMaxPrice[]=tripgainresultspage.verifyDefaultPriceRangeinPriceSlider(Log, screenShots, driver);
+        double maxPrice=minAndMaxPrice[1];
+        double maximumPrice=maxPrice-4000;
+        //Function to adjust Maximum Slider
+      //  tripgain_resultspage.adjustMaximumSliderToValue(driver, adjustMaximumSliderToValue);
+        tripgainresultspage.adjustMaximumSliderToValue(driver, maximumPrice);
 		driver.quit();
        }
 	

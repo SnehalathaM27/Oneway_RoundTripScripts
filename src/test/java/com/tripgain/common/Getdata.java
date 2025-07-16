@@ -1,4 +1,5 @@
 package com.tripgain.common;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -16,10 +17,14 @@ public class Getdata {
 	    public static String[] getexceldata() throws IOException, InterruptedException {
 	        // Define the path to the Excel file
 	    	Thread.sleep(3000);
-	        FileInputStream FileInputStream = new FileInputStream("C:\\Automation\\TG\\src\\test\\resources\\testdata\\Logincred.xlsx");
+	       // FileInputStream FileInputStream = new FileInputStream("C:\\Users\\LENOVO\\OneDrive - tripgain.com\\Documents\\EntireTestCases_automation\\Auto\\src\\test\\resources\\testdata\\Logincred.xlsx");
+	        File classpathRoot = new File(System.getProperty("user.dir"));
+	        File app = new File(classpathRoot.getAbsolutePath() + "\\src\\test\\resources\\testdata\\Logincred.xlsx");
+	        String fileName = app.toString();
 	        
+	        FileInputStream FileInputStream = new FileInputStream(fileName);            
 	        // Open the Excel workbook
-	        XSSFWorkbook workbook = new XSSFWorkbook(FileInputStream);
+	        XSSFWorkbook workbook = new XSSFWorkbook(fileName);
 	        
 	        // Get the sheet named "Sheet1"
 	        XSSFSheet sheet = workbook.getSheet("Sheet1");

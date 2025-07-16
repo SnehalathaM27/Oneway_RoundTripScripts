@@ -4979,7 +4979,7 @@ public void validateDepatureFaretypeToBookingPg(int index, String fareTypeArg, L
 
     // Wait for booking depart fare to be visible
     Thread.sleep(3000);
-    WebElement BookingdepartFare = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'tg-fbdepartfaretype')]")));
+    WebElement BookingdepartFare = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")));
 
     // Scroll to top of Booking depart fare
     js.executeScript("arguments[0].scrollIntoView({block: 'start', behavior: 'smooth'});", BookingdepartFare);
@@ -5067,13 +5067,13 @@ public void validateReturnFaretypeToBookingPg(int index, String fareTypeArg, Log
 
     // Wait for booking depart fare to be visible
     Thread.sleep(3000);
-    WebElement BookingdepartFare = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'tg-fbreturnfaretype')]")));
+    WebElement BookingreturnFare = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'tg-fb-Returnfaretype')]")));
 
     // Scroll to top of Booking depart fare
-    js.executeScript("arguments[0].scrollIntoView({block: 'start', behavior: 'smooth'});", BookingdepartFare);
+    js.executeScript("arguments[0].scrollIntoView({block: 'start', behavior: 'smooth'});", BookingreturnFare);
     ScreenShots.takeScreenShot1();
 
-    String bookingFareText = BookingdepartFare.getText().trim();
+    String bookingFareText = BookingreturnFare.getText().trim();
     System.out.println("Booking Return Fare (full): " + bookingFareText);
 
     // Validate actual selected fare with booking depart fare (case insensitive, substring match)
@@ -5294,19 +5294,6 @@ public void selectReturnFaretypePrices(int index, String fareTypeArg, Log log, S
 
 
 //------------------------------------------------------------------------------------
-public void popupClose()
-{
-    WebElement btn=driver.findElement(By.xpath("//button[.='Close']"));
-    JavascriptExecutor js = (JavascriptExecutor) driver;
-    js.executeScript("arguments[0].scrollIntoView(true);",btn );
-
-    // Wait for the element to be clickable
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    wait.until(ExpectedConditions.elementToBeClickable(btn));
-
-    // Click the element using JavaScriptExecutor
-    js.executeScript("arguments[0].click();", btn);
-}
 
 //-------------------------------------------------------------------------------------------
 
@@ -6799,7 +6786,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
         log.ReportEvent("PASS", "Completed validation successfully for policy text: " + expectedPolicyText);
 
         // === DEPART BOOKING PAGE POLICY ===
-        WebElement departBookingPolicy = driver.findElement(By.xpath("//div[@class='outofpolicy tg-policy' and @data-tgdepartoutpolicy='true'] | //div[@class='outofpolicy tg-policy' and @data-tgreturnoutpolicy='true']"));
+        WebElement departBookingPolicy = driver.findElement(By.xpath("//*[contains(@class,'outofpolicy tg-policy')]"));
         js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", departBookingPolicy);
         Thread.sleep(500);
         String departBookingText = departBookingPolicy.getAttribute("textContent").trim().replaceAll("\\s+", "").toLowerCase();
@@ -6812,7 +6799,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
         log.ReportEvent("PASS", "Booking page depart policy text matches expected text.");
 
         // === RETURN BOOKING PAGE POLICY ===
-        WebElement returnBookingPolicy = driver.findElement(By.xpath("//div[@class='outofpolicy tg-policy' and @data-tgdepartoutpolicy='true']"));
+        WebElement returnBookingPolicy = driver.findElement(By.xpath("//*[contains(@class,'outofpolicy tg-policy')]"));
         js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", returnBookingPolicy);
         Thread.sleep(500);
         String returnBookingText = returnBookingPolicy.getAttribute("textContent").trim().replaceAll("\\s+", "").toLowerCase();
@@ -8405,26 +8392,7 @@ public Object validateBaggagee(Log Log,ScreenShots ScreenShots,double total) thr
 
     }
 
-//Method to select Department dropdown
-    public void selectDepartment()
-    {
-        driver.findElement(By.xpath("//input[@id='react-select-7-input']")).click();
-        driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
-    }
 
-    //Method to select Project dropdown
-    public void selectProject()
-    {
-        driver.findElement(By.xpath("//input[@id='react-select-9-input']")).click();
-        driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
-    }
-
-    //Method to select CostCenter dropdown
-    public void selectCostcenter()
-    {
-        driver.findElement(By.xpath("//input[@id='react-select-8-input']")).click();
-        driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
-    }
 
     //---------------------------------------------------------------------------------
     
@@ -9202,35 +9170,6 @@ public double selectBaggageReturn() throws InterruptedException
 }
 
 //--------------------------------------------------------------------------------------
-//Method to select Department dropdown
-public void selectDepartmentRoundtrip() {
-    TestExecutionNotifier.showExecutionPopup();
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(70));
-
-    WebElement input = wait.until(ExpectedConditions.elementToBeClickable(
-        By.xpath("//input[contains(@id,'react-select-21-input') and @type='text']")));
-    input.click();
-
-    WebElement option = wait.until(ExpectedConditions.visibilityOfElementLocated(
-        By.xpath("//div[contains(@id,'react-select') and contains(@id,'option-0')]")));
-    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", option);
-}
-
-//Method to select Project dropdown
-public void selectProjectRoundtrip()
-{
-	TestExecutionNotifier.showExecutionPopup();
-	driver.findElement(By.xpath("//input[@id='react-select-9-input']")).click();
-	driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
-}
-
-//Method to select CostCenter dropdown
-public void selectCostcenterRoundtrip()
-{
-	TestExecutionNotifier.showExecutionPopup();
-	driver.findElement(By.xpath("//input[@id='react-select-8-input']")).click();
-	driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
-}
 
 //Method to Click on Send Approval
 public void clickOnSendApprovalButton() throws InterruptedException
@@ -9244,7 +9183,7 @@ public void validateSendApprovalToastMessage(Log Log,ScreenShots ScreenShots)
 {
 	TestExecutionNotifier.showExecutionPopup();
     try {
-        String approvalToastMessage=driver.findElement(By.xpath("//span[@id='client-snackbar']")).getText();
+        String approvalToastMessage=driver.findElement(By.id("client-snackbar")).getText();
         if(approvalToastMessage.contentEquals("Your request has been successfully submitted."))
         {
             Log.ReportEvent("PASS", "Send Approval is Successful");
@@ -9451,7 +9390,108 @@ for (int i = 0; i < totalFares; i++) {
     }
 }
 }
+//--------------------------------------------------------------------------
+// Method to click "Back To Search Results" button
+public void clickBackToSearchResults() {
+    try {
+        WebElement backButton = driver.findElement(By.xpath("//button[contains(text(),'Back To Search Results')]"));
 
+        // Use JavaScript to click
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView(true);", backButton); // Optional: scroll to the button
+        js.executeScript("arguments[0].click();", backButton);
 
+        System.out.println("Clicked 'Back To Search Results' button using JavaScript.");
+    } catch (Exception e) {
+        System.err.println("Failed to click 'Back To Search Results' button using JavaScript: " + e.getMessage());
+    }
+}
 
+//Method to select Department dropdown
+	public void selectDepartment()
+	{
+		driver.findElement(By.xpath("//input[@id='react-select-7-input']")).click();
+		driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
+	}
+
+	//Method to select Project dropdown
+	public void selectProject()
+	{
+		driver.findElement(By.xpath("//input[@id='react-select-9-input']")).click();
+		driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
+	}
+
+	//Method to select CostCenter dropdown
+	public void selectCostcenter()
+	{
+		driver.findElement(By.xpath("//input[@id='react-select-8-input']")).click();
+		driver.findElement(By.xpath("//div[@class='tg-select__option tg-select__option--is-focused css-d7l1ni-option']")).click();
+	}
+
+	public void popupClose()
+	{
+		WebElement btn=driver.findElement(By.xpath("//button[.='Close']"));
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].scrollIntoView(true);",btn );
+ 
+		// Wait for the element to be clickable
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.elementToBeClickable(btn));
+ 
+		// Click the element using JavaScriptExecutor
+		js.executeScript("arguments[0].click();", btn);
+	}
+	//Method to Enter Adult Details.
+	public void enterAdultDetailsForInterNational(String[] title,int adults,Log Log, ScreenShots ScreenShots) throws InterruptedException {
+		try{
+			if(adults>1)
+			{
+				for (int i = 0; i < title.length; i++) {
+					String firstName = generateRandomString(5);
+					String lastName = generateRandomString(5);
+					String first="Appu"+firstName;
+					String last="Kumar"+lastName;
+ 
+					String titleNames = title[i];
+					int xpathIndex = i + 2;
+ 
+					WebElement titleDropDown = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbpaxtitile')])["+xpathIndex+"]"));
+					titleDropDown.click();
+					driver.findElement(By.xpath("//li[@data-value='"+titleNames+"']")).click();
+					Thread.sleep(1000);
+ 
+					// Assuming your input fields have ids like firstname1, lastname1, firstname2, lastname2, etc.
+					WebElement firstNameField = driver.findElement(By.xpath("(//input[@name='firstname'])["+xpathIndex+"]"));
+					firstNameField.clear();
+					firstNameField.sendKeys(first);
+					WebElement lastNameField = driver.findElement(By.xpath("(//input[@name='lastname'])["+xpathIndex+"]"));
+					lastNameField.clear();
+					lastNameField.sendKeys(last);
+	}
+ 
+			}else{
+				System.out.println("One Adult had been Selected");
+			}
+ 
+			ScreenShots.takeScreenShot1();
+ 
+		}catch(Exception e)
+		{
+			Log.ReportEvent("FAIL", "Enter Adult Details is UnSuccessful");
+			e.printStackTrace();
+			ScreenShots.takeScreenShot1();
+			Assert.fail();
+		}
+	}
+	//Method to generate random numbers
+		public static String generateRandomString(int length) {
+			String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			Random rng = new Random();
+			StringBuilder sb = new StringBuilder();
+	 
+			for (int i = 0; i < length; i++) {
+				sb.append(characters.charAt(rng.nextInt(characters.length())));
+			}
+			return sb.toString();
+		}
 }

@@ -95,14 +95,16 @@ public class TC_91_ValidateProjectDetails extends BaseClass{
 
  trs.validateDepatureFaretypeToBookingPg(2, "Coupon", Log, screenShots);
 Thread.sleep(3000);
-trs.selectDepartmentRoundtrip();
-trs.selectProjectRoundtrip();
-trs.selectCostcenterRoundtrip();
+trs.selectDepartment();
+trs.selectProject();
+trs.selectCostcenter();
 
 //Functions to Send Approval on Booking Page
 trs.clickOnSendApprovalButton();
+System.out.println("done1");
 trs.validateSendApprovalToastMessage(Log, screenShots);
-     
+System.out.println("done2");
+
 
        //Function to Logout from Application
     		//tripgainhomepage.logOutFromApplication(Log, screenShots);

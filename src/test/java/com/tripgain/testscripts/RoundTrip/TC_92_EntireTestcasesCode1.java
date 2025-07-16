@@ -159,7 +159,7 @@ public class TC_92_EntireTestcasesCode1 extends BaseClass{
 Thread.sleep(15000); 
 		
 		// -------------------------------------------------------------------------------------------------------
-/*
+
 		                         //Slider
 		double values[] =trs.defaultPriceRangeOfSlider(driver,Log,screenShots);
 		double minValue=values[0];
@@ -168,12 +168,16 @@ Thread.sleep(15000);
 		
 		trs.verifyPriceRangeValuesOnResultScreen(Log,screenShots);
 		
+		System.out.println("MINIMUM SLIDER DONE");
 		// -------------------------------------------------------------------------------------------------------
 
 		Thread.sleep(3000);
 
                                     //Currency
 		trs.defaultCurrencyValue(Log,screenShots);
+		
+		System.out.println("DEFAULT CURRENCY  DONE");
+
 		
 //		 //Function click On Currency Drop Down
   		tripgainresultspage.clickOnCurrencyDropDown();
@@ -182,6 +186,10 @@ Thread.sleep(15000);
   		tripgainresultspage.selectCurrencyDropDownValues(driver,selectCurrencyDropDownValues);
 //		
   		tripgainresultspage.validateCurrencyRoundTrip(validateCurrencyRoundTrip,Log,screenShots);
+  		
+		System.out.println("VALIDATE CURRENCY DONE");
+
+
   	// -------------------------------------------------------------------------------------------------------
   		Thread.sleep(3000);
 
@@ -193,6 +201,8 @@ Thread.sleep(15000);
 	     Thread.sleep(2000);
 	 //    tripgain_roundtrip_resultpage.selectAirLines(clickAirlineCheckboxesRoundtripDomestic);
         
+			System.out.println("AIRLINES DONE");
+
 // -------------------------------------------------------------------------------------------------------
 	     
 	     Thread.sleep(3000);
@@ -209,6 +219,8 @@ Thread.sleep(15000);
 		trs.roundTripClickOnWardStops(clickOnWardStops);  
 		trs.validateFlightsStopsOnResultScreen(validateFlightsStopsOnResultScreen,Log, screenShots);
 	
+		System.out.println("ONWARD STOPS DONE");
+
 // -------------------------------------------------------------------------------------------------------
 		
 		Thread.sleep(3000);
@@ -219,9 +231,11 @@ Thread.sleep(15000);
 		  trs.roundTripClickReturnStops(roundTripClickReturnStops);
 	        trs.validateFlightsreturnStopsOnResultScreen(validateFlightsreturnStopsOnResultScreen,Log, screenShots);
 		
+			System.out.println("RETURN STOPS DONE");
+
 //	---------------------------------------------------------------------------------------------------------
 	        
-	*/
+	
 Thread.sleep(3000);
 
 	        
@@ -244,6 +258,8 @@ Thread.sleep(3000);
 	         Thread.sleep(2000);
 	         trs.closePopup1();
       
+	 		System.out.println("CHECKIN BAGGAGE DONE");
+
 	         Thread.sleep(3000);
  //------------------------------------------------------------------------------------------------------------
         trs.clickOnContinue();
@@ -257,6 +273,9 @@ Thread.sleep(3000);
                                       //pick seat
          
         tripgainresultspage.selectSeatFormPickSeat(Log, screenShots);
+        
+		System.out.println("SEAT SELECTION DONE");
+
     	
  //-------------------------------------------------------------------------------------------------------------
         Thread.sleep(3000);
@@ -269,19 +288,26 @@ Thread.sleep(3000);
 
         trs.validateMealsPrice(Log, screenShots,totalMeal);
  
+		System.out.println("MEALS DONE");
+
  //-------------------------------------------------------------------------------------------------------
         Thread.sleep(3000);
 
         
                           // Project details 
-        trs.selectDepartmentRoundtrip();
-        trs.selectProjectRoundtrip();
-        trs.selectCostcenterRoundtrip();
+        trs.selectDepartment();
+        trs.selectProject();
+        trs.selectCostcenter();
+        
+		System.out.println("PROJECT DETAILS  DONE");
+
 
         //Functions to Send Approval on Booking Page
         trs.clickOnSendApprovalButton();
         trs.validateSendApprovalToastMessage(Log, screenShots);
         
+		System.out.println("SEND FOR APPROVAL DONE");
+
     //----------------------------------------------------------------------------------------------------------
 
         

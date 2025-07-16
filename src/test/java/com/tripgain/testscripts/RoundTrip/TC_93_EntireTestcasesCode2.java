@@ -60,23 +60,23 @@ public class TC_93_EntireTestcasesCode2 extends BaseClass{
         int flightStartMinute = Integer.parseInt(excelData.get("FlightStartMinute"));
         int flightEndHour = Integer.parseInt(excelData.get("FlightEndHour"));
         int flightEndMinute = Integer.parseInt(excelData.get("FlightEndMinute"));
-        
-        int index = Integer.parseInt(excelData.get("Index"));
-        
+
         int policyIndex = Integer.parseInt(excelData.get("PolicyIndex"));
-        
-        String stops = excelData.get("Stops");
-        
         String policyText = excelData.get("PolicyText");
-        
+
+        int index = Integer.parseInt(excelData.get("Index"));
+
         int bookingIndex = Integer.parseInt(excelData.get("BookingIndex"));
 
-        int departFareIndex = Integer.parseInt(excelData.get("DepartFareIndex"));
+        String stops = excelData.get("Stops");
+
         int returnfareIndex = Integer.parseInt(excelData.get("ReturnfareIndex"));
-        String departFare = excelData.get("DepartFare");
+
         String returnFare = excelData.get("ReturnFare");
 
+        int departFareIndex = Integer.parseInt(excelData.get("DepartFareIndex"));
 
+        String departFare = excelData.get("DepartFare");
         
       
         String[] dates=GenerateDates.GenerateDatesToSelectFlights();
@@ -112,11 +112,15 @@ Thread.sleep(15000);
 		
 //--------------------------------------------------------------------------------------------------
 
-                                  //Function to click on  Depart Time 
-/*
-trs.selectOnWardDepartTimeroundtrip(times);
-//trs.validateRoundTripOnwardDepartureTimeIsSelected(Log, screenShots, "00 - 06");
-trs.validateFlightsDepartureTimeOnResultScreen(flightStartHour, flightStartMinute, flightEndHour, flightEndMinute, Log, screenShots);
+                                  //Function to click on RETURN  Depart Time 
+
+trs.selectReturnDepartTimeroundtrip(times);
+Thread.sleep(2000);
+//trs.validateroundtripreturnDepartureTimeIsSelected(Log, screenShots, "06 - 12");
+trs.validatereturnFlightsDepartureTimeOnResultScreen(flightStartHour, flightStartMinute, flightEndHour, flightEndMinute, Log, screenShots);
+
+System.out.println("RETURN Depart Time DONE");
+
 
 //--------------------------------------------------------------------------------------------------------------
 Thread.sleep(3000);
@@ -127,6 +131,9 @@ trs.clickRefundableFareRoundTrip();
 Thread.sleep(3000);
 trs.validateRefundableFare(index, Log, screenShots);
 
+System.out.println("REFUNDABLE FARE DONE");
+
+
 //------------------------------------------------------------------------------------------------------- 
 
 Thread.sleep(3000);
@@ -136,17 +143,26 @@ Thread.sleep(3000);
  
  trs.validateOutOfPolicyFilterRoundTrip(policyIndex, policyText, Log, screenShots);
  Thread.sleep(5000);
- driver.navigate().back();
-  */
+ 
+	System.out.println("OUT OF POLICY DONE");
+
+	//---------------------------------------------------------------------------
+	
+	trs.clickBackToSearchResults();
+	
+	System.out.println("BACK TO RESULTS BUTTON CLICKED");
+ 
  //---------------------------------------------------------------------------------------------------------
  
- Thread.sleep(5000);
+ Thread.sleep(6000);
 
     
  trs.roundTripClickOnWardStops(stops);  
 
-  //Checking Location details From Resultpg To Bookingpg  */
+  //Checking Location details From Resultpg To Bookingpg  
   trs.validateLocationsFromResultToBookingPage(Log, screenShots, bookingIndex);
+
+	System.out.println("VALIDATE LOCATIONS BOOKING PAGE DONE");
 
   //----------------------------------------------------------------------------------------------------
   
@@ -163,16 +179,24 @@ Thread.sleep(3000);
   
   trs.validateDepatureFaretypeToBookingPg(departFareIndex, departFare, Log, screenShots);
   Thread.sleep(3000);
-  driver.navigate().back();
-  Thread.sleep(3000);
+  System.out.println("DEPART FARE TYPE DONE");
+  
+           trs.clickBackToSearchResults();
+	System.out.println("BACK TO RESULTS BUTTON CLICKED");
+ 
+  Thread.sleep(5000);
+  
   trs.validateReturnFaretypeToBookingPg(returnfareIndex, returnFare, Log, screenShots);
   
+	System.out.println("RETURN FARE TYPE DONE");
+
+
   //----------------------------------------------------------------------------------------------------
   
                                    //Function to Logout from Application
   
     		//tripgainhomepage.logOutFromApplication(Log, screenShots);
-    		driver.quit();
+    	//	driver.quit();
          
        }
 	
@@ -196,7 +220,7 @@ Thread.sleep(3000);
 	    @AfterMethod
 	    public void tearDown() {
 	       if (driver != null) {
-	          driver.quit();
+	       //   driver.quit();
 	          extantManager.flushReport();
 	       }
 	    }

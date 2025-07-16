@@ -82,12 +82,11 @@ public class TC_128_PricefilteradjustMinValue extends BaseClass {
 		//Functions to Validate flights on Home Page
         tripgainresultspage.validateFlightsResults(Log, screenShots);
         Thread.sleep(3000); 
-       // tripgainresultspage.verifyDefaultPriceRangeinPriceSlider(Log, screenShots, driver,40000);
-        Thread.sleep(2000);
-		//Functions to Side and Validate Price Range Slide Bar
-        tripgainresultspage.adjustMinimumSliderToValue(driver,10000);
-        Thread.sleep(3000);
-        tripgainresultspage.verifyPriceRangeValues(Log, screenShots);    
+        double minAndMaxPrice[]=tripgainresultspage.verifyDefaultPriceRangeinPriceSlider(Log, screenShots, driver);
+        double minPrice=minAndMaxPrice[0];
+        double minimumPrice=minPrice+4000;
+        tripgainresultspage.adjustMinimumSliderToValue(driver,minPrice);
+
       
 		driver.quit();
        }

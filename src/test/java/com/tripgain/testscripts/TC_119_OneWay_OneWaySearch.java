@@ -3,6 +3,7 @@ package com.tripgain.testscripts;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
@@ -47,7 +48,7 @@ public class TC_119_OneWay_OneWaySearch extends BaseClass {
     private WebDriverWait wait;
 
     @Test(dataProvider = "sheetBasedData", dataProviderClass = DataProviderUtils.class)
-    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException {
+    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException, ParseException {
         System.out.println("Running test with: " + excelData);
         //To get Data from Excel
 	    String[] data = Getdata.getexceldata();
@@ -87,11 +88,9 @@ public class TC_119_OneWay_OneWaySearch extends BaseClass {
         Thread.sleep(3000); 
         
         
-        tripgainresultspage.validateFlightsResults(Log, screenShots);
-        tripgainresultspage.validateFlightDetailsOnResultScreen(Log, screenShots);
-        tripgainresultspage.validateAllDatesInResults(Log, screenShots);
-        tripgainresultspage.selectFlightBasedOnIndex(selectflightbasedindex);
-        tripgainresultspage.validateDataAfterSelectingFlight(Log, screenShots, depatureindex, arrivalindex, priceindex);
+        String[] userInput = tripgainresultspage.userEnterData();
+        String resultScreenValidationResults[] =tripgainresultspage.validateResultsInResultPage(userInput[0], userInput[1], userInput[2], 1, Log, screenShots);
+        
         //Function to Logout from Application
   		//tripgainhomepage.logOutFromApplication(Log, screenShots);
   		driver.quit();

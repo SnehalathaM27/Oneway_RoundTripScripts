@@ -4,20 +4,13 @@
   <test thread-count="5" parallel="tests" name="test(failed)">
     <parameter name="browser" value="chrome"/>
     <classes>
-      <class name="com.tripgain.testscripts.TC_178_TypesOfFareForOneway">
-        <methods>
-          <include name="myTest"/>
-          <include name="launchApplication"/>
-          <include name="tearDown"/>
-        </methods>
-      </class> <!-- com.tripgain.testscripts.TC_178_TypesOfFareForOneway -->
-      <class name="com.tripgain.testscripts.TC_119_OneWay_OneWaySearch">
+      <class name="com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4">
         <methods>
           <include name="launchApplication"/>
+          <include name="myTest" invocation-numbers="0"/>
           <include name="tearDown"/>
-          <include name="myTest"/>
         </methods>
-      </class> <!-- com.tripgain.testscripts.TC_119_OneWay_OneWaySearch -->
+      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4 -->
     </classes>
   </test> <!-- test(failed) -->
 </suite> <!-- Failed suite [Suite] -->

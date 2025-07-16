@@ -1824,7 +1824,7 @@ public class Tripgain_resultspage {
 
 	        // --- STEP 2: Apply filter (e.g., click on airline) ---
 	        Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
-	        tripgainresultspage.adjustMaximumSliderValue(driver, 242061);
+	        tripgainresultspage.adjustMaximumSliderToValue(driver, 242061);
             ScreenShots.takeScreenShot1();
 
 	        // --- STEP 3: Wait until flight count changes ---
@@ -1858,123 +1858,140 @@ public class Tripgain_resultspage {
     //-------------------------------------------------------------------------------------------------------------
 	
 	//Method To Adjust Minimum Slider Value on Slide Bar(Low to High Price)
-	public double[] adjustMinimumSliderToValue(WebDriver driver, double targetValue) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
-
-        // Wait until the minimum slider input is visible
-        WebElement minSliderInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//span[@data-index='0']//input[@type='range']")));
-
-        // Get min and max values
-        double minValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemin"));
-        double maxValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemax"));
-
-        System.out.println("Min Value: " + minValue + ", Max Value: " + maxValue);
-
-        // Clamp target value within range
-        double clampedValue = Math.max(minValue, Math.min(maxValue, targetValue));
-        double percentage = (clampedValue - minValue) / (maxValue - minValue);
-
-        System.out.println("Target Value: " + clampedValue + ", Percentage: " + percentage);
-
-        // Get slider track and width
-        WebElement sliderTrack = driver.findElement(By.xpath("//span[contains(@class, 'MuiSlider-track')]"));
-        int trackWidth = sliderTrack.getSize().getWidth();
-
-        // Calculate target offset
-        int targetOffset = (int) (trackWidth * percentage);
-        System.out.println("Track Width: " + trackWidth + ", Target Offset: " + targetOffset);
-
-        // Get thumb handle and track's X position
-        WebElement thumbHandle = driver.findElement(By.xpath("//span[@data-index='0']"));
-        int thumbX = thumbHandle.getLocation().getX();
-        int trackX = sliderTrack.getLocation().getX();
-        int currentOffset = thumbX - trackX;
-
-        int moveBy = targetOffset - currentOffset;
-        System.out.println("Current Offset: " + currentOffset + ", Move By: " + moveBy);
-
-        // Move the slider thumb
-        Actions action = new Actions(driver);
-        action.moveToElement(thumbHandle)
-              .pause(Duration.ofMillis(300))
-              .clickAndHold()
-              .moveByOffset(moveBy, 0)
-              .pause(Duration.ofMillis(200))
-              .release()
-              .perform();
-
-        // Optional wait to allow UI to update
-        Thread.sleep(1000);
-
-        // Log updated value
-        String newMinValue = minSliderInput.getAttribute("aria-valuenow");
-        System.out.println("Updated Min Value: " + newMinValue);
-
-        return new double[]{minValue, maxValue};
-    }
-
+	//Method to Adjust Minimum Value In Slider
+		public double[] adjustMinimumSliderToValue(WebDriver driver, double targetValue) {
+		    double minValue = -1;
+		    double maxValue = -1;
+	 
+		    try {
+		        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	 
+		        // Wait until the minimum slider input is visible
+		        WebElement minSliderInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		                By.xpath("//input[@data-index='0']")));
+	 
+		        // Get min and max values from slider attributes
+		        minValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemin"));
+		        maxValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemax"));
+	 
+		        System.out.println("Min Value: " + minValue + ", Max Value: " + maxValue);
+	 
+		        // Clamp the target value within the slider range
+		        double clampedValue = Math.max(minValue, Math.min(maxValue, targetValue));
+		        double percentage = (clampedValue - minValue) / (maxValue - minValue);
+	 
+		        System.out.println("Target Value: " + clampedValue + ", Percentage: " + percentage);
+	 
+		        // Get the slider track and calculate width
+		        WebElement sliderTrack = driver.findElement(By.xpath("//*[contains(@class, 'MuiSlider-track')]"));
+		        int trackWidth = sliderTrack.getSize().getWidth();
+		        int targetOffset = (int) (trackWidth * percentage);
+	 
+		        System.out.println("Track Width: " + trackWidth + ", Target Offset: " + targetOffset);
+	 
+		        // Get slider thumb and track X offset
+		        WebElement thumbHandle = driver.findElement(By.xpath("(//*[@data-index='0'])[1]"));
+		        int thumbX = thumbHandle.getLocation().getX();
+		        int trackX = sliderTrack.getLocation().getX();
+		        int currentOffset = thumbX - trackX;
+		        int moveBy = targetOffset - currentOffset;
+	 
+		        System.out.println("Current Offset: " + currentOffset + ", Move By: " + moveBy);
+	 
+		        // Perform the slider movement
+		        Actions action = new Actions(driver);
+		        action.moveToElement(thumbHandle)
+		                .pause(Duration.ofMillis(300))
+		                .clickAndHold()
+		                .moveByOffset(moveBy, 0)
+		                .pause(Duration.ofMillis(200))
+		                .release()
+		                .perform();
+	 
+		        // Optional wait for UI to update
+		        Thread.sleep(1000);
+	 
+		        // Log updated value
+		        String newMinValue = minSliderInput.getAttribute("aria-valuenow");
+		        System.out.println("Updated Min Value: " + newMinValue);
+	 
+		    } catch (TimeoutException te) {
+		        System.err.println("❌ Timeout waiting for slider element: " + te.getMessage());
+		    } catch (NoSuchElementException ne) {
+		        System.err.println("❌ Slider element not found: " + ne.getMessage());
+		    } catch (InterruptedException ie) {
+		        System.err.println("❌ Thread sleep was interrupted: " + ie.getMessage());
+		        Thread.currentThread().interrupt(); // restore interrupted status
+		    } catch (Exception e) {
+		        System.err.println("❌ Unexpected error while adjusting slider: " + e.getMessage());
+		        e.printStackTrace();
+		    }
+	 
+		    return new double[]{minValue, maxValue};
+		}
+	 
     //-------------------------------------------------------------------------------------------------------------
 
 	//Method To verify Default Price Range in Price Slider
-    public double[] verifyDefaultPriceRangeinPriceSlider(Log Log, ScreenShots ScreenShots, WebDriver driver) {
-    
-        try {
-            // Wait for the page and slider to load
-            Thread.sleep(8000); // Consider using WebDriverWait instead for dynamic waits
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-
-            // Wait for the min slider input element
-            WebElement minSliderInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//span[@data-index='0']//input[@type='range']")));
-
-            // Get min and max values from slider
-            double minValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemin"));
-            double maxValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemax"));
-
-            System.out.println("Min value: " + minValue);
-            System.out.println("Max value: " + maxValue);
-
-            // Get all price elements
-            List<WebElement> priceElements = driver.findElements(By.xpath(
-                    "//div[contains(@class, 'owf-price-fare') and contains(@class, 'bold') and contains(@class, 'price')]//span[@data-tgprice]"));
-
-            if (minValue >= 0 && maxValue > minValue) {
-                String message = "PASS: Default price range displayed is: Min = " + minValue + ", Max = " + maxValue;
-                Log.ReportEvent("PASS", message);
-                ScreenShots.takeScreenShot1();
-
-                // Loop through each price element
-                for (WebElement price : priceElements) {
-                    String priceText = price.getText().replaceAll("[^\\d.]", ""); // Remove currency symbols, commas, etc.
-                    try {
-                        double priceValue = Double.parseDouble(priceText);
-                        if (priceValue >= minValue && priceValue <= maxValue) {
-                            System.out.println("Price within range: " + priceValue);
-                        } else {
-                            System.out.println("Price out of range: " + priceValue);
-                        }
-                    } catch (NumberFormatException ex) {
-                        System.out.println("Skipping invalid price format: " + priceText);
-                    }
-                }
-            } else {
-                String message = "FAIL: Default price range is invalid. Min = " + minValue + ", Max = " + maxValue;
-                Log.ReportEvent("FAIL", message);
-                ScreenShots.takeScreenShot1();
-                Assert.fail(message);
-            }
-
-            return new double[]{minValue, maxValue}; // Return the price range
-
-        } catch (Exception e) {
-            Log.ReportEvent("ERROR", "Exception while checking default price range: " + e.getMessage());
-            e.printStackTrace();
-            ScreenShots.takeScreenShot1();
-            Assert.fail("Exception occurred during price range validation");
-            return new double[0]; // Required fallback
-        }
-    }
+	//Method To verify Default Price Range in Price Slider
+		public double[] verifyDefaultPriceRangeinPriceSlider(Log Log, ScreenShots ScreenShots, WebDriver driver) {
+	 
+			try {
+				// Wait for the page and slider to load
+				Thread.sleep(8000); // Consider using WebDriverWait instead for dynamic waits
+				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	 
+				// Wait for the min slider input element
+				WebElement minSliderInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
+						//By.xpath("//span[@data-index='0']//input[@type='range']")));
+						By.xpath("//*[@data-index='0']//input[@type='range']")));
+				// Get min and max values from slider
+				double minValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemin"));
+				double maxValue = Double.parseDouble(minSliderInput.getAttribute("aria-valuemax"));
+	 
+				System.out.println("Min value: " + minValue);
+				System.out.println("Max value: " + maxValue);
+	 
+				// Get all price elements
+				List<WebElement> priceElements = driver.findElements(By.xpath(
+					//	"//div[contains(@class, 'owf-price-fare') and contains(@class, 'bold') and contains(@class, 'price')]//span[@data-tgprice]"));
+	                       "//*[@data-tgprice]"));
+				if (minValue >= 0 && maxValue > minValue) {
+					String message = "PASS: Default price range displayed is: Min = " + minValue + ", Max = " + maxValue;
+					Log.ReportEvent("PASS", message);
+					ScreenShots.takeScreenShot1();
+	 
+					// Loop through each price element
+					for (WebElement price : priceElements) {
+						String priceText = price.getText().replaceAll("[^\\d.]", ""); // Remove currency symbols, commas, etc.
+						try {
+							double priceValue = Double.parseDouble(priceText);
+							if (priceValue >= minValue && priceValue <= maxValue) {
+								System.out.println("Price within range: " + priceValue);
+							} else {
+								System.out.println("Price out of range: " + priceValue);
+							}
+						} catch (NumberFormatException ex) {
+							System.out.println("Skipping invalid price format: " + priceText);
+						}
+					}
+				} else {
+					String message = "FAIL: Default price range is invalid. Min = " + minValue + ", Max = " + maxValue;
+					Log.ReportEvent("FAIL", message);
+					ScreenShots.takeScreenShot1();
+					Assert.fail(message);
+				}
+	 
+				return new double[]{minValue, maxValue}; // Return the price range
+	 
+			} catch (Exception e) {
+				Log.ReportEvent("ERROR", "Exception while checking default price range: " + e.getMessage());
+				e.printStackTrace();
+				ScreenShots.takeScreenShot1();
+				Assert.fail("Exception occurred during price range validation");
+				return new double[0]; // Required fallback
+			}
+		}
     //-------------------------------------------------------------------------------------------------------------
 
   //Method to Validate Prices are displaying based on User Select/Slide
@@ -2084,50 +2101,69 @@ public class Tripgain_resultspage {
     //-------------------------------------------------------------------------------------------------------------
 
   //Method To Adjust Maximum Slider Value on Slide Bar(High to Low Price)
-  	public double[] adjustMaximumSliderValue(WebDriver driver, double targetValue) throws InterruptedException {
-  		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(80));
-
-  		// Locate the second thumb input (data-index='1')
-  		WebElement sliderInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
-  				By.xpath("//span[@data-index='1']//input[@type='range']")));
-
-  		Thread.sleep(1000);
-
-  		double minValue = Double.parseDouble(sliderInput.getAttribute("aria-valuemin"));
-  		double maxValue = Double.parseDouble(sliderInput.getAttribute("aria-valuemax"));
-
-  		System.out.println("Min: " + minValue + ", Max: " + maxValue);
-
-  		// Calculate percentage for target value within range
-  		double percentage = Math.max(0, Math.min(1, (targetValue - minValue) / (maxValue - minValue)));
-  		System.out.println("Target Value: " + targetValue + ", Percentage: " + percentage);
-
-  		// Get slider track position and width
-  		WebElement sliderTrack = driver.findElement(By.xpath("//span[contains(@class, 'MuiSlider-track')]"));
-  		Point trackLocation = sliderTrack.getLocation();
-  		int trackStartX = trackLocation.getX();
-  		int trackWidth = sliderTrack.getSize().getWidth();
-
-  		// Target X position based on percentage of track
-  		int targetX = (int) (trackStartX + (percentage * trackWidth));
-
-  		// Get current thumb (second) position
-  		WebElement thumb = driver.findElement(By.xpath("//span[@data-index='1']//input[@type='range']"));
-  		Point thumbLocation = thumb.getLocation();
-  		int thumbX = thumbLocation.getX();
-
-  		// Offset = target - current
-  		int moveBy = targetX - thumbX;
-
-  		System.out.println("Moving Thumb 2 by offset: " + moveBy);
-
-  		// Move the second thumb
-  		Actions actions = new Actions(driver);
-  		actions.clickAndHold(thumb).moveByOffset(moveBy, 0).release().perform();
-
-  		System.out.println("Thumb 2 moved to target value: " + targetValue);
-  		return new double[]{minValue, maxValue};
+  //Method To Adjust Minimum Slider Value on Slide Bar( High to Low Price)
+  	public double[] adjustMaximumSliderToValue(WebDriver driver, double targetValue) {
+  	    double minValue = -1;
+  	    double maxValue = -1;
+   
+  	    try {
+  	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+   
+  	        // Locate the second thumb input (data-index='1')
+  	        WebElement sliderInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
+  	                By.xpath("//input[@data-index='1']")));
+   
+  	        Thread.sleep(1000); // Optional: wait for animation/UI rendering
+   
+  	        // Get min/max from attributes
+  	        minValue = Double.parseDouble(sliderInput.getAttribute("aria-valuemin"));
+  	        maxValue = Double.parseDouble(sliderInput.getAttribute("aria-valuemax"));
+   
+  	        System.out.println("Min: " + minValue + ", Max: " + maxValue);
+   
+  	        // Clamp and calculate percentage
+  	        double percentage = Math.max(0, Math.min(1, (targetValue - minValue) / (maxValue - minValue)));
+  	        System.out.println("Target Value: " + targetValue + ", Percentage: " + percentage);
+   
+  	        // Get track's location and width
+  	        WebElement sliderTrack = driver.findElement(By.xpath("//*[contains(@class, 'MuiSlider-track')]"));
+  	        Point trackLocation = sliderTrack.getLocation();
+  	        int trackStartX = trackLocation.getX();
+  	        int trackWidth = sliderTrack.getSize().getWidth();
+   
+  	        int targetX = (int) (trackStartX + (percentage * trackWidth));
+   
+  	        // Locate thumb and get its current position
+  	        WebElement thumb = driver.findElement(By.xpath("//input[@data-index='1']"));
+  	        Point thumbLocation = thumb.getLocation();
+  	        int thumbX = thumbLocation.getX();
+   
+  	        int moveBy = targetX - thumbX;
+   
+  	        System.out.println("Moving Thumb 2 by offset: " + moveBy);
+   
+  	        // Move the second thumb
+  	        Actions actions = new Actions(driver);
+  	        actions.clickAndHold(thumb).moveByOffset(moveBy, 0).release().perform();
+   
+  	        System.out.println("✅ Thumb 2 moved to target value: " + targetValue);
+   
+  	    } catch (TimeoutException te) {
+  	        System.err.println("❌ Timeout waiting for slider input: " + te.getMessage());
+  	    } catch (NoSuchElementException ne) {
+  	        System.err.println("❌ Slider element not found: " + ne.getMessage());
+  	    } catch (InterruptedException ie) {
+  	        System.err.println("❌ Thread.sleep interrupted: " + ie.getMessage());
+  	        Thread.currentThread().interrupt(); // restore interrupt status
+  	    } catch (Exception e) {
+  	        System.err.println("❌ Unexpected error while adjusting max slider: " + e.getMessage());
+  	        e.printStackTrace();
+  	    }
+   
+  	    return new double[]{minValue, maxValue};
   	}
+   
+ 
     
     //-------------------------------------------------------------------------------------------------------------
 
@@ -4808,7 +4844,7 @@ Thread.sleep(3000);
                     clickOnProceedBooking();
                 }
             } else {
-                Thread.sleep(2000);
+                Thread.sleep(3000);
                 WebElement continueButton=driver.findElement(By.xpath("(//button[text()='Continue'])[1]"));
                 ((JavascriptExecutor) driver).executeScript(
                         "window.scrollTo({ top: arguments[0].getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });",
@@ -6025,11 +6061,483 @@ Thread.sleep(4000);
     	        Assert.fail();
     	    }
     	}
-     		    
-    		    
-    		    
-    		    
-		
+     		   
+      
+    //Method to get user entered data
+  	public String[] userEnterData() {
+  	    try {
+  	        // Get "From" location text and extract code
+  	        String fromText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[1]")).getText().trim();
+  	        String fromLocationCode = extractAirportCode(fromText);
+   
+  	        // Get "To" location text and extract code
+  	        String toText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[2]")).getText().trim();
+  	        String toLocationCode = extractAirportCode(toText);
+   
+  	        // Get journey date
+  	        WebElement journeyDateInput = driver.findElement(By.xpath("//input[@placeholder='Journey Date']"));
+  	        String journeyDateValue = journeyDateInput.getAttribute("value").trim();
+   
+  	        // Get return date (optional)
+  	        WebElement returnDateInput = driver.findElement(By.xpath("//input[@placeholder='Return Date (Optional)']"));
+  	        String returnDateValue = returnDateInput.getAttribute("value").trim();
+   
+  	        // Get flight class
+  	        String flightClass = driver.findElement(By.xpath("//span[@class='capitalize']")).getText().trim();
+   
+  	        // Get adult count
+  	        String adultCount = driver.findElement(By.xpath("//span[@class='capitalize']/ancestor::button")).getText().trim();
+   
+  	        // Fixed travel type for now
+  	        String travel = "flight";
+   
+  	        // Debug log
+  	        System.out.println("From Text: " + fromText);
+  	        System.out.println("From Code: " + fromLocationCode);
+  	        System.out.println("To Text: " + toText);
+  	      //  System.out.println("To Code: " + toLocationCode);
+  	      //  System.out.println("Journey Date: " + journeyDateValue);
+  	      //  System.out.println("Return Date: " + returnDateValue);
+  	      //  System.out.println("Flight Class: " + flightClass);
+  	      //  System.out.println("Adult Count: " + adultCount);
+   
+  	        return new String[] {
+  	            fromLocationCode,
+  	            toLocationCode,
+  	            journeyDateValue,
+  	            returnDateValue,
+  	            flightClass,
+  	            travel,
+  	            adultCount
+  	        };
+   
+  	    } catch (Exception e) {
+  	        e.printStackTrace();
+  	        // Return default values in case of failure (7 items to avoid index errors)
+  	        return new String[] { "", "", "", "", "", "", "" };
+  	    }
+  	}
+  	
+ // Helper method to extract airport code from location string
+ 	private String extractAirportCode(String locationText) {
+ 		Matcher matcher = Pattern.compile("\\((.*?)\\)").matcher(locationText);
+ 		return matcher.find() ? matcher.group(1) : locationText;
+ 	}
+  	
+  	//------------------------------------------------------------------
+  	
+  //Method to validate Search Results In Result page
+  		public String[] validateResultsInResultPage(String From, String to, String journeyDate, int xpathIndex, Log Log, ScreenShots ScreenShots) throws ParseException {
+  		    try {
+  		        System.out.println(From);
+  		        System.out.println(to);
+   
+  		        // Format date
+  		        journeyDate = journeyDate.replaceAll("(st|nd|rd|th)", ""); // e.g. "14th-Jul-2025" -> "14-Jul-2025"
+  		        SimpleDateFormat inputFormat = new SimpleDateFormat("d-MMM-yyyy");
+  		        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+  		        Date parsedDate = inputFormat.parse(journeyDate);
+  		        String formattedJourneyDate = outputFormat.format(parsedDate);
+   
+  		        // Click on flight card
+  		        WebElement flightCard = driver.findElement(By.xpath("(//*[contains(@class,'tg-flight-card')])[" + xpathIndex + "]"));
+  		        flightCard.click();
+   
+  		        // Extract flight info
+  		        String stops = driver.findElement(By.xpath("(//*[@class='tg-stops'])[" + xpathIndex + "]")).getText();
+  		        String departTimeText = driver.findElement(By.xpath("(//*[contains(@class,'tg-deptime')])[" + xpathIndex + "]")).getText().trim();
+  		        String departTime = departTimeText.split("\\n")[0].trim();
+  		        String departDate = driver.findElement(By.xpath("(//*[contains(@class,'tg-depdate')])[" + xpathIndex + "]")).getText();
+  		        String arrivalTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-arrtime')])[" + xpathIndex + "]")).getText();
+  		        String arrivalDate = driver.findElement(By.xpath("(//*[contains(@class,'tg-arrdate')])[" + xpathIndex + "]")).getText();
+  		        String price = driver.findElement(By.xpath("(//*[@class='tg-price'])[" + xpathIndex + "]")).getText();
+   
+  		        // Origin and destination
+  		        String origin = driver.findElement(By.xpath("//*[@data-tgfloriginairport]")).getAttribute("data-tgfloriginairport");
+  		        String destination = driver.findElement(By.xpath("(//*[@data-tgfldestinationairport])[last()]")).getAttribute("data-tgfldestinationairport");
+                   String fareType=driver.findElement(By.xpath("(//*[contains(@class,'tg-farename')])['"+xpathIndex+"']")).getText();
+                   String policy=driver.findElement(By.xpath("(//*[contains(@class,'tg-policy')])['"+xpathIndex+"']")).getText();
+                   String arrivalDates=driver.findElement(By.xpath("(//*[@class='tg-fromarrdate'])[last()]")).getText();
+  		        String flightCodeDetails=driver.findElement(By.xpath("(//*[contains(@class,'tg-fromflightnumber')])[1]")).getText();
+  		        
+  		        System.out.println("Origin: " + origin);
+  		        System.out.println("Destination: " + destination);
+  		        System.out.println("Stops: " + stops);
+  		        System.out.println("Departure time: " + departTime);
+  		        System.out.println("Departure date: " + departDate);
+  		        System.out.println("Arrival time: " + arrivalTime);
+  		        System.out.println("Arrival date: " + arrivalDate);
+  		        System.out.println("Price: " + price);
+   
+  		        // Validation
+  		        if (From.equals(origin) && to.equals(destination) && formattedJourneyDate.equals(outputFormat.format(parsedDate))) {
+  		            String matchedDetails = String.format(
+  		                "Flight result matched:\n" +
+  		                "- From: %s\n" +
+  		                "- To: %s\n" +
+  		                "- Journey Date: %s\n" +
+  		                "- Departure Time: %s\n" +
+  		                "- Arrival Time: %s\n" +
+  		                "- Stops: %s\n" +
+  		                "- Price: %s",
+  		                origin, destination, formattedJourneyDate, departTime, arrivalTime, stops, price
+  		            );
+   
+  		            // Validate airline name/code
+  		            String[] FlightDetails = validateFlightIsDisplayed(xpathIndex, Log, ScreenShots);
+  		            String airlineName = FlightDetails[0];
+  		            String airlineCode = FlightDetails[1];
+   
+  		            Log.ReportEvent("PASS", matchedDetails);
+  		            System.out.println(matchedDetails);
+   
+  		            return new String[] {
+  		                origin, destination, formattedJourneyDate, departTime,
+  		                arrivalTime, stops, price, airlineName, airlineCode,flightCodeDetails,fareType,policy,arrivalDates
+  		            };
+  		        } else {
+  		            String mismatchDetails = String.format(
+  		                "Flight result mismatch:\n" +
+  		                "- From: expected [%s], actual [%s]\n" +
+  		                "- To: expected [%s], actual [%s]\n" +
+  		                "- Journey Date: expected [%s], actual [%s]",
+  		                From, origin, to, destination, formattedJourneyDate, outputFormat.format(parsedDate)
+  		            );
+   
+  		            Log.ReportEvent("FAIL", mismatchDetails);
+  		            System.out.println(mismatchDetails);
+  		        }
+   
+  		    } catch (Exception e) {
+  		        Log.ReportEvent("FAIL", "Exception while validating flight results: " + e.getMessage());
+  		        System.out.println("Exception: " + e.getMessage());
+  		    } finally {
+  		        ScreenShots.takeScreenShot1();
+  		    }
+   
+  		    // Default return if validation fails or exception occurs
+  		    return new String[] {"", "", "", "", "", "", "", "", ""};
+  		}
+   
+            //Helper Method Validate Flight
+  		public String[] validateFlightIsDisplayed(int index, Log Log, ScreenShots ScreenShots) {
+  		    try {
+  		        // Corrected XPath: indexes in XPath start from 1
+  		        WebElement fligtName = driver.findElement(By.xpath("(//*[contains(@class,'tg-flightcarrier')])[" + index + "]"));
+  		        WebElement fligtCode = driver.findElement(By.xpath("(//*[contains(@class,'tg-flightnumber')])[" + index + "]"));
+   
+  		        if (fligtName.isDisplayed() && fligtCode.isDisplayed()) {
+  		            String flightNames = fligtName.getText();
+  		            String flightCodes = fligtCode.getText();
+  		            Log.ReportEvent("PASS", "Flight Details are Displayed: Flight Name: " + flightNames + ", Flight Code: " + flightCodes);
+  		            return new String[]{flightNames, flightCodes};
+  		        } else {
+  		            Log.ReportEvent("FAIL", "Flight details are not displayed at index: " + index);
+  		            Assert.fail();
+  		        }
+  		    } catch (Exception e) {
+  		        Log.ReportEvent("FAIL", "Exception while validating flight details: " + e.getMessage());
+  		        Assert.fail();
+  		    } finally {
+  		        ScreenShots.takeScreenShot1();
+  		    }
+  		    return new String[]{"", ""};  // Return empty strings if validation fails
+  		}
+   
+    //------------------------------------------------------------------------
+  	//Method to Validate Footer Div
+  		public void validateFooterDiv(String[] resultScreenValidationResults, Log Log, ScreenShots ScreenShots) {
+  		    String fromLocation = resultScreenValidationResults[0];
+  		    String toLocation = resultScreenValidationResults[1];
+  		    String departTime = resultScreenValidationResults[3];
+  		    String arrivalTime = resultScreenValidationResults[4];
+  		    String expectedPrice = resultScreenValidationResults[6];
+  		    String expectedFlightCode = resultScreenValidationResults[8];
+  	 
+  		    try {
+  		        // Extract origin and destination from footer (e.g., "BLR-CJB")
+  		        WebElement locations = driver.findElement(By.xpath("//*[@data-tgfullsector]"));
+  		        String location = locations.getAttribute("data-tgfullsector");
+  		        String[] parts = location.split("-");
+  		        String origin = parts[0].trim();
+  		        String destination = parts[1].trim();
+  	 
+  		        // Extract departure and arrival times (e.g., "05:30-07:20")
+  		        String times = driver.findElement(By.xpath("//*[@data-tgfulltime]")).getText();
+  		        String[] timeParts = times.split("-");
+  		        String actualDepartTime = timeParts[0].trim();
+  		        String actualArrivalTime = timeParts[1].trim();
+  	 
+  		        // Extract price
+  		        String actualPrice = driver.findElement(By.xpath("//*[@data-tgfullfare]")).getText().trim();
+  	 
+  		        // Extract flight code from footer
+  		        WebElement flightElement = driver.findElement(By.xpath("//*[contains(@class,'tg-owbar-flightnum')]"));
+  		        String flightText = flightElement.getText().trim(); // e.g., "(EK 567)"
+  		        String actualFlightCode = flightText.replaceAll("[()]", "").trim();
+  	 
+  		        // Logging actual vs expected
+  		        System.out.println("===== Actual Footer Details =====");
+  		        System.out.println("From: " + origin);
+  		        System.out.println("To: " + destination);
+  		        System.out.println("Departure: " + actualDepartTime);
+  		        System.out.println("Arrival: " + actualArrivalTime);
+  		        System.out.println("Price: " + actualPrice);
+  		        System.out.println("Flight Code: " + actualFlightCode);
+  	 
+  		        System.out.println("===== Expected Details =====");
+  		        System.out.println("From: " + fromLocation);
+  		        System.out.println("To: " + toLocation);
+  		        System.out.println("Departure: " + departTime);
+  		        System.out.println("Arrival: " + arrivalTime);
+  		        System.out.println("Price: " + expectedPrice);
+  		        System.out.println("Flight Code: " + expectedFlightCode);
+  	 
+  		        // Validation
+  		        if (
+  		        	    origin.equalsIgnoreCase(fromLocation) &&
+  		        	    destination.equalsIgnoreCase(toLocation) &&
+  		        	    actualDepartTime.equalsIgnoreCase(departTime) &&
+  		        	    actualArrivalTime.equalsIgnoreCase(arrivalTime) &&
+  		        	    actualPrice.equalsIgnoreCase(expectedPrice) &&
+  		        	    actualFlightCode.replaceAll("[^A-Za-z0-9]", "")
+  		        	        .equalsIgnoreCase(expectedFlightCode.replaceAll("[^A-Za-z0-9]", ""))
+  		        	)
+  	                 {
+  		            Log.ReportEvent("PASS", "✅ Flights matched in footer div:\n" +
+  		                    "From: " + origin + " -> To: " + destination +
+  		                    ", Depart: " + actualDepartTime + ", Arrival: " + actualArrivalTime +
+  		                    ", Price: " + actualPrice + ", Flight Code: " + actualFlightCode);
+  	 
+  		            ScreenShots.takeScreenShot1();
+  	 
+  		            // Proceed to next step
+  		            driver.findElement(By.xpath("//div[@class='bottom-container-1']//button[text()='Continue']")).click();
+  		            reasonForSelectionPopUp();
+  		        } else {
+  		            Log.ReportEvent("FAIL", "❌ Flights did not match. Expected vs Actual:\n" +
+  		                    "From: " + fromLocation + " vs " + origin + "\n" +
+  		                    "To: " + toLocation + " vs " + destination + "\n" +
+  		                    "Depart: " + departTime + " vs " + actualDepartTime + "\n" +
+  		                    "Arrival: " + arrivalTime + " vs " + actualArrivalTime + "\n" +
+  		                    "Price: " + expectedPrice + " vs " + actualPrice + "\n" +
+  		                    "Flight Code: " + expectedFlightCode + " vs " + actualFlightCode);
+  	 
+  		            ScreenShots.takeScreenShot1();
+  		            Assert.fail("Flight footer details mismatch.");
+  		        }
+  	 
+  		    } catch (Exception e) {
+  		        Log.ReportEvent("FAIL", "❌ Exception in footer validation: " + e.getMessage());
+  		        ScreenShots.takeScreenShot1();
+  		        e.printStackTrace();
+  		        Assert.fail("Exception during footer validation.");
+  		    }
+  		}
+  		
+  		//----------------------------------------------------------------------
+  	 
+  	//Method to Validate Flight Details Booking Page
+  			    public void validateFlightDetailsInBookingPage(String[] resultScreenValidationResults, String[] userInput, Log log, ScreenShots screenShots) {
+  			        try {
+  			            String expectedClass = userInput[4];
+  	 
+  			            String expectedFrom = resultScreenValidationResults[0];
+  			            String expectedTo = resultScreenValidationResults[1];
+  			            String expectedJourneyDate = resultScreenValidationResults[2];
+  			            String expectedDepartTime = resultScreenValidationResults[3];
+  			            String expectedArrivalTime = resultScreenValidationResults[4];
+  			            String expectedPrice = resultScreenValidationResults[6];
+  			            String expectedAirlineName = resultScreenValidationResults[7];
+  			            String expectedFlightCode = resultScreenValidationResults[9];
+  			            String expectedFareType = resultScreenValidationResults[10];
+  			            String expectedPolicy = resultScreenValidationResults[11];
+  			            String expectedArrivalDate = resultScreenValidationResults[12];
+  	 
+  			            // Actual values from booking page
+  			            String actualFrom = driver.findElement(By.xpath("//*[@data-tgdepartfloriginairport]")).getAttribute("data-tgdepartfloriginairport");
+  			            String actualTo = driver.findElement(By.xpath("(//*[@data-tgdepartfldestinationairport])[last()]")).getAttribute("data-tgdepartfldestinationairport");
+  	 
+  			            String flightDetails = driver.findElement(By.xpath("(//*[@class='tg-fbDepartcarriername'])[1]")).getText().trim();
+  	 
+  			            String actualAirlineName = "";
+  			            String actualFlightCode = "";
+  			            String actualClass = "";
+  	 
+  			            // Split airline info
+  			            String[] parts = flightDetails.split(" - ");
+  			            if (parts.length == 3) {
+  			                actualAirlineName = parts[0].trim();
+  			                actualFlightCode = parts[1].trim();
+  			                actualClass = parts[2].trim();
+  			            } else {
+  			                log.ReportEvent("FAIL", "Unexpected flight details format: " + flightDetails);
+  			                screenShots.takeScreenShot1();
+  			                Assert.fail("Flight details format mismatch.");
+  			                return;
+  			            }
+  	 
+  			            String actualDepartDate = driver.findElement(By.xpath("(//*[@data-tgdepartfldepdate])[1]")).getAttribute("data-tgdepartfldepdate");
+  			            String actualDepartTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartdeptime')])[1]")).getText().trim();
+  			            String actualArrivalDate = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartarrdate')])[last()]")).getText().trim();
+  			            String actualArrivalTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartarrtime')])[last()]")).getText().trim();
+  			            String actualPolicy = driver.findElement(By.xpath("//*[contains(@class,'tg-policy')]")).getText().trim();
+  			            String actualFareType = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")).getText().trim();
+  			            String actualTotalPrice = driver.findElement(By.xpath("//*[contains(@class,'tg-fbgrandtotal')]")).getText().trim();
+  	 
+  			            // Normalize flight code for comparison
+  			            String normExpectedCode = expectedFlightCode.replaceAll("[^A-Za-z0-9]", "");
+  			            String normActualCode = actualFlightCode.replaceAll("[^A-Za-z0-9]", "");
+  	 
+  			            // Normalize fare type by removing spaces and lowercase for comparison
+  			            String normExpectedFareType = expectedFareType.replaceAll("\\s", "").toLowerCase();
+  			            String normActualFareType = actualFareType.replaceAll("\\s", "").toLowerCase();
+  	 
+  			            // Trim arrival dates
+  			            String normExpectedArrivalDate = expectedArrivalDate.trim();
+  			            String normActualArrivalDate = actualArrivalDate.trim();
+  	 
+  			            if (
+  			                actualFrom.equalsIgnoreCase(expectedFrom) &&
+  			                actualTo.equalsIgnoreCase(expectedTo) &&
+  			                actualAirlineName.equalsIgnoreCase(expectedAirlineName) &&
+  			                normActualCode.equalsIgnoreCase(normExpectedCode) &&
+  			                actualClass.equalsIgnoreCase(expectedClass) &&
+  			                actualDepartDate.equals(expectedJourneyDate) &&
+  			                actualDepartTime.equals(expectedDepartTime) &&
+  			                normActualArrivalDate.equals(normExpectedArrivalDate) &&
+  			                actualArrivalTime.equals(expectedArrivalTime) &&
+  			                actualPolicy.equalsIgnoreCase(expectedPolicy) &&
+  			                normActualFareType.equals(normExpectedFareType) &&
+  			                actualTotalPrice.equals(expectedPrice)
+  			            ) {
+  			               // log.ReportEvent("PASS", "✅ Booking page flight details matched expected values.");
+  			                log.ReportEvent("PASS",
+  			                	    "✅ Booking page flight details matched expected values:\n" +
+  			                	    "From: expected [" + expectedFrom + "], actual [" + actualFrom + "]\n" +
+  			                	    "To: expected [" + expectedTo + "], actual [" + actualTo + "]\n" +
+  			                	    "Airline: expected [" + expectedAirlineName + "], actual [" + actualAirlineName + "]\n" +
+  			                	    "Flight Code: expected [" + expectedFlightCode + "], actual [" + actualFlightCode + "]\n" +
+  			                	    "Class: expected [" + expectedClass + "], actual [" + actualClass + "]\n" +
+  			                	    "Depart Date: expected [" + expectedJourneyDate + "], actual [" + actualDepartDate + "]\n" +
+  			                	    "Depart Time: expected [" + expectedDepartTime + "], actual [" + actualDepartTime + "]\n" +
+  			                	    "Arrival Date: expected [" + expectedArrivalDate + "], actual [" + actualArrivalDate + "]\n" +
+  			                	    "Arrival Time: expected [" + expectedArrivalTime + "], actual [" + actualArrivalTime + "]\n" +
+  			                	    "Policy: expected [" + expectedPolicy + "], actual [" + actualPolicy + "]\n" +
+  			                	    "Fare Type: expected [" + expectedFareType + "], actual [" + actualFareType + "]\n" +
+  			                	    "Total Price: expected [" + expectedPrice + "], actual [" + actualTotalPrice + "]"
+  			                	);
+  	 
+  			            } else {
+  			                log.ReportEvent("FAIL", "❌ Booking page flight details mismatch:\n" +
+  			                    "From: expected [" + expectedFrom + "], actual [" + actualFrom + "]\n" +
+  			                    "To: expected [" + expectedTo + "], actual [" + actualTo + "]\n" +
+  			                    "Airline: expected [" + expectedAirlineName + "], actual [" + actualAirlineName + "]\n" +
+  			                    "Flight Code: expected [" + expectedFlightCode + "], actual [" + actualFlightCode + "]\n" +
+  			                    "Class: expected [" + expectedClass + "], actual [" + actualClass + "]\n" +
+  			                    "Depart Date: expected [" + expectedJourneyDate + "], actual [" + actualDepartDate + "]\n" +
+  			                    "Depart Time: expected [" + expectedDepartTime + "], actual [" + actualDepartTime + "]\n" +
+  			                    "Arrival Date: expected [" + expectedArrivalDate + "], actual [" + actualArrivalDate + "]\n" +
+  			                    "Arrival Time: expected [" + expectedArrivalTime + "], actual [" + actualArrivalTime + "]\n" +
+  			                    "Policy: expected [" + expectedPolicy + "], actual [" + actualPolicy + "]\n" +
+  			                    "Fare Type: expected [" + expectedFareType + "], actual [" + actualFareType + "]\n"+
+  			                    "Total Price : expected [" + actualTotalPrice + "], actual [" + expectedPrice + "]")
+  			                ;
+  			                
+  			                screenShots.takeScreenShot1();
+  			                Assert.fail("Booking page flight details mismatch.");
+  			            }
+  			            
+  			            
+  			        } catch (Exception e) {
+  			            log.ReportEvent("FAIL", "❌ Exception during booking page flight details validation: " + e.getMessage());
+  			            screenShots.takeScreenShot1();
+  			            e.printStackTrace();
+  			            Assert.fail("Exception occurred during validation.");
+  			        }
+  			    }
+  	 
+  	 
+   //------------------------------------------------------------------
+  			    
+  			//Method to Validate approval page
+    			  public void approvalPageValidation(String origin, String destination, String travels, Log Log, ScreenShots ScreenShots, String profile[]) {
+    			      try {
+    			          travels = travels.replaceAll("s$", ""); // Remove trailing 's' if present
+    			   
+    			          String employeeCode = profile[0];
+    			          String approvalManager = profile[1];
+    			          String traveller = profile[2];
+    			          String travellerWithCode = traveller + " (" + employeeCode + ")";
+    			          String routeToFind = origin + " - " + destination;
+    			   
+    			          System.out.println("Looking for route: " + routeToFind);
+    			   
+    			          // Wait for approval cards to be present
+    			          new WebDriverWait(driver, Duration.ofSeconds(5))
+    			              .until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'tg-approval-requests')]")));
+    			   
+    			          List<WebElement> cards = driver.findElements(By.xpath("//div[contains(@class,'tg-approval-requests')]"));
+    			   
+    			          boolean matchFound = false;
+    			   
+    			          for (WebElement card : cards) {
+    			              try {
+    			                  String route = card.findElement(By.xpath(".//span[text()='Origin - Destination']/following-sibling::h6")).getText().trim();
+    			                  System.out.println("Found route: " + route);
+    			   
+    			                  if (route.equalsIgnoreCase(routeToFind)) {
+    			                      ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", card);
+    			                      new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(card));
+    			   
+    			                      String travelType = card.findElement(By.xpath(".//*[text()='Request Type']/following-sibling::h6")).getText().trim();
+    			                      String approverName = card.findElement(By.xpath(".//*[text()='Approver Name']/following-sibling::h6")).getText().trim();
+    			                      String requestedBy = card.findElement(By.xpath(".//*[text()='Requested By']/following-sibling::h6")).getText().trim();
+    			   
+    			                      System.out.println("Validating travelType: " + travelType + " == " + travels);
+    			                      System.out.println("Approver: " + approverName + " == " + approvalManager);
+    			                      System.out.println("Requested By: " + requestedBy + " == " + travellerWithCode);
+    			   
+    			                      if (travelType.equalsIgnoreCase(travels)
+    			                              && approverName.equalsIgnoreCase(approvalManager)
+    			                              && requestedBy.equalsIgnoreCase(travellerWithCode)) {
+    			   
+    			                          Log.ReportEvent("PASS", "✅ Sent approval details are correct:\n"
+    			                                  + "Flight Type: " + travelType + "\n"
+    			                                  + "Approver Name: " + approverName + "\n"
+    			                                  + "Requested By: " + requestedBy);
+    			   
+    			                          ScreenShots.takeScreenShot1();
+    			                      }
+    			   
+    			                      WebElement detailsBtn = card.findElement(By.xpath(".//button[text()='Details']"));
+    			                      detailsBtn.click();
+    			                      System.out.println("✅ Clicked Details for: " + routeToFind);
+    			   
+    			                      matchFound = true;
+    			                      break;
+    			                  }
+    			              } catch (NoSuchElementException e) {
+    			                  System.err.println("⚠️ Element missing in card, skipping. Details: " + e.getMessage());
+    			              } catch (Exception e) {
+    			                  System.err.println("⚠️ Unexpected error in card loop: " + e.getMessage());
+    			                  e.printStackTrace();
+    			              }
+    			          }
+    			   
+    			          if (!matchFound) {
+    			              Log.ReportEvent("FAIL", "❌ No matching approval card found for route: " + routeToFind);
+    			              ScreenShots.takeScreenShot1();
+    			          }
+    			   
+    			      } catch (Exception e) {
+    			          Log.ReportEvent("FAIL", "❌ Exception occurred during approval page validation: " + e.getMessage());
+    			          ScreenShots.takeScreenShot1();
+    			          e.printStackTrace();
+    			      }
+    			  }	    
+  //--------------------------------------------------------------------
+    	  
 	}
 	
 

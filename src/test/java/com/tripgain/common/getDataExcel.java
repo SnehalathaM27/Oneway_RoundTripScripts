@@ -18,8 +18,7 @@ public class getDataExcel {
 	public static List<Map<String, String>> getExcelDataFromSheet(String sheetName) {
         List<Map<String, String>> dataList = new ArrayList<>();
         File classpathRoot = new File(System.getProperty("user.dir"));
-       // File app = new File(classpathRoot, "src/test/resources/testdata/testdata.xlsx");
-         File app = new File(classpathRoot, "src\\test\\resources\\testdata\\testdatamain1.xlsx");
+         File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\testdatamain1.xlsx");
 
         String fileName = app.toString();
 

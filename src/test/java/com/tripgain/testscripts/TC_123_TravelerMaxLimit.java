@@ -2,6 +2,7 @@ package com.tripgain.testscripts;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
@@ -46,7 +47,7 @@ public class TC_123_TravelerMaxLimit extends BaseClass {
     private WebDriverWait wait;
 
     @Test(dataProvider = "sheetBasedData", dataProviderClass = DataProviderUtils.class)
-    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException {
+    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException, ParseException {
         System.out.println("Running test with: " + excelData);
 	    String[] data = Getdata.getexceldata();
         String userName = data[0]; 
@@ -62,10 +63,7 @@ public class TC_123_TravelerMaxLimit extends BaseClass {
        String destination = excelData.get("Destination");
        String travelClass = excelData.get("Class");
        int adults = Integer.parseInt(excelData.get("Adults"));
-       int selectflightbasedindex = Integer.parseInt(excelData.get("SelectFlightBasedIndex"));
-       int depatureindex = Integer.parseInt(excelData.get("DepatureIndex"));
-       int arrivalindex = Integer.parseInt(excelData.get("ArrivalIndex"));
-       int priceindex = Integer.parseInt(excelData.get("PriceIndex"));
+      
        
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
@@ -83,11 +81,10 @@ public class TC_123_TravelerMaxLimit extends BaseClass {
 
         Thread.sleep(3000); 
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
-        tripgainresultspage.validateFlightsResults(Log, screenShots);
-        tripgainresultspage.validateFlightDetailsOnResultScreen(Log, screenShots);
-        tripgainresultspage.selectFlightBasedOnIndex(selectflightbasedindex);
+        String[] userInput = tripgainresultspage.userEnterData();
+        String resultScreenValidationResults[] =tripgainresultspage.validateResultsInResultPage(userInput[0], userInput[1], userInput[2], 1, Log, screenShots);
+        
 
-        tripgainresultspage.validateDataAfterSelectingFlight(Log, screenShots, depatureindex, arrivalindex, priceindex);
         
   		driver.quit();
        }

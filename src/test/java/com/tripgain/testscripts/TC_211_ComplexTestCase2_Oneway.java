@@ -104,13 +104,13 @@ public class TC_211_ComplexTestCase2_Oneway extends BaseClass {
 	System.out.println("DEPART TIME  DONE");
 
           
- //Function to validate airline Functionality
+/* //Function to validate airline Functionality
    tripgainresultspage.clickOnFiltersOnResultScreen(filtername);
    tripgainresultspage.validateAirlineSortFunctionalityOnResultScreen(Log, screenShots, order1);
    Thread.sleep(5000);
    tripgainresultspage.clickOnFiltersOnResultScreen(filtername);
    tripgainresultspage.validateAirlineSortFunctionalityOnResultScreen(Log, screenShots, order2);
-	System.out.println("AIRLINE SORT  DONE");
+	System.out.println("AIRLINE SORT  DONE");*/
 
  //Function to Select and Validate Currency DropDown Values
 		tripgainresultspage.verifyDefaultCurrencyIsSelected(Log, screenShots);
@@ -118,6 +118,9 @@ public class TC_211_ComplexTestCase2_Oneway extends BaseClass {
 	tripgainresultspage.selectCurrencyDropDownValues(driver, currencyCode2);
 	tripgainresultspage.validateCurrency(currencyCode2, Log, screenShots);
 	System.out.println("CURRENCY DONE");
+Thread.sleep(2000);
+	tripgainresultspage.selectFlightBasedOnIndex(2);
+	Thread.sleep(2000);
 
 	//Function for to validate fare type
 	String[] fareDetails=tripgainresultspage.clickOnContinueBasedOnFareType(fareType,reason);

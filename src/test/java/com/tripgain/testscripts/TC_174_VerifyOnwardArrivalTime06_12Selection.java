@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -46,12 +47,13 @@ public class TC_174_VerifyOnwardArrivalTime06_12Selection extends BaseClass {
     private WebDriverWait wait;
 
     @Test(dataProvider = "sheetBasedData", dataProviderClass = DataProviderUtils.class)
-    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException {
-        System.out.println("Running test with: " + excelData);
-	    String[] data = Getdata.getexceldata();
-        String userName = data[0]; 
-        String password = data[1];
-        number++;
+    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException {  
+    	System.out.println("Running test with: " + excelData);    //To get Data from Excel    
+    	   
+    		String[] data = Getdata.getexceldata();  
+    		String userName = data[0];    
+    		String password = data[1];  
+    	
         String[] dates=GenerateDates.GenerateDatesToSelectFlights();
         String fromDate=dates[0];
        String fromMonthYear=dates[2];
@@ -94,34 +96,29 @@ tripgainhomepage.searchFlightsOnHomePage(origin, destination,  fromDate, fromMon
       Thread.sleep(3000); 
       //Function to Logout from Application
 		//tripgainhomepage.logOutFromApplication(Log, screenShots);
-		driver.quit();
        }
 	
     @BeforeMethod
     @Parameters("browser")
-    public void launchApplication(String browser)
-    {
-       extantManager=new ExtantManager();
-       extantManager.setUpExtentReporter(browser);
-       className = this.getClass().getSimpleName();
-       String testName=className+"_"+number;
-       extantManager.createTest(testName);  // Get the ExtentTest instance
-       test=ExtantManager.getTest();
-       extent=extantManager.getReport();
-       test.log(Status.INFO, "Execution Started Successful"); 
-       driver=launchBrowser(browser);      
-       Log = new Log(driver, test);
-       screenShots=new ScreenShots(driver, test);
-    }
-
+    public void launchApplication(String browser, ITestContext context){    
+    	extantManager=new ExtantManager();   
+    	extantManager.setUpExtentReporter(browser);    
+    	className = this.getClass().getSimpleName(); 
+    	String testName=className+"_"+number; 
+    	extantManager.createTest(testName);  // Get the ExtentTest instance 
+    	test=ExtantManager.getTest();  
+    	extent=extantManager.getReport();  
+    	test.log(Status.INFO, "Execution Started Successful");  
+    	driver=launchBrowser(browser);
+    	Log = new Log(driver, test);  
+    	screenShots=new ScreenShots(driver, test);
+    	}
     @AfterMethod
-    public void tearDown() {
-       if (driver != null) {
-          driver.quit();
-          extantManager.flushReport();
-       }
-    }
-	
-	
+    public void tearDown() {   
+    	if (driver != null) {     
+    		driver.quit();      
+    		extantManager.flushReport(); 
+    		}}
+ 
 	
 }
