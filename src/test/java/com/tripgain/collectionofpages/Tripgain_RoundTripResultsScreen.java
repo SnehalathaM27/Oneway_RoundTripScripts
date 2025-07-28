@@ -8253,7 +8253,7 @@ public double addTotalMealsPrice(Log log, ScreenShots screenShots, double totalP
         public double selectBaggageOnwardOneWay(Log Log, ScreenShots ScreenShots, String OnwardBaggageSelectSplit[]) throws InterruptedException {
 
             double totalPrice1 = 0.0;
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
             List<WebElement> sectors = driver.findElements(By.xpath("//label[text()='Baggage Preference']/parent::div//div[@aria-labelledby='onward-label onward']"));
             int value = sectors.size();
@@ -9073,7 +9073,7 @@ public void validateMealsPrice(Log log, ScreenShots screenShots, double total) t
 
 //-------------------------------------------------------------------------------------------------------------
 
-public double selectBaggageOnward() throws InterruptedException
+/*public double selectBaggageOnward() throws InterruptedException
 {
 	Thread.sleep(2000);
 
@@ -9168,7 +9168,7 @@ public double selectBaggageReturn() throws InterruptedException
     }
     return totalPrice2;
 }
-
+*/
 //--------------------------------------------------------------------------------------
 
 //Method to Click on Send Approval
@@ -9407,6 +9407,45 @@ public void clickBackToSearchResults() {
     }
 }
 
+////Method to select Department dropdown
+//public void selectDepartment() {
+//    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//    WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='react-select-7-input']")));
+//    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", input);
+//    input.click();
+//
+//    WebElement option = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(@class,'tg-select__option')]")));
+//    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", option);
+//    option.click();
+//}
+//
+//	//Method to select Project dropdown
+//public void selectProject() {
+//    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//    WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='react-select-9-input']")));
+//    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", input);
+//    input.click();
+//
+//    WebElement option = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(@class,'tg-select__option')]")));
+//    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", option);
+//    option.click();
+//}
+//
+//	//Method to select CostCenter dropdown
+//public void selectCostcenter() {
+//    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//    WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='react-select-8-input']")));
+//    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", input);
+//    input.click();
+//
+//    WebElement option = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(@class,'tg-select__option')]")));
+//    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", option);
+//    option.click();
+//}
+
 //Method to select Department dropdown
 	public void selectDepartment()
 	{
@@ -9494,4 +9533,224 @@ public void clickBackToSearchResults() {
 			}
 			return sb.toString();
 		}
+		
+		
+//-----------------------------------------------------------------------------------------------------------------
+//		public double selectBaggageOnward() throws InterruptedException
+//		   {
+//		       Thread.sleep(2000);
+//		 
+//		       double totalPrice1 = 0.0;
+//		       List<WebElement> sectors = driver.findElements(By.xpath("//label[text()='Baggage Preference']/parent::div//div[@aria-labelledby='onward-label onward']"));
+//		 
+//		       for(WebElement sector:sectors)
+//		 
+//		       {
+//		           System.out.println(sector);
+//		 
+//		           sector.click();
+//		           List<WebElement>  baggageList = driver.findElements(By.xpath("//ul/li[position() > 1]"));
+//		           for(WebElement baggageListGet:baggageList)  
+//		           {
+//		               String getBaggageName = baggageListGet.getText();
+//		               System.out.println(getBaggageName);
+//		               baggageList.get(1).click();
+//		               String price = driver.findElement(By.xpath("//span[@class='price']")).getText();
+//		               System.out.println(price);
+//		               double prices = Double.parseDouble(price.replaceAll("[^\\d.]", ""));
+//		               totalPrice1 += prices; // Add to total price
+//		               System.out.println(totalPrice1);
+//		               break;
+//		 
+//		           }
+//		 
+//		       }
+//		       return totalPrice1;
+//		 
+//		   }
+//		 
+		
+		
+		public double selectBaggageOnward() throws InterruptedException {
+		    double totalPrice1 = 0.0;
+		    Random random = new Random();
+
+		    List<WebElement> onwardDropdowns = driver.findElements(By.xpath("//label[text()='Baggage Preference']/parent::div//div[@aria-labelledby='onward-label onward']"));
+		    System.out.println("Onward Baggage dropdowns found: " + onwardDropdowns.size());
+
+		    for (WebElement dropdown : onwardDropdowns) {
+		        try {
+		            dropdown.click();
+		            Thread.sleep(1000);
+
+		            List<WebElement> baggageOptions = driver.findElements(By.xpath("//ul/li[position() > 1]"));
+
+		            if (baggageOptions.size() > 0) {
+		                int randomIndex = random.nextInt(baggageOptions.size());
+		                WebElement selectedOption = baggageOptions.get(randomIndex);
+
+		                String baggageText = selectedOption.getText();
+		                System.out.println("Selected baggage: " + baggageText);
+
+		                selectedOption.click();
+		                Thread.sleep(1000);
+
+		                // 🔥 Extract price from the selected baggage option's text
+		                String priceFromOption = baggageText.replaceAll("[\\s\\S]*₹", "₹").replaceAll("[^\\d.]", "");
+		                if (!priceFromOption.isEmpty()) {
+		                    double price = Double.parseDouble(priceFromOption);
+		                    totalPrice1 += price;
+		                    System.out.println("Price added: " + price + " | Total so far: " + totalPrice1);
+		                } else {
+		                    System.out.println("⚠️ Price not found in selected option text.");
+		                }
+
+		            } else {
+		                System.out.println("No baggage options available in dropdown.");
+		            }
+		        } catch (Exception e) {
+		            System.out.println("⚠️ Error processing onward baggage dropdown: " + e.getMessage());
+		        }
+		    }
+		    return totalPrice1;
+		}
+
+//		public double selectBaggageReturn() throws InterruptedException
+//		   {
+//		       Thread.sleep(2000);
+//		 
+//		       double totalPrice2 = 0.0;
+//		 
+//		       List<WebElement> sectors = driver.findElements(By.xpath("//label[text()='Baggage Preference']/parent::div//div[@aria-labelledby='return-label return']"));
+//		 
+//		       for(WebElement sector:sectors)
+//		 
+//		       {
+//		           System.out.println(sector);
+//		 
+//		           sector.click();
+//		           List<WebElement>  baggageList = driver.findElements(By.xpath("//ul/li[position() > 1]"));
+//		           for(WebElement baggageListGet:baggageList)  
+//		           {
+//		               String getBaggageName = baggageListGet.getText();
+//		               System.out.println(getBaggageName);
+//		               baggageList.get(1).click();
+//		               String price = driver.findElement(By.xpath("//div[@aria-labelledby='return-label return']//span[@class='price']")).getText();
+//		               System.out.println(price);
+//		               double prices = Double.parseDouble(price.replaceAll("[^\\d.]", ""));
+//		               totalPrice2 += prices; // Add to total price
+//		               System.out.println(totalPrice2);
+//		               break;
+//		 
+//		           }
+//		 
+//		       }
+//		       return totalPrice2;
+//		   }
+//		 
+//		public double addTotalBaggagePrice(Log log, ScreenShots screenShots, double totalPrice1, double totalPrice2) {
+//		       {
+//		           System.out.println("Onward Price: " + totalPrice1);
+//		           System.out.println("Return Price: " + totalPrice2);
+//		 
+//		           double total = totalPrice1 + totalPrice2;
+//		           System.out.println("Total Baggage Price: " + total);
+//		 
+//		           log.ReportEvent("PASS", "Combined price of meals: " + total);
+//		           return total;
+//		       }
+//		   }
+//		 
+		
+		public double selectBaggageReturn() throws InterruptedException {
+		    double totalPrice2 = 0.0;
+		    Random random = new Random();
+
+		    List<WebElement> returnDropdowns = driver.findElements(By.xpath("//label[text()='Baggage Preference']/parent::div//div[@aria-labelledby='return-label return']"));
+		    System.out.println("Return Baggage dropdowns found: " + returnDropdowns.size());
+
+		    for (WebElement dropdown : returnDropdowns) {
+		        try {
+		            dropdown.click();
+		            Thread.sleep(1000);
+
+		            List<WebElement> baggageOptions = driver.findElements(By.xpath("//ul/li[position() > 1]"));
+
+		            if (baggageOptions.size() > 0) {
+		                int randomIndex = random.nextInt(baggageOptions.size());
+		                WebElement selectedOption = baggageOptions.get(randomIndex);
+
+		                String baggageText = selectedOption.getText();
+		                System.out.println("Selected return baggage: " + baggageText);
+
+		                selectedOption.click();
+		                Thread.sleep(1000);
+
+		                // 🔥 Extract price directly from the option text
+		                String priceFromOption = baggageText.replaceAll("[\\s\\S]*₹", "₹").replaceAll("[^\\d.]", "");
+		                if (!priceFromOption.isEmpty()) {
+		                    double price = Double.parseDouble(priceFromOption);
+		                    totalPrice2 += price;
+		                    System.out.println("Return price added: " + price + " | Total so far: " + totalPrice2);
+		                } else {
+		                    System.out.println("⚠️ Price not found in selected return option text.");
+		                }
+
+		            } else {
+		                System.out.println("No baggage options found in return dropdown.");
+		            }
+
+		        } catch (Exception e) {
+		            System.out.println("⚠️ Error processing return baggage dropdown: " + e.getMessage());
+		        }
+		    }
+
+		    return totalPrice2;
+		}
+
+		
+		public double addTotalBaggagePrice(Log log, ScreenShots screenShots, double totalPrice1, double totalPrice2) {
+		    double total = totalPrice1 + totalPrice2;
+		    System.out.println("Onward Price: " + totalPrice1);
+		    System.out.println("Return Price: " + totalPrice2);
+		    System.out.println("Total Baggage Price: " + total);
+
+		    log.ReportEvent("PASS", "Combined price of baggage: " + total);
+		    return total;
+		}
+
+		
+//		public void validateBaggagePrice(double total) throws InterruptedException
+//		   {
+//		       //double total = addTotalBaggagePrice();
+//		       String FareSummary = driver.findElement(By.xpath("//span[text()='Baggage Price']/parent::div//h6")).getText();
+//		       double FareSummary1 = Double.parseDouble(FareSummary.replaceAll("[^\\d.]", ""));
+//		 
+//		       System.out.println(total);
+//		       System.out.println(FareSummary1);
+//		 
+//		       if(total==FareSummary1)
+//		       {
+//		           System.out.println("Baggage price validated");
+//		       }
+//		   }
+//		
+//		
+		
+		public void validateBaggagePrice(double total) {
+		    String fareSummaryText = driver.findElement(By.xpath("//span[text()='Baggage Price']/parent::div//h6")).getText();
+		    double fareSummary = Double.parseDouble(fareSummaryText.replaceAll("[^\\d.]", ""));
+
+		    System.out.println("Calculated Total: " + total);
+		    System.out.println("Displayed Total: " + fareSummary);
+
+		    if (Math.abs(total - fareSummary) < 0.01) {
+		        System.out.println("✅ Baggage price validated");
+		    } else {
+		        System.out.println("❌ Baggage price mismatch!");
+		    }
+		}
+
+		
+		
 }

@@ -9,41 +9,18 @@
 <table>
 <tr><th>Test</th><th># Passed</th><th># Skipped</th><th># Retried</th><th># Failed</th><th>Time (ms)</th><th>Included Groups</th><th>Excluded Groups</th></tr>
 <tr><th colspan="8">Suite</th></tr>
-<tr><td><a href="#t0">test1</a></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">11</td><td></td><td></td></tr>
-<tr class="stripe"><td><a href="#t1">test</a></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num attn">1</td><td class="num">132,158</td><td></td><td></td></tr>
-<tr><th>Total</th><th class="num">0</th><th class="num">0</th><th class="num">0</th><th class="num attn">1</th><th class="num">132,169</th><th colspan="2"></th></tr>
+<tr><td><a href="#t0">test1</a></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">16</td><td></td><td></td></tr>
+<tr class="stripe"><td><a href="#t1">test</a></td><td class="num">6</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">376,721</td><td></td><td></td></tr>
+<tr><th>Total</th><th class="num">6</th><th class="num">0</th><th class="num">0</th><th class="num">0</th><th class="num">376,737</th><th colspan="2"></th></tr>
 </table>
 <table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">Suite</th></tr></tbody><tbody id="t0"><tr><th colspan="4" class="invisible"/></tr></tbody>
-<tbody id="t1"><tr><th colspan="4">test &#8212; failed</th></tr><tr class="failedeven"><td rowspan="1">com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4</td><td><a href="#m0">myTest</a></td><td rowspan="1">1752672051376</td><td rowspan="1">127137</td></tr></tbody>
+<tbody id="t1"><tr><th colspan="4">test &#8212; passed</th></tr><tr class="passedeven"><td rowspan="1">com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch</td><td><a href="#m0">myTest</a></td><td rowspan="1">1753690421099</td><td rowspan="1">58885</td></tr><tr class="passedodd"><td rowspan="1">com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler</td><td><a href="#m1">myTest</a></td><td rowspan="1">1753690481666</td><td rowspan="1">54633</td></tr><tr class="passedeven"><td rowspan="1">com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality</td><td><a href="#m2">myTest</a></td><td rowspan="1">1753690537716</td><td rowspan="1">57331</td></tr><tr class="passedodd"><td rowspan="1">com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime</td><td><a href="#m3">myTest</a></td><td rowspan="1">1753690596515</td><td rowspan="1">55611</td></tr><tr class="passedeven"><td rowspan="1">com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed</td><td><a href="#m4">myTest</a></td><td rowspan="1">1753690653437</td><td rowspan="1">56056</td></tr><tr class="passedodd"><td rowspan="1">com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations</td><td><a href="#m5">myTest</a></td><td rowspan="1">1753690710883</td><td rowspan="1">83451</td></tr></tbody>
 </table>
-<h2>test1</h2><h2>test</h2><h3 id="m0">com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4#myTest</h3><table class="result"><tr class="param"><th>Parameter #1</th></tr><tr class="param stripe"><td>{Origin=CCU, Destination=BOM, ReturnFare=Flexi, onwardMealsSelect=Paneer Tikka Sandwich,Corporate Meal,Paneer Tikka Sandwich,Corporate Meal, onwardBaggageSelect=Extra Baggage 20KG,Extra Baggage 30KG, Index=1, title=Mr, DepartFare=Coupon, returnMealsSelect=Paneer Tikka Sandwich,Corporate Meal,Paneer Tikka Sandwich,Corporate Meal, TestRun=, returnBaggageSelect=Extra Baggage 20KG,Extra Baggage 30KG, ReturnfareIndex=2, Class=Premium Economy, Adults=2, DepartFareIndex=2}</td></tr><tr><th>Exception</th></tr><tr><td><div class="stacktrace">org.openqa.selenium.InvalidSelectorException: invalid selector: Unable to locate an element with the xpath expression //[@id=&apos;onward&apos;]/ancestor::div//[text()=&apos;Meal Preference&apos;]/parent::div//*[@class=&apos;price&apos;] because of the following error:
-SyntaxError: Failed to execute &apos;evaluate&apos; on &apos;Document&apos;: The string &apos;//[@id=&apos;onward&apos;]/ancestor::div//[text()=&apos;Meal Preference&apos;]/parent::div//*[@class=&apos;price&apos;]&apos; is not a valid XPath expression.
-  (Session info: chrome=138.0.7204.101)
-For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalid-selector-exception
-Build info: version: &apos;4.29.0&apos;, revision: &apos;5fc1ec94cb&apos;
-System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;21.0.7&apos;
-Driver info: org.openqa.selenium.chrome.ChromeDriver
-Command: [aebb33d602d0c37c8d2fff5874706cea, findElements {value=//[@id=&apos;onward&apos;]/ancestor::div//[text()=&apos;Meal Preference&apos;]/parent::div//*[@class=&apos;price&apos;], using=xpath}]
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 138.0.7204.101, chrome: {chromedriverVersion: 138.0.7204.157 (e533e98b126..., userDataDir: C:\Users\LENOVO\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:57800}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:57800/devtoo..., se:cdpVersion: 138.0.7204.101, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Session ID: aebb33d602d0c37c8d2fff5874706cea
-	at org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
-	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:138)
-	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:50)
-	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:215)
-	at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
-	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
-	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:545)
-	at org.openqa.selenium.remote.ElementLocation$ElementFinder$2.findElements(ElementLocation.java:182)
-	at org.openqa.selenium.remote.ElementLocation.findElements(ElementLocation.java:103)
-	at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:381)
-	at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:375)
-	at com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen.selectMealsOnwardOneWay(Tripgain_RoundTripResultsScreen.java:8140)
-	at com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4.myTest(TC_95_EntireTestcasesCode4.java:143)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-... Removed 18 stack frames</div></td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>test1</h2><h2>test</h2><h3 id="m0">com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch#myTest</h3><table class="result"><tr class="param"><th>Parameter #1</th></tr><tr class="param stripe"><td>{Origin=BLR, Destination=BBI, Class=Premium Economy, Adults=4, TestRun=}</td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m1">com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler#myTest</h3><table class="result"><tr class="param"><th>Parameter #1</th></tr><tr class="param stripe"><td>{Origin=BBI, Destination=DEL, Class=Premium Economy, Adults=1, TestRun=}</td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m2">com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality#myTest</h3><table class="result"><tr class="param"><th>Parameter #1</th></tr><tr class="param stripe"><td>{Origin=BBI, Destination=HYD, Class=Premium Economy, Adults=4, TestRun=}</td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m3">com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime#myTest</h3><table class="result"><tr class="param"><th>Parameter #1</th></tr><tr class="param stripe"><td>{Origin=BOM, Destination=CCU, Class=Premium Economy, Adults=2, TestRun=}</td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m4">com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed#myTest</h3><table class="result"><tr class="param"><th>Parameter #1</th></tr><tr class="param stripe"><td>{Origin=BLR, Destination=GOI, Class=Premium Economy, Adults=3, TestRun=}</td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m5">com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations#myTest</h3><table class="result"><tr class="param"><th>Parameter #1</th></tr><tr class="param stripe"><td>{Origin=BLR, Destination=DEL, Class=Premium Economy, Adults=2, TestRun=}</td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
 </body>
 </html>

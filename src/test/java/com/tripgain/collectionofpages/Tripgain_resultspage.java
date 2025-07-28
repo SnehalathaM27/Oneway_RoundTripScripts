@@ -6012,7 +6012,7 @@ Thread.sleep(4000);
     	    	js.executeScript("arguments[0].click();", flightCard);
 
     	        // Get the policy text element
-    	        WebElement containerPolicyText = driver.findElement(By.xpath("//*[contains(@class,'fare-options-container')]//*[contains(@class,'inpolicy tg-policy')]"));
+    	        WebElement containerPolicyText = driver.findElement(By.xpath("//*[contains(@class,'fare-card')]//*[contains(@class,'inpolicy tg-policy')]"));
     	        String policyText = containerPolicyText.getText().trim();
 
     	        // Check if policy text contains "In Policy"

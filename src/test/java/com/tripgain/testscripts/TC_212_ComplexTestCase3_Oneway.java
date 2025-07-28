@@ -150,7 +150,7 @@ tripgainhomepage.searchFlightsOnHomePage(origin, destination,  fromDate, fromMon
 		
 		System.out.println("CLASSES TEXT  DONE");
 
-//		tripgain_resultspage.validateCabinClasses(classes,Log,screenShots);
+//	tripgain_resultspage.validateCabinClasses(classes,Log,screenShots);
 		String[] flightDetails=tripgainresultspage.getFlightDetails(stopsText,Log,screenShots);
 		Thread.sleep(4000);
 		

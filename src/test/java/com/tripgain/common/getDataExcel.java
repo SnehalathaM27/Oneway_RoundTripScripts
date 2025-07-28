@@ -19,7 +19,6 @@ public class getDataExcel {
         List<Map<String, String>> dataList = new ArrayList<>();
         File classpathRoot = new File(System.getProperty("user.dir"));
          File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\testdatamain1.xlsx");
-
         String fileName = app.toString();
 
         try (FileInputStream fis = new FileInputStream(fileName);

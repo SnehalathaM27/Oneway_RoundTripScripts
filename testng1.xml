@@ -5,7 +5,7 @@
   <test name="test">
   <parameter name="browser" value="chrome"/>
      <classes>
-     
+
      
       <!--class name="com.tripgain.testscripts.TC_119_OneWay_OneWaySearch"/>
       <class name="com.tripgain.testscripts.TC_120_OnewayFlightSearch"/>
@@ -100,16 +100,17 @@
               <class name="com.tripgain.testscripts.TC_210_ComplexTestCase1_Oneway"/>
               <class name="com.tripgain.testscripts.TC_211_ComplexTestCase2_Oneway"/>
               <class name="com.tripgain.testscripts.TC_212_ComplexTestCase3_Oneway"/>
-                            <class name="com.tripgain.testscripts.TC_213_ComplexTestCase4_Oneway"/-->
+               <class name="com.tripgain.testscripts.TC_213_ComplexTestCase4_Oneway"/-->
 
-              
-              
+
+
+
 
 
 
                                         <!--Round Trip-->
  
-           <!--class name="com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch"/>
+           <class name="com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch"/>
       <class name="com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler"/>
       <class name="com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality"/>
       <class name="com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime"/>
@@ -195,12 +196,11 @@
         <class name="com.tripgain.testscripts.RoundTrip.TC_91_ValidateProjectDetails"/>
                 <class name="com.tripgain.testscripts.RoundTrip.TC_92_EntireTestcasesCode1"/>       
         <class name="com.tripgain.testscripts.RoundTrip.TC_93_EntireTestcasesCode2"/>
-        <class name="com.tripgain.testscripts.RoundTrip.TC_94_EntireTestcasesCode3"/-->       
-
-        
+        <class name="com.tripgain.testscripts.RoundTrip.TC_94_EntireTestcasesCode3"/>      
                 <class name="com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4"/>       
 
-
+   
+               
 
                       <!--Grades-->
                                           

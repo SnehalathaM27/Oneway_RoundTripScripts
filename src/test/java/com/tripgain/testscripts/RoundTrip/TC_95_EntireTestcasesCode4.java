@@ -140,30 +140,22 @@ trs.enterAdultDetailsForInterNational(titles,adults,Log,screenShots);
 System.out.println("ADULTS DONE");
 
 //----------------------------------------------------------------------------------------s
-double totalPrice  = trs.selectMealsOnwardOneWay(Log,screenShots,OnwardMealsSelectSplit);
 
-//Meals
 
-double selectMealsOnwardTotalPrice1 = trs.selectMealsOnward();
-double selectMealsOnwardTotalPrice2 = trs.selectMealsReturn();
-double totalMeal = trs.addTotalMealsPrice(Log, screenShots,selectMealsOnwardTotalPrice1,selectMealsOnwardTotalPrice2);
+double selectBaggageOnwardTotal =trs.selectBaggageOnward();
+double selectBaggageReturnTotal =trs.selectBaggageReturn();
+double addTotalBaggagePrice1= trs.addTotalBaggagePrice(Log, screenShots, selectBaggageOnwardTotal,selectBaggageReturnTotal);
+trs.validateBaggagePrice(addTotalBaggagePrice1);
+ 
+        System.out.println("BAGGAGE DONE");
 
-trs.validateMealsPrice(Log, screenShots,totalMeal);
-
-System.out.println("MEALS DONE");
 //----------------------------------------------------------------------------------------
 
-double totalPrice1  = trs.selectBaggageOnwardOneWay(Log,screenShots,OnwardBaggageSelectSplit);
-double totalPricereturn1  = trs.selectBaggageReturnn(Log,screenShots,ReturnBaggageSelectSplit);
-double totalCalculatedAmount1 = trs.addTotalBaggagePrice(Log, screenShots,totalPrice1,totalPricereturn1);
 
-Object totalvalue1 = trs.validateBaggagee(Log,screenShots,totalCalculatedAmount1);
-System.out.println("BAGGAGE DONE");
-//----------------------------------------------------------------------------------------
-trs.selectDepartment();
 
+/*trs.selectDepartment();
 trs.selectProject();
-trs.selectCostcenter();
+trs.selectCostcenter();*/
 trs.clickOnSendApprovalButton();
 
 

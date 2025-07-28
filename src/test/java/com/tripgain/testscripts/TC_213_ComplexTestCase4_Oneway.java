@@ -130,6 +130,7 @@ tripgainhomepage.searchFlightsOnHomePage(origin, destination,  fromDate, fromMon
 
         String resultScreenValidationResults[] =tripgainresultspage.validateResultsInResultPage(userInput[0], userInput[1], userInput[2], 1, Log, screenShots);
 
+        System.out.println("ENTIRE VALIDATION DONE");
         //Function to close browser
         driver.quit();               
     

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="0" total="1" passed="0" failed="1" skipped="0">
+<testng-results ignored="0" total="6" passed="6" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-07-16T18:50:47 IST" name="Suite" finished-at="2025-07-16T18:52:59 IST" duration-ms="132158">
+  <suite started-at="2025-07-28T13:43:37 IST" name="Suite" finished-at="2025-07-28T13:49:54 IST" duration-ms="376721">
     <groups>
     </groups>
-    <test started-at="2025-07-16T18:50:47 IST" name="test1" finished-at="2025-07-16T18:50:47 IST" duration-ms="11">
+    <test started-at="2025-07-28T13:43:37 IST" name="test1" finished-at="2025-07-28T13:43:37 IST" duration-ms="16">
     </test> <!-- test1 -->
-    <test started-at="2025-07-16T18:50:47 IST" name="test" finished-at="2025-07-16T18:52:59 IST" duration-ms="132158">
-      <class name="com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4">
-        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4@f5958c9]" started-at="2025-07-16T18:50:48 IST" name="launchApplication" finished-at="2025-07-16T18:50:51 IST" duration-ms="2507" status="PASS">
+    <test started-at="2025-07-28T13:43:37 IST" name="test" finished-at="2025-07-28T13:49:54 IST" duration-ms="376721">
+      <class name="com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch">
+        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch@ae13544]" started-at="2025-07-28T13:43:38 IST" name="launchApplication" finished-at="2025-07-28T13:43:41 IST" duration-ms="2207" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -20,85 +20,162 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- launchApplication -->
-        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4@f5958c9]" started-at="2025-07-16T18:50:51 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-16T18:52:58 IST" duration-ms="127137" status="FAIL">
+        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch@ae13544]" started-at="2025-07-28T13:43:41 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:44:39 IST" duration-ms="58885" status="PASS">
           <params>
             <param index="0">
               <value>
-                <![CDATA[{Origin=CCU, Destination=BOM, ReturnFare=Flexi, onwardMealsSelect=Paneer Tikka Sandwich,Corporate Meal,Paneer Tikka Sandwich,Corporate Meal, onwardBaggageSelect=Extra Baggage 20KG,Extra Baggage 30KG, Index=1, title=Mr, DepartFare=Coupon, returnMealsSelect=Paneer Tikka Sandwich,Corporate Meal,Paneer Tikka Sandwich,Corporate Meal, TestRun=, returnBaggageSelect=Extra Baggage 20KG,Extra Baggage 30KG, ReturnfareIndex=2, Class=Premium Economy, Adults=2, DepartFareIndex=2}]]>
+                <![CDATA[{Origin=BLR, Destination=BBI, Class=Premium Economy, Adults=4, TestRun=}]]>
               </value>
             </param>
           </params>
-          <exception class="org.openqa.selenium.InvalidSelectorException">
-            <message>
-              <![CDATA[invalid selector: Unable to locate an element with the xpath expression //[@id='onward']/ancestor::div//[text()='Meal Preference']/parent::div//*[@class='price'] because of the following error:
-SyntaxError: Failed to execute 'evaluate' on 'Document': The string '//[@id='onward']/ancestor::div//[text()='Meal Preference']/parent::div//*[@class='price']' is not a valid XPath expression.
-  (Session info: chrome=138.0.7204.101)
-For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalid-selector-exception
-Build info: version: '4.29.0', revision: '5fc1ec94cb'
-System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.7'
-Driver info: org.openqa.selenium.chrome.ChromeDriver
-Command: [aebb33d602d0c37c8d2fff5874706cea, findElements {value=//[@id='onward']/ancestor::div//[text()='Meal Preference']/parent::div//*[@class='price'], using=xpath}]
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 138.0.7204.101, chrome: {chromedriverVersion: 138.0.7204.157 (e533e98b126..., userDataDir: C:\Users\LENOVO\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:57800}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:57800/devtoo..., se:cdpVersion: 138.0.7204.101, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Session ID: aebb33d602d0c37c8d2fff5874706cea]]>
-            </message>
-            <full-stacktrace>
-              <![CDATA[org.openqa.selenium.InvalidSelectorException: invalid selector: Unable to locate an element with the xpath expression //[@id='onward']/ancestor::div//[text()='Meal Preference']/parent::div//*[@class='price'] because of the following error:
-SyntaxError: Failed to execute 'evaluate' on 'Document': The string '//[@id='onward']/ancestor::div//[text()='Meal Preference']/parent::div//*[@class='price']' is not a valid XPath expression.
-  (Session info: chrome=138.0.7204.101)
-For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalid-selector-exception
-Build info: version: '4.29.0', revision: '5fc1ec94cb'
-System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.7'
-Driver info: org.openqa.selenium.chrome.ChromeDriver
-Command: [aebb33d602d0c37c8d2fff5874706cea, findElements {value=//[@id='onward']/ancestor::div//[text()='Meal Preference']/parent::div//*[@class='price'], using=xpath}]
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 138.0.7204.101, chrome: {chromedriverVersion: 138.0.7204.157 (e533e98b126..., userDataDir: C:\Users\LENOVO\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:57800}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:57800/devtoo..., se:cdpVersion: 138.0.7204.101, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Session ID: aebb33d602d0c37c8d2fff5874706cea
-at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
-at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
-at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
-at org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
-at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:138)
-at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:50)
-at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:215)
-at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
-at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
-at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:545)
-at org.openqa.selenium.remote.ElementLocation$ElementFinder$2.findElements(ElementLocation.java:182)
-at org.openqa.selenium.remote.ElementLocation.findElements(ElementLocation.java:103)
-at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:381)
-at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:375)
-at com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen.selectMealsOnwardOneWay(Tripgain_RoundTripResultsScreen.java:8140)
-at com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4.myTest(TC_95_EntireTestcasesCode4.java:143)
-at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
-at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:687)
-at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
-at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
-at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:995)
-at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
-at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
-at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
-at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-at org.testng.TestRunner.privateRun(TestRunner.java:741)
-at org.testng.TestRunner.run(TestRunner.java:616)
-at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
-at org.testng.SuiteRunner$SuiteWorker.run(SuiteRunner.java:463)
-at org.testng.internal.thread.ThreadUtil.lambda$execute$0(ThreadUtil.java:64)
-at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
-at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
-at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-at java.base/java.lang.Thread.run(Thread.java:1583)
-]]>
-            </full-stacktrace>
-          </exception> <!-- org.openqa.selenium.InvalidSelectorException -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- myTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4@f5958c9]" started-at="2025-07-16T18:52:58 IST" name="tearDown" finished-at="2025-07-16T18:52:59 IST" duration-ms="976" status="PASS">
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch@ae13544]" started-at="2025-07-28T13:44:39 IST" name="tearDown" finished-at="2025-07-28T13:44:40 IST" duration-ms="199" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDown -->
-      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4 -->
+      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch -->
+      <class name="com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime">
+        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime@63070bab]" started-at="2025-07-28T13:46:35 IST" name="launchApplication" finished-at="2025-07-28T13:46:36 IST" duration-ms="1291" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- launchApplication -->
+        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime@63070bab]" started-at="2025-07-28T13:46:36 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:47:32 IST" duration-ms="55611" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[{Origin=BOM, Destination=CCU, Class=Premium Economy, Adults=2, TestRun=}]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- myTest -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime@63070bab]" started-at="2025-07-28T13:47:32 IST" name="tearDown" finished-at="2025-07-28T13:47:32 IST" duration-ms="21" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime -->
+      <class name="com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations">
+        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations@291b4bf5]" started-at="2025-07-28T13:48:29 IST" name="launchApplication" finished-at="2025-07-28T13:48:30 IST" duration-ms="1241" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- launchApplication -->
+        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations@291b4bf5]" started-at="2025-07-28T13:48:30 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:49:54 IST" duration-ms="83451" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[{Origin=BLR, Destination=DEL, Class=Premium Economy, Adults=2, TestRun=}]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- myTest -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations@291b4bf5]" started-at="2025-07-28T13:49:54 IST" name="tearDown" finished-at="2025-07-28T13:49:54 IST" duration-ms="15" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations -->
+      <class name="com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed">
+        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed@68e5eea7]" started-at="2025-07-28T13:47:32 IST" name="launchApplication" finished-at="2025-07-28T13:47:33 IST" duration-ms="1180" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- launchApplication -->
+        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed@68e5eea7]" started-at="2025-07-28T13:47:33 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:48:29 IST" duration-ms="56056" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[{Origin=BLR, Destination=GOI, Class=Premium Economy, Adults=3, TestRun=}]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- myTest -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed@68e5eea7]" started-at="2025-07-28T13:48:29 IST" name="tearDown" finished-at="2025-07-28T13:48:29 IST" duration-ms="45" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed -->
+      <class name="com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality">
+        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality@38e79ae3]" started-at="2025-07-28T13:45:36 IST" name="launchApplication" finished-at="2025-07-28T13:45:37 IST" duration-ms="1267" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- launchApplication -->
+        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality@38e79ae3]" started-at="2025-07-28T13:45:37 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:46:35 IST" duration-ms="57331" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[{Origin=BBI, Destination=HYD, Class=Premium Economy, Adults=4, TestRun=}]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- myTest -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality@38e79ae3]" started-at="2025-07-28T13:46:35 IST" name="tearDown" finished-at="2025-07-28T13:46:35 IST" duration-ms="21" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality -->
+      <class name="com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler">
+        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler@6f45df59]" started-at="2025-07-28T13:44:40 IST" name="launchApplication" finished-at="2025-07-28T13:44:41 IST" duration-ms="1241" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- launchApplication -->
+        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler@6f45df59]" started-at="2025-07-28T13:44:41 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:45:36 IST" duration-ms="54633" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[{Origin=BBI, Destination=DEL, Class=Premium Economy, Adults=1, TestRun=}]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- myTest -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler@6f45df59]" started-at="2025-07-28T13:45:36 IST" name="tearDown" finished-at="2025-07-28T13:45:36 IST" duration-ms="16" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler -->
     </test> <!-- test -->
   </suite> <!-- Suite -->
 </testng-results>

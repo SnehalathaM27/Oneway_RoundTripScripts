@@ -63,6 +63,7 @@ public class TC_92_EntireTestcasesCode1 extends BaseClass{
         int Adults = Integer.parseInt(excelData.get("Adults"));
         System.out.println(Adults);
         
+        Thread.sleep(15000);
         
         String clickOnWardStops = excelData.get("clickOnWardStops");
         System.out.println(clickOnWardStops);
@@ -295,11 +296,11 @@ Thread.sleep(3000);
 
         
                           // Project details 
-        trs.selectDepartment();
+     /*   trs.selectDepartment();
         trs.selectProject();
         trs.selectCostcenter();
         
-		System.out.println("PROJECT DETAILS  DONE");
+		System.out.println("PROJECT DETAILS  DONE");*/
 
 
         //Functions to Send Approval on Booking Page

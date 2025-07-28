@@ -196,7 +196,7 @@ Thread.sleep(3000);
                                    //Function to Logout from Application
   
     		//tripgainhomepage.logOutFromApplication(Log, screenShots);
-    	//	driver.quit();
+    		driver.quit();
          
        }
 	
@@ -220,7 +220,7 @@ Thread.sleep(3000);
 	    @AfterMethod
 	    public void tearDown() {
 	       if (driver != null) {
-	       //   driver.quit();
+	         driver.quit();
 	          extantManager.flushReport();
 	       }
 	    }
