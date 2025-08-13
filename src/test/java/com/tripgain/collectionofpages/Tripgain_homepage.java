@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -621,10 +622,12 @@ public class Tripgain_homepage {
 	WebElement Roundtrip;
 
 	public void Clickroundtrip() {
-		//driver.findElement(By.xpath("//button[text()='Close']")).click();
-
 		Roundtrip.click();
 	}
+
+
+		
+	
 
 	//Return date picker --RoundTrip
 	@FindBy(xpath = "//input[@placeholder='Return Date (Optional)']")
@@ -856,7 +859,6 @@ public class Tripgain_homepage {
 
 			if (gradeText.equals(expectedGrade)) {
 				Log.ReportEvent("PASS", "Selected grade is: " + gradeText);
-				ScreenShots.takeScreenShot1();
 
 			} else {
 				Log.ReportEvent("FAIL", "Selected grade does not match expected. Found: " + gradeText);
@@ -917,7 +919,6 @@ public class Tripgain_homepage {
 			if(errorMsgForFromField.isDisplayed())
 			{
 				Log.ReportEvent("PASS", "Error Message is Displayed for From field (Select Origin field) is Successful");
-				ScreenShots.takeScreenShot1();
 			}
 			else
 			{
@@ -1043,7 +1044,6 @@ public class Tripgain_homepage {
 			if(errorMsgForCalenderField.isDisplayed())
 			{
 				Log.ReportEvent("PASS", "Error Message is Displayed for Calender Field is Successful");
-				ScreenShots.takeScreenShot1();
 			}
 			else
 			{
@@ -1153,7 +1153,6 @@ public class Tripgain_homepage {
 
 			if (gradeText.equals(expectedGrade)) {
 				Log.ReportEvent("PASS", "Selected grade is: " + gradeText);
-				ScreenShots.takeScreenShot1();
 
 			} else {
 				Log.ReportEvent("FAIL", "Selected grade does not match expected. Found: " + gradeText);
@@ -1175,7 +1174,6 @@ public class Tripgain_homepage {
 
 			if (gradeText.equals(expectedGrade)) {
 				Log.ReportEvent("PASS", "Selected grade is: " + gradeText);
-				ScreenShots.takeScreenShot1();
 
 			} else {
 				Log.ReportEvent("FAIL", "Selected grade does not match expected. Found: " + gradeText);

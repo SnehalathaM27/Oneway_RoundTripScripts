@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_FutureDates;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
@@ -73,12 +74,15 @@ public class TC_89_ValidateChoosingMealPreference extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
         
         //Functions to Search on Home Page     
@@ -92,7 +96,8 @@ public class TC_89_ValidateChoosingMealPreference extends BaseClass{
         policyDates  policyDates= new policyDates(driver);
        
         String monthYear=date5.month + " " + date5.year;
-        
+        trs.printVersion(Log);
+        Thread.sleep(2000);
        // policyDates.searchFlightsOnHomePage(origin, destination, date15.month, date15.year, date15.day, date15.month, date15.year, date15.day, travelClass, adults);
          tripgainhomepage.Clickroundtrip();
         tripgainhomepage.searchFlightsOnHomePage(Log, screenShots,origin, destination,  fromDate, fromMonthYear, returnDate, returnMonthYear, travelClass, adults);

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="0" total="6" passed="6" failed="0" skipped="0">
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-07-28T13:43:37 IST" name="Suite" finished-at="2025-07-28T13:49:54 IST" duration-ms="376721">
+  <suite started-at="2025-08-13T14:31:18 IST" name="Suite" finished-at="2025-08-13T14:34:52 IST" duration-ms="214667">
     <groups>
     </groups>
-    <test started-at="2025-07-28T13:43:37 IST" name="test1" finished-at="2025-07-28T13:43:37 IST" duration-ms="16">
+    <test started-at="2025-08-13T14:31:18 IST" name="test1" finished-at="2025-08-13T14:31:18 IST" duration-ms="6">
     </test> <!-- test1 -->
-    <test started-at="2025-07-28T13:43:37 IST" name="test" finished-at="2025-07-28T13:49:54 IST" duration-ms="376721">
-      <class name="com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch">
-        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch@ae13544]" started-at="2025-07-28T13:43:38 IST" name="launchApplication" finished-at="2025-07-28T13:43:41 IST" duration-ms="2207" status="PASS">
+    <test started-at="2025-08-13T14:31:18 IST" name="test" finished-at="2025-08-13T14:34:52 IST" duration-ms="214667">
+      <class name="com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices">
+        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices@f5958c9]" started-at="2025-08-13T14:31:18 IST" name="launchApplication" finished-at="2025-08-13T14:31:20 IST" duration-ms="1857" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -20,162 +20,22 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- launchApplication -->
-        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch@ae13544]" started-at="2025-07-28T13:43:41 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:44:39 IST" duration-ms="58885" status="PASS">
+        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices@f5958c9]" started-at="2025-08-13T14:31:20 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-08-13T14:34:52 IST" duration-ms="211570" status="PASS">
           <params>
             <param index="0">
               <value>
-                <![CDATA[{Origin=BLR, Destination=BBI, Class=Premium Economy, Adults=4, TestRun=}]]>
+                <![CDATA[{Origin=Bangalore, Destination=Delhi, ReturnFare=Flexi, FlightStartMinute=0, FlightEndMinute=0, DropDownValue=Pre Trip Flow, Index=1, clickOnWardStops=1, title=Mr, DepartFare=Coupon, validateFlightsStopsOnResultScreen=1stops, FlightStartHour=6, Services=Flight,Hotel, returnIndex=1, FlightEndHour=12, TripName=ExampleTrip, TestRun=, Times=06 - 12, Adults=1}]]>
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- myTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch@ae13544]" started-at="2025-07-28T13:44:39 IST" name="tearDown" finished-at="2025-07-28T13:44:40 IST" duration-ms="199" status="PASS">
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices@f5958c9]" started-at="2025-08-13T14:34:52 IST" name="tearDown" finished-at="2025-08-13T14:34:52 IST" duration-ms="565" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDown -->
-      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch -->
-      <class name="com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime">
-        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime@63070bab]" started-at="2025-07-28T13:46:35 IST" name="launchApplication" finished-at="2025-07-28T13:46:36 IST" duration-ms="1291" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[chrome]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- launchApplication -->
-        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime@63070bab]" started-at="2025-07-28T13:46:36 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:47:32 IST" duration-ms="55611" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[{Origin=BOM, Destination=CCU, Class=Premium Economy, Adults=2, TestRun=}]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- myTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime@63070bab]" started-at="2025-07-28T13:47:32 IST" name="tearDown" finished-at="2025-07-28T13:47:32 IST" duration-ms="21" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- tearDown -->
-      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime -->
-      <class name="com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations">
-        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations@291b4bf5]" started-at="2025-07-28T13:48:29 IST" name="launchApplication" finished-at="2025-07-28T13:48:30 IST" duration-ms="1241" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[chrome]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- launchApplication -->
-        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations@291b4bf5]" started-at="2025-07-28T13:48:30 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:49:54 IST" duration-ms="83451" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[{Origin=BLR, Destination=DEL, Class=Premium Economy, Adults=2, TestRun=}]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- myTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations@291b4bf5]" started-at="2025-07-28T13:49:54 IST" name="tearDown" finished-at="2025-07-28T13:49:54 IST" duration-ms="15" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- tearDown -->
-      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_8_VerifywithLocalDestinations -->
-      <class name="com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed">
-        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed@68e5eea7]" started-at="2025-07-28T13:47:32 IST" name="launchApplication" finished-at="2025-07-28T13:47:33 IST" duration-ms="1180" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[chrome]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- launchApplication -->
-        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed@68e5eea7]" started-at="2025-07-28T13:47:33 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:48:29 IST" duration-ms="56056" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[{Origin=BLR, Destination=GOI, Class=Premium Economy, Adults=3, TestRun=}]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- myTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed@68e5eea7]" started-at="2025-07-28T13:48:29 IST" name="tearDown" finished-at="2025-07-28T13:48:29 IST" duration-ms="45" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- tearDown -->
-      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_7_VerifyclickingonDatesAreDisplayed -->
-      <class name="com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality">
-        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality@38e79ae3]" started-at="2025-07-28T13:45:36 IST" name="launchApplication" finished-at="2025-07-28T13:45:37 IST" duration-ms="1267" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[chrome]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- launchApplication -->
-        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality@38e79ae3]" started-at="2025-07-28T13:45:37 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:46:35 IST" duration-ms="57331" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[{Origin=BBI, Destination=HYD, Class=Premium Economy, Adults=4, TestRun=}]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- myTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality@38e79ae3]" started-at="2025-07-28T13:46:35 IST" name="tearDown" finished-at="2025-07-28T13:46:35 IST" duration-ms="21" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- tearDown -->
-      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality -->
-      <class name="com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler">
-        <test-method is-config="true" signature="launchApplication(java.lang.String)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler@6f45df59]" started-at="2025-07-28T13:44:40 IST" name="launchApplication" finished-at="2025-07-28T13:44:41 IST" duration-ms="1241" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[chrome]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- launchApplication -->
-        <test-method signature="myTest(java.util.Map)[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler@6f45df59]" started-at="2025-07-28T13:44:41 IST" name="myTest" data-provider="sheetBasedData" finished-at="2025-07-28T13:45:36 IST" duration-ms="54633" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[{Origin=BBI, Destination=DEL, Class=Premium Economy, Adults=1, TestRun=}]]>
-              </value>
-            </param>
-          </params>
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- myTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler@6f45df59]" started-at="2025-07-28T13:45:36 IST" name="tearDown" finished-at="2025-07-28T13:45:36 IST" duration-ms="16" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- tearDown -->
-      </class> <!-- com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler -->
+      </class> <!-- com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices -->
     </test> <!-- test -->
   </suite> <!-- Suite -->
 </testng-results>

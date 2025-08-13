@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_FutureDates;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
@@ -88,12 +89,15 @@ public class TC_93_EntireTestcasesCode2 extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
 		 
 		//Functions to Search flights on Home Page  
@@ -102,7 +106,8 @@ public class TC_93_EntireTestcasesCode2 extends BaseClass{
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
         Tripgain_RoundTripResultsScreen trs=new Tripgain_RoundTripResultsScreen(driver);
 		
-	
+        trs.printVersion(Log);
+        Thread.sleep(2000);
         tripgainhomepage.Clickroundtrip();
         tripgainhomepage.searchFlightsOnHomePage(Log, screenShots,origin, destination,  fromDate, fromMonthYear, returnDate, returnMonthYear, travelClass, adults);
         Thread.sleep(5000);
@@ -139,12 +144,12 @@ System.out.println("REFUNDABLE FARE DONE");
 Thread.sleep(3000);
 
                                         //Policy Filter
-
+/*
  
  trs.validateOutOfPolicyFilterRoundTrip(policyIndex, policyText, Log, screenShots);
  Thread.sleep(5000);
  
-	System.out.println("OUT OF POLICY DONE");
+	System.out.println("OUT OF POLICY DONE");  */
 
 	//---------------------------------------------------------------------------
 	

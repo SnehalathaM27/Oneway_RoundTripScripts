@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
 import com.tripgain.collectionofpages.Tripgain_homepage;
@@ -67,19 +68,23 @@ public class TC_87_Validatepickingseats extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
         
         //Functions to Search on Home Page     
         Tripgain_homepage tripgainhomepage = new Tripgain_homepage(driver);
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
         Tripgain_RoundTripResultsScreen trs=new Tripgain_RoundTripResultsScreen(driver);
-
+        trs.printVersion(Log);
+        Thread.sleep(2000);
          tripgainhomepage.Clickroundtrip();
          tripgainhomepage.searchFlightsOnHomePage(Log, screenShots,origin, destination,  fromDate, fromMonthYear, returnDate, returnMonthYear, travelClass, adults);
          Thread.sleep(5000);
@@ -87,11 +92,10 @@ public class TC_87_Validatepickingseats extends BaseClass{
  Thread.sleep(15000); 
  
 
-/*trs.clickSeats(1);
-trs.selectSeatByNumber("24A");
-trs.validateSeatBooking("24A");*/
 
- trs.validateDepatureFaretypeToBookingPg(2, "Coupon", Log, screenShots);
+
+ trs.clickOnContinue();
+ Thread.sleep(3000);
 tripgainresultspage.selectSeatFormPickSeat(Log, screenShots);
 
 

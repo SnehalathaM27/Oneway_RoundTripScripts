@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_FutureDates;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
@@ -91,12 +92,15 @@ public class TC_94_EntireTestcasesCode3 extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
 		 
 		//Functions to Search flights on Home Page  
@@ -105,7 +109,8 @@ public class TC_94_EntireTestcasesCode3 extends BaseClass{
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
         Tripgain_RoundTripResultsScreen trs=new Tripgain_RoundTripResultsScreen(driver);
 		
-	
+        trs.printVersion(Log);
+        Thread.sleep(2000);
         tripgainhomepage.Clickroundtrip();
         tripgainhomepage.searchFlightsOnHomePage(Log, screenShots,origin, destination,  fromDate, fromMonthYear, returnDate, returnMonthYear, travelClass, Adults);
         Thread.sleep(5000);
@@ -149,8 +154,8 @@ System.out.println("validate return stops  done");
 
 //Function to validate fare rule prices
 
-trs.selectFromFaretypePrices(3, "StretchPlus", Log, screenShots);
-trs.selectReturnFaretypePrices(2, "SME", Log, screenShots);
+trs.selectFromFaretypePrices(1, "StretchPlus", Log, screenShots);
+trs.selectReturnFaretypePrices(1, "SME", Log, screenShots);
 //----------------------------------------------------------------------------------------------------------
 
 trs.clickContinueButton();
@@ -161,6 +166,16 @@ double selectMealsOnwardTotalPrice2 = trs.selectMealsReturn();
 double totalMeal = trs.addTotalMealsPrice(Log, screenShots,selectMealsOnwardTotalPrice1,selectMealsOnwardTotalPrice2);
 trs.validateMealsPrice(Log, screenShots,totalMeal);
 System.out.println("validate meals done");
+
+/*
+//baggage
+double selectBaggageOnwardTotal =trs.selectBaggageOnward();
+double selectBaggageReturnTotal =trs.selectBaggageReturn();
+double addTotalBaggagePrice1= trs.addTotalBaggagePrice(Log, screenShots, selectBaggageOnwardTotal,selectBaggageReturnTotal);
+trs.validateBaggagePrice(addTotalBaggagePrice1);
+ 
+        System.out.println("BAGGAGE DONE");  */
+
 
 //----------------------------------------------------------------------------------------------------------
  

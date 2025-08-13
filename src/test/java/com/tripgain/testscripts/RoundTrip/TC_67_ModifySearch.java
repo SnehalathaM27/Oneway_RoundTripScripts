@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_FutureDates;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
@@ -73,12 +74,15 @@ public class TC_67_ModifySearch extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
         
         //Functions to Search on Home Page     
@@ -95,7 +99,8 @@ public class TC_67_ModifySearch extends BaseClass{
         policyDates  policyDates= new policyDates(driver);
        
         String monthYear=date5.month + " " + date5.year;
-
+        trs.printVersion(Log);
+        Thread.sleep(2000);
          tripgainhomepage.Clickroundtrip();
        //  policyDates.searchFlightsOnHomePage(origin, destination, date5.month, date5.year, date5.day, date15.month, date15.year, date15.day, travelClass, adults);
 
@@ -108,23 +113,12 @@ public class TC_67_ModifySearch extends BaseClass{
  
  tripgainhomepage.modifySearch(from, day, monthandYear, modifyAdults);
  //tripgainhomepage.modifySearch(from, date15.month, date15.year, date15.day, modifyAdults);
- Thread.sleep(7000);
+ Thread.sleep(15000);
  trs.validateBeforeSwap(Log, screenShots, index);
  
 // tripgainhomepage.selectDate(returnDate, returnMonthYear);
  trs.ValidateBookingPageFlightsDetails(Log, screenShots);
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
        //Function to Logout from Application
     		//tripgainhomepage.logOutFromApplication(Log, screenShots);
     		driver.quit();

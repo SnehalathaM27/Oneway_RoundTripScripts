@@ -12,13 +12,16 @@ import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -2460,6 +2463,8 @@ public void defaultCurrencyValue(Log Log, ScreenShots screenShots) {
             // Step 4: Final check
             if (!allFromValid || !allToValid) {
                 Assert.fail("One or more prices are not in the expected currency format.");
+                screenShots.takeScreenShot1();
+
             }
 
         } else {
@@ -2469,7 +2474,6 @@ public void defaultCurrencyValue(Log Log, ScreenShots screenShots) {
             
         }
 
-        screenShots.takeScreenShot1(); // Always take screenshot
 
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception while validating currency: " + e.getMessage());
@@ -4100,7 +4104,6 @@ public String validateLocationsFromResultToBookingPage(Log Log, ScreenShots Scre
 
         Log.ReportEvent("INFO", "Result Page FROM " + fromStopType + ": " + resultFromOriginCode + " → " + resultFromDestCode);
         Log.ReportEvent("INFO", "Result Page TO " + toStopType + ": " + resultToOriginCode + " → " + resultToDestCode);
-        ScreenShots.takeScreenShot1();
 
         Thread.sleep(2000);
         viewFlightDetailsClosePopup();
@@ -4136,7 +4139,6 @@ public String validateLocationsFromResultToBookingPage(Log Log, ScreenShots Scre
 
         Log.ReportEvent("INFO", "Booking Page FROM: " + bookingFromOrigin + " → " + bookingFromDest);
         Log.ReportEvent("INFO", "Booking Page TO: " + bookingToOrigin + " → " + bookingToDest);
-        ScreenShots.takeScreenShot1();
 
         // Validation
         boolean fromMatch = resultFromOriginCode.equalsIgnoreCase(bookingFromOrigin) &&
@@ -4963,18 +4965,27 @@ public void validateDepatureFaretypeToBookingPg(int index, String fareTypeArg, L
             Log.ReportEvent("PASS", "User expected FareType not found, clicked on first fare: " + actualSelectedFare);
         } else {
             Log.ReportEvent("FAIL", "No fare types available to select.");
+            ScreenShots.takeScreenShot1();
+
             return; // nothing to validate
         }
     }
 
     // Click Continue button
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(80));
-    WebElement continueBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Continue']")));
+    Thread.sleep(3000);
+    
     try {
-        continueBtn.click();
-    } catch (Exception e) {
-        System.out.println("Normal click failed, trying JS click");
-        js.executeScript("arguments[0].click();", continueBtn);
+        WebElement continueBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Continue']")));
+        try {
+            continueBtn.click();
+        } catch (Exception e) {
+            System.out.println("Normal click failed, trying JS click");
+            js.executeScript("arguments[0].scrollIntoView(true);", continueBtn);
+            js.executeScript("arguments[0].click();", continueBtn);
+        }
+    } catch (TimeoutException te) {
+        System.out.println("Continue button not found/clickable within timeout.");
     }
 
     // Wait for booking depart fare to be visible
@@ -5051,6 +5062,8 @@ public void validateReturnFaretypeToBookingPg(int index, String fareTypeArg, Log
             Log.ReportEvent("PASS", "User expected FareType not found, clicked on first fare: " + actualSelectedFare);
         } else {
             Log.ReportEvent("FAIL", "No Return fare types available to select.");
+            ScreenShots.takeScreenShot1();
+
             return; // nothing to validate
         }
     }
@@ -5187,9 +5200,10 @@ public void selectFromFaretypePrices(int index, String fareTypeArg, Log log, Scr
     } else {
         log.ReportEvent("FAIL", "From Price mismatch. Popup: " + popupFareText + ", Bottom Bar: " + bottomBarText);
         System.out.println("From Fare price mismatch.");
+        screenshots.takeScreenShot1();
+
     }
 
-    screenshots.takeScreenShot1();
 }
 
 public void selectReturnFaretypePrices(int index, String fareTypeArg, Log log, ScreenShots screenshots) throws InterruptedException {
@@ -5689,9 +5703,10 @@ public void validateRadioButtonRoundTrip(Log Log, ScreenShots ScreenShots) {
         } else {
             System.out.println("Did not change from booking page to result page (Roundtrip not selected)");
             Log.ReportEvent("FAIL", "Did not change from booking page to result page (Roundtrip not selected)");
+            ScreenShots.takeScreenShot1();
+
         }
 
-        ScreenShots.takeScreenShot1();
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception while validating radio button: " + e.getMessage());
         ScreenShots.takeScreenShot1();
@@ -5915,6 +5930,8 @@ public void validateBookingpgFirstName(Log Log, ScreenShots ScreenShots, WebDriv
             System.out.println("Cleared First Name field.");
         } else {
             Log.ReportEvent("FAIL", "First Name field is not interactable.");
+            ScreenShots.takeScreenShot1();
+
             return;
         }
 
@@ -5933,9 +5950,10 @@ public void validateBookingpgFirstName(Log Log, ScreenShots ScreenShots, WebDriv
             Log.ReportEvent("PASS", "Error message is displayed.");
         } else {
             Log.ReportEvent("FAIL", "Error message is not displayed.");
+            ScreenShots.takeScreenShot1();
+
         }
 
-        ScreenShots.takeScreenShot1();
 
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception occurred: " + e.getMessage());
@@ -5991,9 +6009,10 @@ public void validateBookingpgLastName(Log Log, ScreenShots ScreenShots, WebDrive
             Log.ReportEvent("PASS", "Error message is displayed.");
         } else {
             Log.ReportEvent("FAIL", "Error message is not displayed.");
+            ScreenShots.takeScreenShot1();
+
         }
 
-        ScreenShots.takeScreenShot1();
 
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception occurred: " + e.getMessage());
@@ -6024,6 +6043,8 @@ public void validateBookingpgEmail(Log Log, ScreenShots ScreenShots, WebDriver d
             System.out.println("Cleared Email field.");
         } else {
             Log.ReportEvent("FAIL", "Email field is not interactable.");
+            ScreenShots.takeScreenShot1();
+
             return;
         }
 
@@ -6042,9 +6063,10 @@ public void validateBookingpgEmail(Log Log, ScreenShots ScreenShots, WebDriver d
             Log.ReportEvent("PASS", "Error message is displayed.");
         } else {
             Log.ReportEvent("FAIL", "Error message is not displayed.");
+            ScreenShots.takeScreenShot1();
+
         }
 
-        ScreenShots.takeScreenShot1();
 
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception occurred: " + e.getMessage());
@@ -6075,6 +6097,8 @@ public void validateBookingpgPhoneNo(Log Log, ScreenShots ScreenShots, WebDriver
             System.out.println("Cleared Phone Number field.");
         } else {
             Log.ReportEvent("FAIL", "Phone Number field is not interactable.");
+            ScreenShots.takeScreenShot1();
+
             return;
         }
 
@@ -6093,9 +6117,10 @@ public void validateBookingpgPhoneNo(Log Log, ScreenShots ScreenShots, WebDriver
             Log.ReportEvent("PASS", "Error message is displayed.");
         } else {
             Log.ReportEvent("FAIL", "Error message is not displayed.");
+            ScreenShots.takeScreenShot1();
+
         }
 
-        ScreenShots.takeScreenShot1();
 
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception occurred: " + e.getMessage());
@@ -6132,9 +6157,10 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
             log.ReportEvent("PASS", "Error message is displayed.");
         } else {
             log.ReportEvent("FAIL", "Error message is not displayed.");
+            screenshots.takeScreenShot1();
+
         }
 
-        screenshots.takeScreenShot1();
 
     } catch (Exception e) {
         log.ReportEvent("FAIL", "Exception occurred: " + e.getMessage());
@@ -6699,8 +6725,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
     public void validateOutOfPolicyFilterRoundTrip(int index, String expectedPolicyText,Log log, ScreenShots screenshots) throws InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
-        // Normalize input
-        String expectedNormalized = expectedPolicyText.replaceAll("\\s+", "").toLowerCase();
+        String expectedPolicy = expectedPolicyText.replaceAll("\\s+", "").toLowerCase();
         System.out.println("Starting validation for Out Of policy text: " + expectedPolicyText);
         log.ReportEvent("INFO", "Starting validation for Out Of policy text: " + expectedPolicyText);
 
@@ -6710,7 +6735,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
         Thread.sleep(500);
         String fromText = fromPolicyText.getAttribute("textContent").trim().replaceAll("\\s+", "").toLowerCase();
         System.out.println("From policy text found: " + fromText);
-        if (!fromText.contains(expectedNormalized)) {
+        if (!fromText.contains(expectedPolicy)) {
             log.ReportEvent("FAIL", "From result policy mismatch. Expected: " + expectedPolicyText + ", Found: " + fromText);
             screenshots.takeScreenShot1();
             throw new AssertionError("From result policy mismatch. Expected: " + expectedPolicyText + ", Found: " + fromText);
@@ -6731,7 +6756,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
         Thread.sleep(500);
         String fareText = farePolicyText.getAttribute("textContent").trim().replaceAll("\\s+", "").toLowerCase();
         System.out.println("Fare policy (FROM) text found: " + fareText);
-        if (!fareText.contains(expectedNormalized)) {
+        if (!fareText.contains(expectedPolicy)) {
             log.ReportEvent("FAIL", "Fare policy (from) mismatch. Expected: " + expectedPolicyText + ", Found: " + fareText);
             screenshots.takeScreenShot1();
             throw new AssertionError("Fare policy (from) mismatch. Expected: " + expectedPolicyText + ", Found: " + fareText);
@@ -6760,7 +6785,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
         Thread.sleep(500);
         String toFareText = toFarePolicyText.getAttribute("textContent").trim().replaceAll("\\s+", "").toLowerCase();
         System.out.println("Fare policy (TO) text found: " + toFareText);
-        if (!toFareText.contains(expectedNormalized)) {
+        if (!toFareText.contains(expectedPolicy)) {
             log.ReportEvent("FAIL", "Fare policy (to) mismatch. Expected: " + expectedPolicyText + ", Found: " + toFareText);
             screenshots.takeScreenShot1();
             throw new AssertionError("Fare policy (to) mismatch. Expected: " + expectedPolicyText + ", Found: " + toFareText);
@@ -6791,7 +6816,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
         Thread.sleep(500);
         String departBookingText = departBookingPolicy.getAttribute("textContent").trim().replaceAll("\\s+", "").toLowerCase();
         System.out.println("Booking page depart policy text found: " + departBookingText);
-        if (!departBookingText.contains(expectedNormalized)) {
+        if (!departBookingText.contains(expectedPolicy)) {
             log.ReportEvent("FAIL", "Booking page depart policy mismatch. Expected: " + expectedPolicyText + ", Found: " + departBookingText);
             screenshots.takeScreenShot1();
             throw new AssertionError("Booking page depart policy mismatch. Expected: " + expectedPolicyText + ", Found: " + departBookingText);
@@ -6804,7 +6829,7 @@ public void validateBookingpageTitle(Log log, ScreenShots screenshots, WebDriver
         Thread.sleep(500);
         String returnBookingText = returnBookingPolicy.getAttribute("textContent").trim().replaceAll("\\s+", "").toLowerCase();
         System.out.println("Booking page return policy text found: " + returnBookingText);
-        if (!returnBookingText.contains(expectedNormalized)) {
+        if (!returnBookingText.contains(expectedPolicy)) {
             log.ReportEvent("FAIL", "Booking page return policy mismatch. Expected: " + expectedPolicyText + ", Found: " + returnBookingText);
             screenshots.takeScreenShot1();
             throw new AssertionError("Booking page return policy mismatch. Expected: " + expectedPolicyText + ", Found: " + returnBookingText);
@@ -7035,19 +7060,24 @@ public void verifyPriceRangeValuesOnResultScreen(Log Log, ScreenShots ScreenShot
             Log.ReportEvent("PASS", "FROM price ₹" + priceFrom + " is within range ₹" + min + " - ₹" + max);
         } else {
             Log.ReportEvent("FAIL", "FROM price ₹" + priceFrom + " is NOT within range ₹" + min + " - ₹" + max);
+            ScreenShots.takeScreenShot1();
+
         }
 
         if (toValid) {
             Log.ReportEvent("PASS", "TO price ₹" + priceTo + " is within range ₹" + min + " - ₹" + max);
         } else {
             Log.ReportEvent("FAIL", "TO price ₹" + priceTo + " is NOT within range ₹" + min + " - ₹" + max);
+            ScreenShots.takeScreenShot1();
+
         }
 
         if (!fromValid || !toValid) {
             Assert.fail("Flight price is not within selected slider range.");
+            ScreenShots.takeScreenShot1();
+
         }
 
-        ScreenShots.takeScreenShot1();
 
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception during price validation: " + e.getMessage());
@@ -8527,7 +8557,23 @@ public void validateAirlinesDomesticroundtrip(int index, Log Log, ScreenShots Sc
 
 public void clickOnContinue()
 {
-    driver.findElement(By.xpath("//button[@data-tgbookflights]")).click();
+	 // Click Continue button
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(80));
+    JavascriptExecutor js = (JavascriptExecutor) driver;
+
+    
+    try {
+        WebElement continueBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Continue']")));
+        try {
+            continueBtn.click();
+        } catch (Exception e) {
+            System.out.println("Normal click failed, trying JS click");
+            js.executeScript("arguments[0].scrollIntoView(true);", continueBtn);
+            js.executeScript("arguments[0].click();", continueBtn);
+        }
+    } catch (TimeoutException te) {
+        System.out.println("Continue button not found/clickable within timeout.");
+    }
 
 }
 
@@ -8582,6 +8628,8 @@ public void validateReturnAirlinesDomesticroundtrip(int index, Log Log, ScreenSh
                 Log.ReportEvent("PASS", "Expected airline is showing for return: " + expectedAirline);
             } else {
                 Log.ReportEvent("FAIL", "Expected airline NOT found for return: " + expectedAirline);
+                ScreenShots.takeScreenShot1();
+
                 allMatch = false;
             }
         }
@@ -8590,9 +8638,10 @@ public void validateReturnAirlinesDomesticroundtrip(int index, Log Log, ScreenSh
             Log.ReportEvent("PASS", "All expected airlines are correctly shown in the results for return.");
         } else {
             Log.ReportEvent("FAIL", "Some expected airlines are missing in the results for return.");
+            ScreenShots.takeScreenShot1();
+
         }
 
-        ScreenShots.takeScreenShot1();
 
     } catch (Exception e) {
         Log.ReportEvent("FAIL", "Exception occurred while validating airline codes for return: " + e.getMessage());
@@ -8869,9 +8918,10 @@ public void validateReturnAirlinesDomesticroundtrip(Log Log, ScreenShots ScreenS
 
                 if (!matched) {
                     Log.ReportEvent("FAIL", "Return flight [" + index + "] has NO matching airlines from expected: " + Arrays.toString(airlineCode));
+                    ScreenShots.takeScreenShot1();
+
                 }
 
-                ScreenShots.takeScreenShot1();
 
                 // Close popup
                 closeButtononresultpage();
@@ -8948,9 +8998,10 @@ public void validateDepartAirlinesDomesticroundtrip(Log Log, ScreenShots ScreenS
 
                 if (!matched) {
                     Log.ReportEvent("FAIL", "Return flight [" + index + "] has NO matching airlines from expected: " + Arrays.toString(airlineCode));
+                    ScreenShots.takeScreenShot1();
+
                 }
 
-                ScreenShots.takeScreenShot1();
 
                 // Close popup
                 closeButtononresultpage();
@@ -9751,6 +9802,3037 @@ public void clickBackToSearchResults() {
 		    }
 		}
 
+		//Method to check and print version
 		
+		public void printVersion(Log log) {
+		    try {
+		        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+		        // Click the dropdown (profile menu)
+		        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		                By.xpath("//*[contains(@class,'profile-container-div')]")));
+
+		        // Scroll and click safely
+		        try {
+		            dropdown.click();
+		        } catch (ElementClickInterceptedException e) {
+		            js.executeScript("arguments[0].scrollIntoView(true);", dropdown);
+		            js.executeScript("arguments[0].click();", dropdown);
+		        }
+
+		        // Wait a bit for dropdown to open
+		        Thread.sleep(1000);
+
+		        // Get and log version text
+		        WebElement versionText = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		                By.xpath("//*[contains(@class,'app-version')]")));
+		        String version = versionText.getText();
+		        log.ReportEvent("PASS", "App version displayed: " + version);
+
+		        Thread.sleep(1000);
+
+		        driver.navigate().refresh();
+		    
+
+
+		    } catch (Exception e) {
+		        log.ReportEvent("FAIL", "Failed to retrieve version text: " + e.getMessage());
+		    }
+		}
+
+//validate all details
 		
+//validate inside flight based on index
+//	public void validateDetailsInsideFlightIndex(int index) throws InterruptedException {
+//		
+//		//top bar details
+//		
+//		// Get "From" location text and extract code
+//	        String fromText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[1]")).getText().trim();
+//
+//	        // Get "To" location text and extract code
+//	        String toText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[2]")).getText().trim();
+//
+//	        // Get journey date
+//	        WebElement journeyDateInput = driver.findElement(By.xpath("//input[@placeholder='Journey Date']"));
+//
+//	        // Get return date (optional)
+//	        WebElement returnDateInput = driver.findElement(By.xpath("//input[@placeholder='Return Date (Optional)']"));
+//
+//	        // Get flight class
+//	        String flightClass = driver.findElement(By.xpath("//span[@class='capitalize']")).getText().trim();
+//
+//	        // Get adult count
+//	        String adultCount = driver.findElement(By.xpath("//span[@class='capitalize']/ancestor::button")).getText().trim();
+//		
+//		
+//		 String xpathExpression = "(//div[@class='round-trip-from-results']//button[text()='View Flight'])[" + index + "]";
+//		    WebElement button = driver.findElement(By.xpath(xpathExpression));
+//		    JavascriptExecutor js = (JavascriptExecutor) driver;
+//		    js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+//		    Thread.sleep(1000);
+//		    button.click();
+//		 
+//		    //get details inside result depart card 
+//		    
+//WebElement departFromloc = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightorigin')])[1]"));)
+//WebElement departToloc = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightdestinatio')])[last()]"));
+//List<WebElement> Class = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightcabinclass')]"));
+//WebElement departDate = driver.findElement(By.xpath("(//*[contains(@id,'undefined-depdate')])[1]"));
+//WebElement departtime = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightdeptime')])[1]"));
+//WebElement arrivaltime = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightarrtime')])[last()]"));
+// List<WebElement> duration = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightduration')]"));
+// List<WebElement> airlineNames = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightflightcarrier')]"));
+//
+
+ public void validateDetailsInsideDepartFlightIndex(int index) throws InterruptedException {
+	    // -------- TOP BAR EXTRACTION --------
+	    String fromText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[1]")).getText().trim();
+	    String fromCode = extractLocationCode(fromText);
+
+	    String toText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[2]")).getText().trim();
+	    String toCode = extractLocationCode(toText);
+
+	    String journeyDate = driver.findElement(By.xpath("//input[@placeholder='Journey Date']")).getAttribute("value").trim();
+	    String returnDate = driver.findElement(By.xpath("//input[@placeholder='Return Date (Optional)']")).getAttribute("value").trim();
+
+	    String flightClass = driver.findElement(By.xpath("//span[@class='capitalize']")).getText().trim();
+	    String adultCount = driver.findElement(By.xpath("//span[@class='capitalize']/ancestor::button")).getText().trim();
+
+	    // -------- CLICK ON SELECTED FLIGHT --------
+	    String xpathExpression = "(//div[@class='round-trip-from-results']//button[text()='View Flight'])[" + index + "]";
+	    WebElement button = driver.findElement(By.xpath(xpathExpression));
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+	    Thread.sleep(1000);
+	    button.click();
+
+	    // -------- FLIGHT CARD EXTRACTION --------
+	    String resultFromText = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightorigin')])[1]")).getText().trim();
+	    String resultFromCode = extractLocationCode(resultFromText);
+
+	    String resultToText = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightdestinatio')])[last()]")).getText().trim();
+	    String resultToCode = extractLocationCode(resultToText);
+
+	    String resultDate = driver.findElement(By.xpath("(//*[contains(@id,'undefined-depdate')])[1]")).getText().trim();
+
+	    String resultFlightClass = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightcabinclass')])[1]")).getText().trim();
+
+	    // -------- COMPARISONS --------
+	    System.out.println(" Validating flight details for index: " + index);
+
+	    if (fromCode.equalsIgnoreCase(resultFromCode)) {
+	        System.out.println(" From location matched: " + fromCode);
+	    } else {
+	        System.out.println(" From location mismatch: Expected [" + fromCode + "], Found [" + resultFromCode + "]");
+	    }
+
+	    if (toCode.equalsIgnoreCase(resultToCode)) {
+	        System.out.println(" To location matched: " + toCode);
+	    } else {
+	        System.out.println(" To location mismatch: Expected [" + toCode + "], Found [" + resultToCode + "]");
+	    }
+
+	    if (journeyDate.equals(resultDate)) {
+	        System.out.println(" Journey Date matched: " + journeyDate);
+	    } else {
+	        System.out.println(" Journey Date mismatch: Expected [" + journeyDate + "], Found [" + resultDate + "]");
+	    }
+
+	    if (flightClass.equalsIgnoreCase(resultFlightClass)) {
+	        System.out.println(" Flight Class matched: " + flightClass);
+	    } else {
+	        System.out.println(" Flight Class mismatch: Expected [" + flightClass + "], Found [" + resultFlightClass + "]");
+	    }
+	}
+	
+	private String extractLocationCode(String text) {
+	    // Extract code from format like "Delhi (DEL)" → "DEL"
+	    if (text.contains("(") && text.contains(")")) {
+	        return text.substring(text.indexOf('(') + 1, text.indexOf(')')).trim();
+	    }
+	    return text.trim(); // fallback
+	}
+	
+
+	 
+	 
+	 //----------------------------------------------------------------------------
+	 
+	public String[] getTopBarFlightDetails() {
+	    // -------- TOP BAR EXTRACTION --------
+	    String fromText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[1]")).getText().trim();
+	    String fromCode = extractLocationCode(fromText);
+
+	    String toText = driver.findElement(By.xpath("(//div[contains(@class, 'tg-select__single-value')])[2]")).getText().trim();
+	    String toCode = extractLocationCode(toText);
+
+	  
+	      
+	       
+	        
+	        // Raw dates from page
+	        String journeyDate = driver.findElement(By.xpath("//input[@placeholder='Journey Date']")).getAttribute("value").trim();		    
+		    if (journeyDate.toLowerCase().startsWith("on ")) {
+		    	journeyDate = journeyDate.substring(3).trim();
+		    }
+		    journeyDate = journeyDate.replaceAll(",$", "").trim();  // Remove trailing comma
+
+	        String returnDate = driver.findElement(By.xpath("//input[@placeholder='Return Date (Optional)']")).getAttribute("value").trim();
+		    if (returnDate.toLowerCase().startsWith("on ")) {
+		    	returnDate = returnDate.substring(3).trim();
+		    }
+		    returnDate = returnDate.replaceAll(",$", "").trim();  // Remove trailing comma
+
+		    // Format dates with suffix (e.g. "8th Aug")
+		    String departDate = formatDateWithSuffix(journeyDate);
+		    String arrivalDate = formatDateWithSuffix(returnDate);
+
+
+	    String flightClass = driver.findElement(By.xpath("//span[@class='capitalize']")).getText().trim();
+	    String adultCount = driver.findElement(By.xpath("//span[@class='capitalize']/ancestor::button")).getText().trim();
+
+	    // Return all values as a simple array
+	    return new String[] { fromCode, toCode, departDate, arrivalDate, flightClass, adultCount };
+	}
+
+//get result card details from depart index  --- we can use this but in this only validating 1st and loc locations
+//	public String[] getDepartFlightResultCardDetails(int index, Log Log) throws InterruptedException {
+//	    // -------- FLIGHT RESULT CARD EXTRACTION --------
+//
+//	    String departdurationText = driver.findElement(By.xpath("//*[contains(@class,'tg-fromduration')]")).getText().trim();
+//	    System.out.println(departdurationText);
+//
+//	    String departStopsText = driver.findElement(By.xpath("//*[contains(@class,'tg-fromstops')]")).getText().trim();
+//	    System.out.println(departStopsText);
+//
+//	    String xpathExpression = "(//div[@class='round-trip-from-results']//button[text()='View Flight'])[" + index + "]";
+//	    WebElement button = driver.findElement(By.xpath(xpathExpression));
+//	    JavascriptExecutor js = (JavascriptExecutor) driver;
+//	    js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+//	    Thread.sleep(1000);
+//	    button.click();
+//
+//	    Log.ReportEvent("INFO", "Clicked on 'Depart View Flight' for index: " + index);
+//
+//	    String departFromText = driver.findElement(By.xpath("//*[contains(@class,'tg-from-flightorigin')]")).getText().trim();
+//	    String departFromCode = extractLocationCode(departFromText);
+//	    System.out.println(departFromCode);
+//
+//	    String departToText = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightdestinatio')])[last()]")).getText().trim();
+//	    String departToCode = extractLocationCode(departToText);
+//	    System.out.println(departToCode);
+//
+//	    // Raw dates from page
+//	    String departDateRaw = driver.findElement(By.xpath("(//*[contains(@id,'undefined-depdate')])[1]")).getText().trim();
+//	    if (departDateRaw.toLowerCase().startsWith("on ")) {
+//	        departDateRaw = departDateRaw.substring(3).trim();
+//	    }
+//	    departDateRaw = departDateRaw.replaceAll(",$", "").trim();  // Remove trailing comma
+//
+//	    String arrivalDateRaw = driver.findElement(By.xpath("(//*[contains(@id,'undefined-arrdate')])[last()]")).getText().trim();
+//	    if (arrivalDateRaw.toLowerCase().startsWith("on ")) {
+//	        arrivalDateRaw = arrivalDateRaw.substring(3).trim();
+//	    }
+//	    arrivalDateRaw = arrivalDateRaw.replaceAll(",$", "").trim();  // Remove trailing comma
+//
+//	    // Format dates with suffix (e.g. "8th Aug")
+//	    String departDate = formatDateWithSuffix(departDateRaw);
+//	    String arrivalDate = formatDateWithSuffix(arrivalDateRaw);
+//
+//	    String departTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightdeptime')])[1]")).getText().trim();
+//	    String arrivalTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightarrtime')])[last()]")).getText().trim();
+//
+//	    String flightClass = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightcabinclass')])[1]")).getText().trim();
+//
+//	    // Get all durations
+//	    List<WebElement> durationElements = driver.findElements(By.id("undefined-journeyduration"));
+//	    StringBuilder allDurationsBuilder = new StringBuilder();
+//
+//	    for (int i = 0; i < durationElements.size(); i++) {
+//	        String dur = durationElements.get(i).getText().trim();
+//	        allDurationsBuilder.append(dur);
+//	        if (i != durationElements.size() - 1) {    //this is for donyt add commas/space to last element 
+//	            allDurationsBuilder.append(", ");
+//	        }
+//	    }
+//
+//	    String allDurations = allDurationsBuilder.toString();  //convert to string
+//
+//	    String airlineName = driver.findElement(By.xpath("(//*[contains(@class,'tg-from-flightflightcarrier')])[1]")).getText().trim();
+//
+//	 // Get all connecting  flights text
+//	    List<WebElement> connectingFlightsText = driver.findElements(By.xpath("//*[contains(@class,'tg-from-layovercity')]"));
+//	    StringBuilder allConnectingFlightsBuilder = new StringBuilder();
+//
+//	    for (int i = 0; i < connectingFlightsText.size(); i++) {
+//	        String dur = connectingFlightsText.get(i).getText().trim();
+//	        allConnectingFlightsBuilder.append(dur);
+//	        if (i != connectingFlightsText.size() - 1) {    //this is for donyt add commas/space to last element 
+//	        	allConnectingFlightsBuilder.append(", ");
+//	        }
+//	    }
+//
+//	    String allConnectingFlightsText = allConnectingFlightsBuilder.toString();  //convert to string
+//
+//	    
+//	    
+//	    
+//	    return new String[] {
+//	        departFromCode,     // 0
+//	        departToCode,       // 1
+//	        departDate,         // 2
+//	        departTime,         // 3
+//	        arrivalTime,        // 4
+//	        flightClass,        // 5
+//	        allDurations,       // 6 - combined durations
+//	        airlineName,        // 7
+//	        arrivalDate,  //8
+//	        departdurationText,//9
+//	        departStopsText, //10
+//	        allConnectingFlightsText //11
+//	    };
+//	}
+
+	
+	public String[] getDepartFlightResultCardDetails(int index, Log Log) throws InterruptedException {
+	    // -------- FLIGHT RESULT CARD EXTRACTION --------
+
+	    String departdurationText = driver.findElement(By.xpath("//*[contains(@class,'tg-fromduration')]")).getText().trim();
+	    System.out.println(departdurationText);
+
+	    String departStopsText = driver.findElement(By.xpath("//*[contains(@class,'tg-fromstops')]")).getText().trim();
+	    System.out.println(departStopsText);
+
+	    String xpathExpression = "(//div[@class='round-trip-from-results']//button[text()='View Flight'])[" + index + "]";
+	    WebElement button = driver.findElement(By.xpath(xpathExpression));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+	    Thread.sleep(1000);
+	    button.click();
+
+	    Log.ReportEvent("INFO", "Clicked on 'Depart View Flight' for index: " + index);
+
+	    // ---------- DEPART FROM CODES ----------
+	    List<WebElement> fromElements = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightorigin')]"));
+	    List<String> fromCodes = new ArrayList<>();
+	    for (WebElement element : fromElements) {
+	        String text = element.getText().trim();
+	        String code = extractLocationCode(text);
+	        fromCodes.add(code);
+	        System.out.println("From Code: " + code);
+	    }
+	    String departFromCode = String.join(", ", fromCodes);
+
+	    // ---------- DEPART TO CODES ----------
+	    List<WebElement> toElements = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightdestinatio')]"));
+	    List<String> toCodes = new ArrayList<>();
+	    for (WebElement element : toElements) {
+	        String text = element.getText().trim();
+	        String code = extractLocationCode(text);
+	        toCodes.add(code);
+	        System.out.println("To Code: " + code);
+	    }
+	    String departToCode = String.join(", ", toCodes);
+
+	    // ---------- DEPART DATE ----------
+	    List<WebElement> departDateElements = driver.findElements(By.xpath("//*[contains(@id,'undefined-depdate')]"));
+	    List<String> departDatesRaw = new ArrayList<>();
+	    for (WebElement element : departDateElements) {
+	        String text = element.getText().trim();
+	        if (text.toLowerCase().startsWith("on ")) text = text.substring(3).trim();
+	        text = text.replaceAll(",$", "").trim();
+	        departDatesRaw.add(text);
+	    }
+	    // Format each date with suffix and join by comma
+	    List<String> departDatesFormatted = new ArrayList<>();
+	    for (String d : departDatesRaw) {
+	        departDatesFormatted.add(formatDateWithSuffix(d));
+	    }
+	    String departDate = String.join(", ", departDatesFormatted);
+
+	    // ---------- ARRIVAL DATE ----------
+	    List<WebElement> arrivalDateElements = driver.findElements(By.xpath("//*[contains(@id,'undefined-arrdate')]"));
+	    List<String> arrivalDatesRaw = new ArrayList<>();
+	    for (WebElement element : arrivalDateElements) {
+	        String text = element.getText().trim();
+	        if (text.toLowerCase().startsWith("on ")) text = text.substring(3).trim();
+	        text = text.replaceAll(",$", "").trim();
+	        arrivalDatesRaw.add(text);
+	    }
+	    List<String> arrivalDatesFormatted = new ArrayList<>();
+	    for (String d : arrivalDatesRaw) {
+	        arrivalDatesFormatted.add(formatDateWithSuffix(d));
+	    }
+	    String arrivalDate = String.join(", ", arrivalDatesFormatted);
+
+	    // ---------- DEPART TIME ----------
+	    List<WebElement> departTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightdeptime')]"));
+	    List<String> departTimes = new ArrayList<>();
+	    for (WebElement element : departTimeElements) {
+	        departTimes.add(element.getText().trim());
+	    }
+	    String departTime = String.join(", ", departTimes);
+
+	    // ---------- ARRIVAL TIME ----------
+	    List<WebElement> arrivalTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightarrtime')]"));
+	    List<String> arrivalTimes = new ArrayList<>();
+	    for (WebElement element : arrivalTimeElements) {
+	        arrivalTimes.add(element.getText().trim());
+	    }
+	    String arrivalTime = String.join(", ", arrivalTimes);
+
+	    // ---------- FLIGHT CLASS ----------
+	    List<WebElement> flightClassElements = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightcabinclass')]"));
+	    List<String> flightClasses = new ArrayList<>();
+	    for (WebElement element : flightClassElements) {
+	        flightClasses.add(element.getText().trim());
+	    }
+	    String flightClass = String.join(", ", flightClasses);
+
+	    // Get all durations
+	    List<WebElement> durationElements = driver.findElements(By.id("undefined-journeyduration"));
+	    StringBuilder allDurationsBuilder = new StringBuilder();
+	    for (int i = 0; i < durationElements.size(); i++) {
+	        String dur = durationElements.get(i).getText().trim();
+	        allDurationsBuilder.append(dur);
+	        if (i != durationElements.size() - 1) {
+	            allDurationsBuilder.append(", ");
+	        }
+	    }
+	    String allDurations = allDurationsBuilder.toString();
+
+	    // ---------- AIRLINE NAMES ----------
+	    List<WebElement> airlineElements = driver.findElements(By.xpath("//*[contains(@class,'tg-from-flightflightcarrier')]"));
+	    List<String> airlineNames = new ArrayList<>();
+	    for (WebElement element : airlineElements) {
+	        airlineNames.add(element.getText().trim());
+	    }
+	    String airlineName = String.join(", ", airlineNames);
+
+	    // Get all connecting flights text
+	    List<WebElement> connectingFlightsText = driver.findElements(By.xpath("//*[contains(@class,'tg-from-layovercity')]"));
+	    StringBuilder allConnectingFlightsBuilder = new StringBuilder();
+	    for (int i = 0; i < connectingFlightsText.size(); i++) {
+	        String dur = connectingFlightsText.get(i).getText().trim();
+	        allConnectingFlightsBuilder.append(dur);
+	        if (i != connectingFlightsText.size() - 1) {
+	            allConnectingFlightsBuilder.append(", ");
+	        }
+	    }
+	    String allConnectingFlightsText = allConnectingFlightsBuilder.toString();
+
+	    return new String[] {
+	        departFromCode,        // 0
+	        departToCode,          // 1
+	        departDate,            // 2
+	        departTime,            // 3
+	        arrivalTime,           // 4
+	        flightClass,           // 5
+	        allDurations,          // 6
+	        airlineName,           // 7
+	        arrivalDate,           // 8
+	        departdurationText,    // 9
+	        departStopsText,       // 10
+	        allConnectingFlightsText // 11
+	    };
+	}
+
+
+	// Helper method to format date string with suffix (e.g. 1st, 2nd, 3rd, 4th)
+	private String formatDateWithSuffix(String rawDate) {
+	    // Example input: "8-Aug" or "8-Aug-2025" - adjust split accordingly
+	    String[] parts = rawDate.split("-");
+	    if (parts.length < 2) return rawDate; // Return raw if unexpected format
+
+	    String dayStr = parts[0];
+	    String monthStr = parts[1];
+
+	    int day;
+	    try {
+	        day = Integer.parseInt(dayStr.replaceAll("\\D", "")); // remove any non-digit chars
+	    } catch (NumberFormatException e) {
+	        return rawDate;  // fallback
+	    }
+
+	    // Determine suffix
+	    String suffix = "th";
+	    if (day == 1 || day == 21 || day == 31) suffix = "st";
+	    else if (day == 2 || day == 22) suffix = "nd";
+	    else if (day == 3 || day == 23) suffix = "rd";
+
+	    return day + suffix + " " + monthStr;
+	}
+
+
+//	//we can use this also but it will validate only 1st and last loc only
+	public String[] getReturnFlightResultCardDetails(int returnindex, Log Log) throws InterruptedException {
+	    // -------- RETURN RESULT CARD EXTRACTION --------
+
+	    String returndurationText = driver.findElement(By.xpath("//*[contains(@class,'tg-toduration')]")).getText().trim();
+	    System.out.println(returndurationText);
+
+	    String returnStopsText = driver.findElement(By.xpath("//*[contains(@class,'tg-tostops')]")).getText().trim();
+	    System.out.println(returnStopsText);
+
+	    String xpathExpression = "(//div[@class='round-trip-to-results']//button[text()='View Flight'])[" + returnindex + "]";
+	    WebElement button = driver.findElement(By.xpath(xpathExpression));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+	    Thread.sleep(1000);
+	    button.click();
+
+	    Log.ReportEvent("INFO", "Clicked on 'Return View Flight' for index: " + returnindex);
+
+	    // ---------- RETURN FROM CODES ----------
+	    List<WebElement> fromElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightorigin')]"));
+	    List<String> fromCodes = new ArrayList<>();
+	    for (WebElement element : fromElements) {
+	        String code = extractLocationCode(element.getText().trim());
+	        fromCodes.add(code);
+	    }
+	    String returnFromCode = String.join(", ", fromCodes);
+
+	    // ---------- RETURN TO CODES ----------
+	    List<WebElement> toElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightdestinatio')]"));
+	    List<String> toCodes = new ArrayList<>();
+	    for (WebElement element : toElements) {
+	        String code = extractLocationCode(element.getText().trim());
+	        toCodes.add(code);
+	    }
+	    String returnToCode = String.join(", ", toCodes);
+
+	    // ---------- RETURN DEPART DATE ----------
+	    List<WebElement> departDateElements = driver.findElements(By.xpath("//*[contains(@id,'undefined-depdate')]"));
+	    List<String> departDatesRaw = new ArrayList<>();
+	    for (WebElement element : departDateElements) {
+	        String text = element.getText().trim();
+	        if (text.toLowerCase().startsWith("on ")) text = text.substring(3).trim();
+	        text = text.replaceAll(",$", "").trim();
+	        departDatesRaw.add(text);
+	    }
+	    List<String> departDatesFormatted = new ArrayList<>();
+	    for (String d : departDatesRaw) {
+	        departDatesFormatted.add(formatDateWithSuffix(d));
+	    }
+	    String returndepartDate = String.join(", ", departDatesFormatted);
+
+	    // ---------- RETURN ARRIVAL DATE ----------
+	    List<WebElement> arrivalDateElements = driver.findElements(By.xpath("//*[contains(@id,'undefined-arrdate')]"));
+	    List<String> arrivalDatesRaw = new ArrayList<>();
+	    for (WebElement element : arrivalDateElements) {
+	        String text = element.getText().trim();
+	        if (text.toLowerCase().startsWith("on ")) text = text.substring(3).trim();
+	        text = text.replaceAll(",$", "").trim();
+	        arrivalDatesRaw.add(text);
+	    }
+	    List<String> arrivalDatesFormatted = new ArrayList<>();
+	    for (String d : arrivalDatesRaw) {
+	        arrivalDatesFormatted.add(formatDateWithSuffix(d));
+	    }
+	    String returnDate = String.join(", ", arrivalDatesFormatted);
+
+	    // ---------- RETURN DEPART TIME ----------
+	    List<WebElement> departTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightdeptime')]"));
+	    List<String> departTimes = new ArrayList<>();
+	    for (WebElement element : departTimeElements) {
+	        departTimes.add(element.getText().trim());
+	    }
+	    String departTime = String.join(", ", departTimes);
+
+	    // ---------- RETURN ARRIVAL TIME ----------
+	    List<WebElement> arrivalTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightarrtime')]"));
+	    List<String> arrivalTimes = new ArrayList<>();
+	    for (WebElement element : arrivalTimeElements) {
+	        arrivalTimes.add(element.getText().trim());
+	    }
+	    String arrivalTime = String.join(", ", arrivalTimes);
+
+	    // ---------- FLIGHT CLASS ----------
+	    List<WebElement> flightClassElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightcabinclass')]"));
+	    List<String> flightClasses = new ArrayList<>();
+	    for (WebElement element : flightClassElements) {
+	        flightClasses.add(element.getText().trim());
+	    }
+	    String flightClass = String.join(", ", flightClasses);
+
+	    // ---------- JOURNEY DURATION ----------
+	    List<WebElement> durationElements = driver.findElements(By.id("undefined-journeyduration"));
+	    StringBuilder allDurationsBuilder = new StringBuilder();
+	    for (int i = 0; i < durationElements.size(); i++) {
+	        allDurationsBuilder.append(durationElements.get(i).getText().trim());
+	        if (i != durationElements.size() - 1) {
+	            allDurationsBuilder.append(", ");
+	        }
+	    }
+	    String allDurations = allDurationsBuilder.toString();
+
+	    // ---------- AIRLINE NAMES ----------
+	    List<WebElement> airlineElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightflightcarrier')]"));
+	    List<String> airlineNames = new ArrayList<>();
+	    for (WebElement element : airlineElements) {
+	        airlineNames.add(element.getText().trim());
+	    }
+	    String airlineName = String.join(", ", airlineNames);
+
+	    // ---------- CONNECTING FLIGHTS ----------
+	    List<WebElement> connectingFlightsText = driver.findElements(By.xpath("//*[contains(@class,'tg-to-layovercity')]"));
+	    StringBuilder connectingBuilder = new StringBuilder();
+	    for (int i = 0; i < connectingFlightsText.size(); i++) {
+	        connectingBuilder.append(connectingFlightsText.get(i).getText().trim());
+	        if (i != connectingFlightsText.size() - 1) {
+	            connectingBuilder.append(", ");
+	        }
+	    }
+	    String allConnectingFlightsText = connectingBuilder.toString();
+
+	    return new String[] {
+	        returnFromCode,              // 0
+	        returnToCode,                // 1
+	        returndepartDate,            // 2
+	        departTime,                  // 3
+	        arrivalTime,                 // 4
+	        flightClass,                 // 5
+	        allDurations,                // 6
+	        airlineName,                 // 7
+	        returnDate,                  // 8
+	        returndurationText,          // 9
+	        returnStopsText,             // 10
+	        allConnectingFlightsText     // 11
+	    };
+	}
+
+	
+//	public String[] getReturnFlightResultCardDetails(int returnindex, Log Log) throws InterruptedException {
+//	    
+//	    String returndurationText = driver.findElement(By.xpath("//*[contains(@class,'tg-toduration')]")).getText().trim();
+//	    String returnStopsText = driver.findElement(By.xpath("//*[contains(@class,'tg-tostops')]")).getText().trim();
+//
+//	    String xpathExpression = "(//div[@class='round-trip-to-results']//button[text()='View Flight'])[" + returnindex + "]";
+//	    WebElement button = driver.findElement(By.xpath(xpathExpression));
+//	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+//	    Thread.sleep(1000);
+//	    button.click();
+//
+//	    Log.ReportEvent("INFO", "Clicked on 'Return View Flight' for index: " + returnindex);
+//
+//	    // --------- RETURN FROM CODES ---------
+//	    List<WebElement> fromElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightorigin')]"));
+//	    StringBuilder returnFromBuilder = new StringBuilder();
+//	    for (int i = 0; i < fromElements.size(); i++) {
+//	        String code = extractLocationCode(fromElements.get(i).getText().trim());
+//	        returnFromBuilder.append(code);
+//	        if (i != fromElements.size() - 1) returnFromBuilder.append(", ");
+//	    }
+//	    String returnFromCode = returnFromBuilder.toString();
+//
+//	    // --------- RETURN TO CODES ---------
+//	    List<WebElement> toElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightdestinatio')]"));
+//	    StringBuilder returnToBuilder = new StringBuilder();
+//	    for (int i = 0; i < toElements.size(); i++) {
+//	        String code = extractLocationCode(toElements.get(i).getText().trim());
+//	        returnToBuilder.append(code);
+//	        if (i != toElements.size() - 1) returnToBuilder.append(", ");
+//	    }
+//	    String returnToCode = returnToBuilder.toString();
+//
+//	    // --------- RETURN DEPART DATE ----------
+//	    List<WebElement> departDateElements = driver.findElements(By.xpath("//*[contains(@id,'undefined-depdate')]"));
+//	    StringBuilder returndepartDateBuilder = new StringBuilder();
+//	    for (int i = 0; i < departDateElements.size(); i++) {
+//	        String text = departDateElements.get(i).getText().trim();
+//	        if (text.toLowerCase().startsWith("on ")) text = text.substring(3).trim();
+//	        text = text.replaceAll(",$", "").trim();
+//	        String formatted = formatDateWithSuffix(text);
+//	        returndepartDateBuilder.append(formatted);
+//	        if (i != departDateElements.size() - 1) returndepartDateBuilder.append(", ");
+//	    }
+//	    String returndepartDate = returndepartDateBuilder.toString();
+//
+//	    // --------- RETURN ARRIVAL DATE ----------
+//	    List<WebElement> arrivalDateElements = driver.findElements(By.xpath("//*[contains(@id,'undefined-arrdate')]"));
+//	    StringBuilder returnArrivalDateBuilder = new StringBuilder();
+//	    for (int i = 0; i < arrivalDateElements.size(); i++) {
+//	        String text = arrivalDateElements.get(i).getText().trim();
+//	        if (text.toLowerCase().startsWith("on ")) text = text.substring(3).trim();
+//	        text = text.replaceAll(",$", "").trim();
+//	        String formatted = formatDateWithSuffix(text);
+//	        returnArrivalDateBuilder.append(formatted);
+//	        if (i != arrivalDateElements.size() - 1) returnArrivalDateBuilder.append(", ");
+//	    }
+//	    String returnDate = returnArrivalDateBuilder.toString();
+//
+//	    // --------- RETURN DEPART TIME ----------
+//	    List<WebElement> departTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightdeptime')]"));
+//	    StringBuilder departTimeBuilder = new StringBuilder();
+//	    for (int i = 0; i < departTimeElements.size(); i++) {
+//	        departTimeBuilder.append(departTimeElements.get(i).getText().trim());
+//	        if (i != departTimeElements.size() - 1) departTimeBuilder.append(", ");
+//	    }
+//	    String departTime = departTimeBuilder.toString();
+//
+//	    // --------- RETURN ARRIVAL TIME ----------
+//	    List<WebElement> arrivalTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightarrtime')]"));
+//	    StringBuilder arrivalTimeBuilder = new StringBuilder();
+//	    for (int i = 0; i < arrivalTimeElements.size(); i++) {
+//	        arrivalTimeBuilder.append(arrivalTimeElements.get(i).getText().trim());
+//	        if (i != arrivalTimeElements.size() - 1) arrivalTimeBuilder.append(", ");
+//	    }
+//	    String arrivalTime = arrivalTimeBuilder.toString();
+//
+//	    // --------- RETURN FLIGHT CLASS ----------
+//	    List<WebElement> flightClassElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightcabinclass')]"));
+//	    StringBuilder flightClassBuilder = new StringBuilder();
+//	    for (int i = 0; i < flightClassElements.size(); i++) {
+//	        flightClassBuilder.append(flightClassElements.get(i).getText().trim());
+//	        if (i != flightClassElements.size() - 1) flightClassBuilder.append(", ");
+//	    }
+//	    String flightClass = flightClassBuilder.toString();
+//
+//	    // --------- RETURN ALL DURATIONS ----------
+//	    List<WebElement> returndurationElements = driver.findElements(By.id("undefined-journeyduration"));
+//	    StringBuilder durationBuilder = new StringBuilder();
+//	    for (int i = 0; i < returndurationElements.size(); i++) {
+//	        durationBuilder.append(returndurationElements.get(i).getText().trim());
+//	        if (i != returndurationElements.size() - 1) durationBuilder.append(", ");
+//	    }
+//	    String allreturnDurations = durationBuilder.toString();
+//
+//	    // --------- RETURN AIRLINE NAMES ----------
+//	    List<WebElement> airlineElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-flightflightcarrier')]"));
+//	    StringBuilder airlineBuilder = new StringBuilder();
+//	    for (int i = 0; i < airlineElements.size(); i++) {
+//	        airlineBuilder.append(airlineElements.get(i).getText().trim());
+//	        if (i != airlineElements.size() - 1) airlineBuilder.append(", ");
+//	    }
+//	    String airlineName = airlineBuilder.toString();
+//
+//	    // --------- RETURN CONNECTING FLIGHTS ----------
+//	    List<WebElement> connectingFlightElements = driver.findElements(By.xpath("//*[contains(@class,'tg-to-layovercity')]"));
+//	    StringBuilder connectingFlightsBuilder = new StringBuilder();
+//	    for (int i = 0; i < connectingFlightElements.size(); i++) {
+//	        connectingFlightsBuilder.append(connectingFlightElements.get(i).getText().trim());
+//	        if (i != connectingFlightElements.size() - 1) connectingFlightsBuilder.append(", ");
+//	    }
+//	    String allreturnConnectingFlightsText = connectingFlightsBuilder.toString();
+//
+//	    return new String[]{
+//	        returndurationText,              // 0
+//	        returnStopsText,                 // 1
+//	        returnFromCode,                  // 2
+//	        returnToCode,                    // 3
+//	        returndepartDate,                // 4
+//	        returnDate,                      // 5
+//	        departTime,                      // 6
+//	        arrivalTime,                     // 7
+//	        flightClass,                     // 8
+//	        allreturnDurations,              // 9
+//	        airlineName,                     // 10
+//	        allreturnConnectingFlightsText   // 11
+//	    };
+//	}
+
+
+//get bottom bar depart details 
+		 
+		 public String[] getBottomBarFlightdepartCardDetails() {
+			    // -------- FLIGHT RESULT CARD EXTRACTION --------
+			    String bottomBarDepartFromText = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-oworigin')]")).getText().trim();
+
+			    String bottomBarDepartToText = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-owdestination')]")).getText().trim();
+			   		    
+			    String bottomBardepartDepartTime = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-owdeptime')]")).getText().trim();
+			    String bottomBarDepartarrivalTime = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-owarrtime')]")).getText().trim();
+
+			    String bottomBarDepartduration = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-owduration')]")).getText().trim();
+
+			 String bottomdepartduration = bottomBarDepartduration.split(",")[0].trim();
+
+			 System.out.println("Flight Duration: " + bottomdepartduration);
+
+			    String bottomdepartprice = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-owprice')]")).getText().trim();
+			    String bottomdepartStops = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-owstops')]")).getText().trim();
+
+
+			    // Return all as array
+			    return new String[] {
+			    		bottomBarDepartFromText,     //0
+			    		bottomBarDepartToText,       
+			    		bottomBardepartDepartTime,
+			    		bottomBarDepartarrivalTime,
+			    		bottomdepartduration,         
+			    		bottomdepartprice,        
+			    		bottomdepartStops       
+			                
+			     };
+			}
+		 
+		 
+			//get result card details from return index
+			 public String[] getBottomBarFlightreturnCardDetails() {
+				    // -------- FLIGHT RESULT CARD EXTRACTION --------
+				    String bottomBarreturnFromText = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtorigin')]")).getText().trim();
+
+				    String bottomBarreturnToText = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtdestination')]")).getText().trim();
+				   		    
+				    String bottomBarreturndepartTime = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtdeptime')]")).getText().trim();
+				    String bottomBarreturnarrivalTime = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtarrtime')]")).getText().trim();
+
+				    String bottomBarreturndepartduration = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtduration')]")).getText().trim();
+
+				 String bottomreturnduration = bottomBarreturndepartduration.split(",")[0].trim();
+
+				 System.out.println("Flight Duration: " + bottomreturnduration);
+
+				    String bottomreturnprice = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtprice')]")).getText().trim();
+				    String bottombottomreturndurationStops = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtstops')]")).getText().trim();
+
+
+				    // Return all as array
+				    return new String[] {
+				    		bottomBarreturnFromText,     //0
+				    		bottomBarreturnToText,       
+				    		bottomBarreturndepartTime,
+				    		bottomBarreturnarrivalTime,
+				    		bottomreturnduration,         
+				    		bottomreturnprice,        
+				    		bottombottomreturndurationStops       
+				                 
+				       };
+				}
+			 
+			 //get bottom bar price details
+			 public int getbottombarpricedetails(int index, Log Log, ScreenShots ScreenShots) throws InterruptedException {
+				    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
+				    Thread.sleep(4000);
+
+				    // Step 1: Get origin and destination cards by user index
+				    WebElement originDiv = driver.findElement(By.xpath("(//*[contains(@class,'round-trip-card-from')])[" + index + "]"));
+				    WebElement destDiv = driver.findElement(By.xpath("(//*[contains(@class,'round-trip-card-to')])[" + index + "]"));
+
+				    // Step 2: Get prices from result page
+				    int resultPageOriginPrice = Integer.parseInt(
+				        driver.findElement(By.xpath("//*[contains(@class,'tg-fromprice')]")).getText().replaceAll("[^\\d]", "")
+				    );
+				    int resultPageDestPrice = Integer.parseInt(
+				        driver.findElement(By.xpath("//*[contains(@class,'tg-toprice')]")).getText().replaceAll("[^\\d]", "")
+				    );
+
+				    // Step 3: Get prices from bottom bar
+				    int bottomBarOriginPrice = Integer.parseInt(
+				        driver.findElement(By.xpath("//*[contains(@class,'tg-bar-owprice')]")).getText().replaceAll("[^\\d]", "")
+				    );
+				    int bottomBarDestPrice = Integer.parseInt(
+				        driver.findElement(By.xpath("//*[contains(@class,'tg-bar-rtprice')]")).getText().replaceAll("[^\\d]", "")
+				    );
+				    int bottomBarTotalPrice = Integer.parseInt(
+				        driver.findElement(By.xpath("//*[contains(@class,'tg-bar-totalprice')]")).getText().replaceAll("[^\\d]", "")
+				    );
+
+				    // Validation 1: Origin price
+				    if (resultPageOriginPrice != bottomBarOriginPrice) {
+				        Log.ReportEvent("FAIL", "Origin price mismatch. Result Page: " + resultPageOriginPrice + ", Bottom Bar: " + bottomBarOriginPrice);
+				        ScreenShots.takeScreenShot1();
+				        return -1;
+				    } else {
+				        Log.ReportEvent("PASS", "Origin price matched: " + resultPageOriginPrice);
+				    }
+
+				    // Validation 2: Destination price
+				    if (resultPageDestPrice != bottomBarDestPrice) {
+				        Log.ReportEvent("FAIL", "Destination price mismatch. Result Page: " + resultPageDestPrice + ", Bottom Bar: " + bottomBarDestPrice);
+				        ScreenShots.takeScreenShot1();
+				        return -1;
+				    } else {
+				        Log.ReportEvent("PASS", "Destination price matched: " + resultPageDestPrice);
+				    }
+
+				    // Validation 3: Total = Origin + Destination
+				    int calculatedTotal = bottomBarOriginPrice + bottomBarDestPrice;
+				    if (calculatedTotal != bottomBarTotalPrice) {
+				        Log.ReportEvent("FAIL", "Total price mismatch. Calculated: " + calculatedTotal + ", Bottom Bar Total: " + bottomBarTotalPrice);
+				        ScreenShots.takeScreenShot1();
+				        return -1;
+				    } else {
+				        Log.ReportEvent("PASS", "Bottom bar total price matched: " + calculatedTotal);
+				    }
+
+				    // ✅ Return total bottom bar price if all validations passed
+				    return bottomBarTotalPrice;
+				}
+
+			
+			 
+//-------------------------------------------------------------------
+//get booking page depart details
+			 
+		
+//			 public String[] getBookingPageFlightDepartCardDetails(String departStopsText) throws InterruptedException {
+//				    String BookingPagedepartFromText = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartorigin')])[1]")).getText().trim();
+//				    String bookingFromCode = extractLocationCode(BookingPagedepartFromText);
+//
+//				    String BookingPagedepartToText = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartdestination')])[last()]")).getText().trim();
+//				    String bookingToCode = extractLocationCode(BookingPagedepartToText);
+//
+//				    String BookingPagedepartdepartDate = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartdepdate')])[1]")).getText().trim();
+//
+//				    if (BookingreturnArrDate.toLowerCase().startsWith("on ")) {
+//				    	BookingreturnArrDate = BookingreturnArrDate.substring(3).trim();
+//				    }
+//				    BookingreturnArrDate = BookingreturnArrDate.replaceAll(",$", "").trim();  // Remove trailing comma
+//			    // Format dates with suffix (e.g. "8th Aug")
+//			    String BookingreturnArrivalDate = formatDateWithSuffix(BookingreturnArrDate);
+//			    
+//			    
+//			    
+//				    String BookingdepartArrivalDate = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartarrdate')])[last()]")).getText().trim();
+//
+//				    String BookingdepartTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartdeptime')])[1]")).getText().trim();
+//	
+//				    String BookingarrivalTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartarrtime')])[last()]")).getText().trim();
+//				    
+//
+//				    String BookingPagedepartflightClass = driver.findElement(By.xpath("//*[contains(@class,'tg-fbDepartcabinclass')]")).getText().trim();
+//
+//				    String BookingPagedepartduration1 = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartduration')])[1]")).getText().trim();
+//
+//				    String BookingPagedepartduration2 = "";
+//				    if (!departStopsText.equalsIgnoreCase("Nonstop")) {
+//				        BookingPagedepartduration2 = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbDepartduration')])[last()]")).getText().trim();
+//				    }
+//
+//				    String bookingpageairlineText = driver.findElement(By.xpath("//*[contains(@class,'tg-fbDepartcarriername')]")).getText().trim();
+//				    String departairlinetext = bookingpageairlineText.split(" -")[0].trim();
+//
+//				    System.out.println("Airline Name: " + departairlinetext);
+//				    
+//				    String faretype = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")).getText().trim();
+//				    String BookingPagedepartFareText = faretype.split("\\s+")[0];
+//
+//				    String BookingPageCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[1]")).getText().trim();
+//
+//				    String BookingPageCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[1]")).getText().trim();
+//
+//
+//
+//				    return new String[]{
+//				        bookingFromCode,           // 0
+//				        bookingToCode,             // 1
+//				        BookingPagedepartdepartDate,       // 2
+//				        BookingdepartArrivalDate,          // 3
+//				        BookingPagedepartdepartTime,       // 4
+//				        BookingPagedepartarrivalTime,      // 5
+//				        BookingPagedepartflightClass,      // 6
+//				        BookingPagedepartduration1,        // 7
+//				        BookingPagedepartduration2,        // 8
+//				        departairlinetext,
+//				        BookingPagedepartFareText,
+//				        BookingPageCabinBaggageText,
+//				        BookingPageCheckInBaggageText
+//				        
+//				    };
+//				}
+//			 
+			 
+//			 
+//			 public String[] getBookingPageFlightDepartCardDetails(String departStopsText) throws InterruptedException {
+//				    
+//				    // From code
+//				    List<WebElement> fromElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartorigin')]"));
+//				    StringBuilder fromBuilder = new StringBuilder();
+//				    for (int i = 0; i < fromElements.size(); i++) {
+//				        String text = extractLocationCode(fromElements.get(i).getText().trim());
+//				        fromBuilder.append(text);
+//				        if (i != fromElements.size() - 1) fromBuilder.append(", ");
+//				    }
+//				    String bookingFromCode = fromBuilder.toString();
+//
+//				    // To code
+//				    List<WebElement> toElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartdestination')]"));
+//				    StringBuilder toBuilder = new StringBuilder();
+//				    for (int i = 0; i < toElements.size(); i++) {
+//				        String text = extractLocationCode(toElements.get(i).getText().trim());
+//				        toBuilder.append(text);
+//				        if (i != toElements.size() - 1) toBuilder.append(", ");
+//				    }
+//				    String bookingToCode = toBuilder.toString();
+//
+//				    // Depart date
+//				    List<WebElement> departDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartdepdate')]"));
+//				    StringBuilder departDateBuilder = new StringBuilder();
+//				    for (int i = 0; i < departDateElements.size(); i++) {
+//				        String date = departDateElements.get(i).getText().trim();
+//				        if (date.toLowerCase().startsWith("on ")) {
+//				            date = date.substring(3).trim();
+//				        }
+//				        date = date.replaceAll(",$", "").trim();
+//				        date = formatDateWithSuffix(date);
+//				        departDateBuilder.append(date);
+//				        if (i != departDateElements.size() - 1) departDateBuilder.append(", ");
+//				    }
+//				    String BookingPagedepartdepartDate = departDateBuilder.toString();
+//
+//				    // Arrival date
+//				    List<WebElement> arrivalDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnarrdate')]"));
+//				    StringBuilder arrivalDateBuilder = new StringBuilder();
+//				    for (int i = 0; i < arrivalDateElements.size(); i++) {
+//				        String date = arrivalDateElements.get(i).getText().trim();
+//				        if (date.toLowerCase().startsWith("on ")) {
+//				            date = date.substring(3).trim();
+//				        }
+//				        date = date.replaceAll(",$", "").trim();
+//				        date = formatDateWithSuffix(date);
+//				        arrivalDateBuilder.append(date);
+//				        if (i != arrivalDateElements.size() - 1) arrivalDateBuilder.append(", ");
+//				    }
+//				    String BookingdepartArrivalDate = arrivalDateBuilder.toString();
+//
+//				    // Departure time
+//				    List<WebElement> departTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartdeptime')]"));
+//				    StringBuilder departTimeBuilder = new StringBuilder();
+//				    for (int i = 0; i < departTimeElements.size(); i++) {
+//				        departTimeBuilder.append(departTimeElements.get(i).getText().trim());
+//				        if (i != departTimeElements.size() - 1) departTimeBuilder.append(", ");
+//				    }
+//				    String BookingdepartTime = departTimeBuilder.toString();
+//
+//				    // Arrival time
+//				    List<WebElement> arrivalTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartarrtime')]"));
+//				    StringBuilder arrivalTimeBuilder = new StringBuilder();
+//				    for (int i = 0; i < arrivalTimeElements.size(); i++) {
+//				        arrivalTimeBuilder.append(arrivalTimeElements.get(i).getText().trim());
+//				        if (i != arrivalTimeElements.size() - 1) arrivalTimeBuilder.append(", ");
+//				    }
+//				    String BookingarrivalTime = arrivalTimeBuilder.toString();
+//
+//				    // Flight class
+//				    List<WebElement> flightClassElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartcabinclass')]"));
+//				    StringBuilder flightClassBuilder = new StringBuilder();
+//				    for (int i = 0; i < flightClassElements.size(); i++) {
+//				        flightClassBuilder.append(flightClassElements.get(i).getText().trim());
+//				        if (i != flightClassElements.size() - 1) flightClassBuilder.append(", ");
+//				    }
+//				    String BookingPagedepartflightClass = flightClassBuilder.toString();
+//
+//				    // Durations
+//				    List<WebElement> durationElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartduration')]"));
+//				    StringBuilder durationBuilder = new StringBuilder();
+//				    for (int i = 0; i < durationElements.size(); i++) {
+//				        durationBuilder.append(durationElements.get(i).getText().trim());
+//				        if (i != durationElements.size() - 1) durationBuilder.append(", ");
+//				    }
+//				    String allbookingDurations = durationBuilder.toString();
+//
+//				    // Airline name
+//				    List<WebElement> airlineElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartcarriername')]"));
+//				    StringBuilder airlineBuilder = new StringBuilder();
+//				    for (int i = 0; i < airlineElements.size(); i++) {
+//				        String text = airlineElements.get(i).getText().trim().split(" -")[0].trim();
+//				        airlineBuilder.append(text);
+//				        if (i != airlineElements.size() - 1) airlineBuilder.append(", ");
+//				    }
+//				    String departairlinetext = airlineBuilder.toString();
+//
+//				    // Fare type
+//				    String faretype = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")).getText().trim();
+//				    String BookingPagedepartFareText = faretype.replace("Fare", "").trim();
+//
+//				    // Cabin & check-in baggage
+//				    String BookingPageCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[1]")).getText().trim();
+//				    String BookingPageCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[1]")).getText().trim();
+//
+//				    // Connecting flights
+//				    List<WebElement> connectingFlightElements = driver.findElements(By.xpath("//h6[contains(@class, 'tg-fbDepartflight')]/ancestor::div[contains(@class,'MuiCardContent-root')]//strong[contains(@class, 'tg-fb-layover-destination')]"));
+//				    StringBuilder connectingFlightsBuilder = new StringBuilder();
+//				    for (int i = 0; i < connectingFlightElements.size(); i++) {
+//				        connectingFlightsBuilder.append(connectingFlightElements.get(i).getText().trim());
+//				        if (i != connectingFlightElements.size() - 1) connectingFlightsBuilder.append(", ");
+//				    }
+//				    String allbookingConnectingFlightsText = connectingFlightsBuilder.toString();
+//
+//				    // Return all details
+//				    return new String[]{
+//				        bookingFromCode,                  // 0
+//				        bookingToCode,                    // 1
+//				        BookingPagedepartdepartDate,      // 2
+//				        BookingdepartArrivalDate,         // 3
+//				        BookingdepartTime,                // 4
+//				        BookingarrivalTime,               // 5
+//				        BookingPagedepartflightClass,     // 6
+//				        allbookingDurations,              // 7
+//				        departairlinetext,                // 8
+//				        BookingPagedepartFareText,        // 9
+//				        BookingPageCabinBaggageText,      //10
+//				        BookingPageCheckInBaggageText,    //11
+//				        allbookingConnectingFlightsText   //12
+//				    };
+//				}
+
+			 public String[] getBookingPageFlightDepartCardDetails(String departStopsText) throws InterruptedException {
+
+				    // ---------- FROM CODES ----------
+				    List<WebElement> fromElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartorigin')]"));
+				    List<String> fromCodes = new ArrayList<>();
+				    for (WebElement element : fromElements) {
+				        String text = element.getText().trim();
+				        String code = extractLocationCode(text);
+				        fromCodes.add(code);
+				        System.out.println("From Code: " + code);
+				    }
+				    String bookingFromCode = String.join(", ", fromCodes);
+
+				    // ---------- TO CODES ----------
+				    List<WebElement> toElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartdestination')]"));
+				    List<String> toCodes = new ArrayList<>();
+				    for (WebElement element : toElements) {
+				        String text = element.getText().trim();
+				        String code = extractLocationCode(text);
+				        toCodes.add(code);
+				        System.out.println("To Code: " + code);
+				    }
+				    String bookingToCode = String.join(", ", toCodes);
+
+				    // ---------- DEPART DATES ----------
+				    List<WebElement> departDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartdepdate')]"));
+				    List<String> departDatesRaw = new ArrayList<>();
+				    for (WebElement elem : departDateElements) {
+				        String dateText = elem.getText().trim();
+				        if (dateText.toLowerCase().startsWith("on ")) {
+				            dateText = dateText.substring(3).trim();
+				        }
+				        dateText = dateText.replaceAll(",$", "").trim();
+				        departDatesRaw.add(formatDateWithSuffix(dateText));
+				    }
+				    String BookingPagedepartdepartDate = String.join(", ", departDatesRaw);
+
+				    // ---------- ARRIVAL DATES ----------
+				    List<WebElement> arrivalDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnarrdate')]"));
+				    List<String> arrivalDatesRaw = new ArrayList<>();
+				    for (WebElement elem : arrivalDateElements) {
+				        String dateText = elem.getText().trim();
+				        if (dateText.toLowerCase().startsWith("on ")) {
+				            dateText = dateText.substring(3).trim();
+				        }
+				        dateText = dateText.replaceAll(",$", "").trim();
+				        arrivalDatesRaw.add(formatDateWithSuffix(dateText));
+				    }
+				    String BookingdepartArrivalDate = String.join(", ", arrivalDatesRaw);
+
+				    // ---------- DEPART TIMES ----------
+				    List<WebElement> departTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartdeptime')]"));
+				    List<String> departTimes = new ArrayList<>();
+				    for (WebElement elem : departTimeElements) {
+				        departTimes.add(elem.getText().trim());
+				    }
+				    String BookingdepartTime = String.join(", ", departTimes);
+
+				    // ---------- ARRIVAL TIMES ----------
+				    List<WebElement> arrivalTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartarrtime')]"));
+				    List<String> arrivalTimes = new ArrayList<>();
+				    for (WebElement elem : arrivalTimeElements) {
+				        arrivalTimes.add(elem.getText().trim());
+				    }
+				    String BookingarrivalTime = String.join(", ", arrivalTimes);
+
+				    // ---------- FLIGHT CLASS ----------
+				    List<WebElement> flightClassElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartcabinclass')]"));
+				    List<String> flightClasses = new ArrayList<>();
+				    for (WebElement elem : flightClassElements) {
+				        flightClasses.add(elem.getText().trim());
+				    }
+				    String BookingPagedepartflightClass = String.join(", ", flightClasses);
+
+				    // ---------- AIRLINE NAMES ----------
+				    List<WebElement> airlineElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartcarriername')]"));
+				    List<String> airlines = new ArrayList<>();
+				    for (WebElement elem : airlineElements) {
+				        String airlineText = elem.getText().trim();
+				        String airlineName = airlineText.split(" -")[0].trim();
+				        airlines.add(airlineName);
+				    }
+				    String departairlinetext = String.join(", ", airlines);
+				    System.out.println("Airline Names: " + departairlinetext);
+
+				    // --- The rest of your code remains exactly the same ---
+
+				    // Get all durations
+				    List<WebElement> bookingdurationElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartduration')]"));
+				    StringBuilder allDurationsBuilder = new StringBuilder();
+				    for (int i = 0; i < bookingdurationElements.size(); i++) {
+				        String dur = bookingdurationElements.get(i).getText().trim();
+				        allDurationsBuilder.append(dur);
+				        if (i != bookingdurationElements.size() - 1) {
+				            allDurationsBuilder.append(", ");
+				        }
+				    }
+				    String allbookingDurations = allDurationsBuilder.toString();
+
+				    String faretype = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")).getText().trim();
+				    String BookingPagedepartFareText = faretype.replace("Fare", "").trim();
+
+				    String BookingPageCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[1]")).getText().trim();
+				    String BookingPageCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[1]")).getText().trim();
+
+				    // Get all connecting flights text
+				    List<WebElement> bookingconnectingFlightsText = driver.findElements(By.xpath("//h6[contains(@class, 'tg-fbDepartflight')]/ancestor::div[contains(@class,'MuiCardContent-root')]//strong[contains(@class, 'tg-fb-layover-destination')]"));
+				    StringBuilder allConnectingFlightsBuilder = new StringBuilder();
+				    for (int i = 0; i < bookingconnectingFlightsText.size(); i++) {
+				        String dur = bookingconnectingFlightsText.get(i).getText().trim();
+				        allConnectingFlightsBuilder.append(dur);
+				        if (i != bookingconnectingFlightsText.size() - 1) {
+				            allConnectingFlightsBuilder.append(", ");
+				        }
+				    }
+				    String allbookingConnectingFlightsText = allConnectingFlightsBuilder.toString();
+
+				    return new String[]{
+				            bookingFromCode,         // 0
+				            bookingToCode,           // 1
+				            BookingPagedepartdepartDate,
+				            BookingdepartArrivalDate,
+				            BookingdepartTime,
+				            BookingarrivalTime,
+				            BookingPagedepartflightClass,
+				            allbookingDurations,
+				            departairlinetext,
+				            BookingPagedepartFareText,
+				            BookingPageCabinBaggageText,
+				            BookingPageCheckInBaggageText,
+				            allbookingConnectingFlightsText
+				    };
+				}
+			 
+			 
+			 public String[] getBookingPageFareAndBaggageDetails() {
+				    try {
+				        // Get Fare Type
+				    	String faretype = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")).getText().trim();
+					    String BookingPagedepartFareText = faretype.replace("Fare", "").trim();
+				        // Get Cabin Baggage
+				        String BookingPageCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[1]")).getText().trim();
+
+				        // Get Check-In Baggage
+				        String BookingPageCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[1]")).getText().trim();
+
+				        return new String[]{
+				            BookingPagedepartFareText,       // index 0
+				            BookingPageCabinBaggageText,     // index 1
+				            BookingPageCheckInBaggageText    // index 2
+				        };
+
+				    } catch (Exception e) {
+				        System.out.println("Error fetching fare and baggage details: " + e.getMessage());
+				        return new String[]{"", "", ""}; // return empty strings if elements not found
+				    }
+				}
+
+			 public String[] getBookingPageFlightReturnCardDetails(String departStopsText) throws InterruptedException {
+
+				    // ---------- FROM CODES ----------
+				    List<WebElement> fromElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnorigin')]"));
+				    List<String> fromCodes = new ArrayList<>();
+				    for (WebElement element : fromElements) {
+				        String text = element.getText().trim();
+				        String code = extractLocationCode(text);
+				        fromCodes.add(code);
+				        System.out.println("From Code: " + code);
+				    }
+				    String bookingreturnFromCode = String.join(", ", fromCodes);
+
+				    // ---------- TO CODES ----------
+				    List<WebElement> toElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturndestination')]"));
+				    List<String> toCodes = new ArrayList<>();
+				    for (WebElement element : toElements) {
+				        String text = element.getText().trim();
+				        String code = extractLocationCode(text);
+				        toCodes.add(code);
+				        System.out.println("To Code: " + code);
+				    }
+				    String bookingreturnToCode = String.join(", ", toCodes);
+
+				    // ---------- DEPART DATES ----------
+				    List<WebElement> departDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturndepdate')]"));
+				    List<String> departDatesRaw = new ArrayList<>();
+				    for (WebElement elem : departDateElements) {
+				        String dateText = elem.getText().trim();
+				        if (dateText.toLowerCase().startsWith("on ")) {
+				            dateText = dateText.substring(3).trim();
+				        }
+				        dateText = dateText.replaceAll(",$", "").trim();
+				        departDatesRaw.add(formatDateWithSuffix(dateText));
+				    }
+				    String BookingPagereturndepartDate = String.join(", ", departDatesRaw);
+
+				    // ---------- ARRIVAL DATES ----------
+				    List<WebElement> arrivalDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnarrdate')]"));
+				    List<String> arrivalDatesRaw = new ArrayList<>();
+				    for (WebElement elem : arrivalDateElements) {
+				        String dateText = elem.getText().trim();
+				        if (dateText.toLowerCase().startsWith("on ")) {
+				            dateText = dateText.substring(3).trim();
+				        }
+				        dateText = dateText.replaceAll(",$", "").trim();
+				        arrivalDatesRaw.add(formatDateWithSuffix(dateText));
+				    }
+				    String BookingreturnArrivalDate = String.join(", ", arrivalDatesRaw);
+
+				    // ---------- DEPART TIMES ----------
+				    List<WebElement> departTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturndeptime')]"));
+				    List<String> departTimes = new ArrayList<>();
+				    for (WebElement elem : departTimeElements) {
+				        departTimes.add(elem.getText().trim());
+				    }
+				    String BookingreturndepartTime = String.join(", ", departTimes);
+
+				    // ---------- ARRIVAL TIMES ----------
+				    List<WebElement> arrivalTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnarrtime')]"));
+				    List<String> arrivalTimes = new ArrayList<>();
+				    for (WebElement elem : arrivalTimeElements) {
+				        arrivalTimes.add(elem.getText().trim());
+				    }
+				    String BookingreturnarrivalTime = String.join(", ", arrivalTimes);
+
+				    // ---------- FLIGHT CLASS ----------
+				    List<WebElement> flightClassElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturncabinclass')]"));
+				    List<String> flightClasses = new ArrayList<>();
+				    for (WebElement elem : flightClassElements) {
+				        flightClasses.add(elem.getText().trim());
+				    }
+				    String BookingPagereturnflightClass = String.join(", ", flightClasses);
+
+				    // ---------- AIRLINE NAMES ----------
+				    List<WebElement> airlineElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturncarriername')]"));
+				    List<String> airlines = new ArrayList<>();
+				    for (WebElement elem : airlineElements) {
+				        String airlineText = elem.getText().trim();
+				        String airlineName = airlineText.split(" -")[0].trim();
+				        airlines.add(airlineName);
+				    }
+				    String returnairlinetext = String.join(", ", airlines);
+				    System.out.println("Airline Names: " + returnairlinetext);
+
+				    // --- The rest of your code remains exactly the same ---
+
+				    // Get all durations
+				    List<WebElement> bookingdurationElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnduration')]"));
+				    StringBuilder allDurationsBuilder = new StringBuilder();
+				    for (int i = 0; i < bookingdurationElements.size(); i++) {
+				        String dur = bookingdurationElements.get(i).getText().trim();
+				        allDurationsBuilder.append(dur);
+				        if (i != bookingdurationElements.size() - 1) {
+				            allDurationsBuilder.append(", ");
+				        }
+				    }
+				    String allbookingDurations = allDurationsBuilder.toString();
+
+				    String faretype = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")).getText().trim();
+				    String BookingPagedepartFareText = faretype.replace("Fare", "").trim();
+
+				    String BookingPageCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[1]")).getText().trim();
+				    String BookingPageCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[1]")).getText().trim();
+
+				    // Get all connecting flights text
+				    List<WebElement> bookingconnectingFlightsText = driver.findElements(
+				    	    By.xpath("//h6[contains(@class, 'tg-fbReturnflight')]/ancestor::div[contains(@class,'MuiCardContent-root')]//strong[contains(@class, 'tg-fb-layover-destination')]"));
+				    StringBuilder allConnectingFlightsBuilder = new StringBuilder();
+				    for (int i = 0; i < bookingconnectingFlightsText.size(); i++) {
+				        String dur = bookingconnectingFlightsText.get(i).getText().trim();
+				        allConnectingFlightsBuilder.append(dur);
+				        if (i != bookingconnectingFlightsText.size() - 1) {
+				            allConnectingFlightsBuilder.append(", ");
+				        }
+				    }
+				    String allbookingConnectingFlightsText = allConnectingFlightsBuilder.toString();
+
+				    return new String[]{
+					        bookingreturnFromCode,                  // 0
+					        bookingreturnToCode,                    // 1
+					        BookingPagereturndepartDate,      // 2
+					        BookingreturnArrivalDate,         // 3
+					        BookingreturndepartTime,                // 4
+					        BookingreturnarrivalTime,               // 5
+					        BookingPagereturnflightClass,     // 6
+					        allbookingDurations,              // 7
+					        returnairlinetext,                // 8
+					        BookingPagedepartFareText,        // 9
+					        BookingPageCabinBaggageText,      //10
+					        BookingPageCheckInBaggageText,    //11
+					        allbookingConnectingFlightsText   //12
+					    };
+					}
+				
+			 
+//			 public String[] getBookingPageFlightReturnCardDetails(String departStopsText) throws InterruptedException {
+//				    
+//				    // From code
+//				    List<WebElement> fromElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnorigin')]"));
+//				    StringBuilder fromBuilder = new StringBuilder();
+//				    for (int i = 0; i < fromElements.size(); i++) {
+//				        String text = extractLocationCode(fromElements.get(i).getText().trim());
+//				        fromBuilder.append(text);
+//				        if (i != fromElements.size() - 1) fromBuilder.append(", ");
+//				    }
+//				    String bookingreturnFromCode = fromBuilder.toString();
+//
+//				    // To code
+//				    List<WebElement> toElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturndestination')]"));
+//				    StringBuilder toBuilder = new StringBuilder();
+//				    for (int i = 0; i < toElements.size(); i++) {
+//				        String text = extractLocationCode(toElements.get(i).getText().trim());
+//				        toBuilder.append(text);
+//				        if (i != toElements.size() - 1) toBuilder.append(", ");
+//				    }
+//				    String bookingreturnToCode = toBuilder.toString();
+//
+//				    // Depart date
+//				    List<WebElement> departDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturndepdate')]"));
+//				    StringBuilder departDateBuilder = new StringBuilder();
+//				    for (int i = 0; i < departDateElements.size(); i++) {
+//				        String date = departDateElements.get(i).getText().trim();
+//				        if (date.toLowerCase().startsWith("on ")) {
+//				            date = date.substring(3).trim();
+//				        }
+//				        date = date.replaceAll(",$", "").trim();
+//				        date = formatDateWithSuffix(date);
+//				        departDateBuilder.append(date);
+//				        if (i != departDateElements.size() - 1) departDateBuilder.append(", ");
+//				    }
+//				    String BookingPagereturndepartDate = departDateBuilder.toString();
+//
+//				    // Arrival date
+//				    List<WebElement> arrivalDateElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnarrdate')]"));
+//				    StringBuilder arrivalDateBuilder = new StringBuilder();
+//				    for (int i = 0; i < arrivalDateElements.size(); i++) {
+//				        String date = arrivalDateElements.get(i).getText().trim();
+//				        if (date.toLowerCase().startsWith("on ")) {
+//				            date = date.substring(3).trim();
+//				        }
+//				        date = date.replaceAll(",$", "").trim();
+//				        date = formatDateWithSuffix(date);
+//				        arrivalDateBuilder.append(date);
+//				        if (i != arrivalDateElements.size() - 1) arrivalDateBuilder.append(", ");
+//				    }
+//				    String BookingreturnArrivalDate = arrivalDateBuilder.toString();
+//
+//				    // Departure time
+//				    List<WebElement> departTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturndeptime')]"));
+//				    StringBuilder departTimeBuilder = new StringBuilder();
+//				    for (int i = 0; i < departTimeElements.size(); i++) {
+//				        departTimeBuilder.append(departTimeElements.get(i).getText().trim());
+//				        if (i != departTimeElements.size() - 1) departTimeBuilder.append(", ");
+//				    }
+//				    String BookingreturndepartTime = departTimeBuilder.toString();
+//
+//				    // Arrival time
+//				    List<WebElement> arrivalTimeElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnarrtime')]"));
+//				    StringBuilder arrivalTimeBuilder = new StringBuilder();
+//				    for (int i = 0; i < arrivalTimeElements.size(); i++) {
+//				        arrivalTimeBuilder.append(arrivalTimeElements.get(i).getText().trim());
+//				        if (i != arrivalTimeElements.size() - 1) arrivalTimeBuilder.append(", ");
+//				    }
+//				    String BookingreturnarrivalTime = arrivalTimeBuilder.toString();
+//
+//				    // Flight class
+//				    List<WebElement> flightClassElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturncabinclass')]"));
+//				    StringBuilder flightClassBuilder = new StringBuilder();
+//				    for (int i = 0; i < flightClassElements.size(); i++) {
+//				        flightClassBuilder.append(flightClassElements.get(i).getText().trim());
+//				        if (i != flightClassElements.size() - 1) flightClassBuilder.append(", ");
+//				    }
+//				    String BookingPagereturnflightClass = flightClassBuilder.toString();
+//
+//				    // Durations
+//				    List<WebElement> durationElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartduration')]"));
+//				    StringBuilder durationBuilder = new StringBuilder();
+//				    for (int i = 0; i < durationElements.size(); i++) {
+//				        durationBuilder.append(durationElements.get(i).getText().trim());
+//				        if (i != durationElements.size() - 1) durationBuilder.append(", ");
+//				    }
+//				    String allbookingDurations = durationBuilder.toString();
+//
+//				    // Airline name
+//				    List<WebElement> airlineElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbDepartcarriername')]"));
+//				    StringBuilder airlineBuilder = new StringBuilder();
+//				    for (int i = 0; i < airlineElements.size(); i++) {
+//				        String text = airlineElements.get(i).getText().trim().split(" -")[0].trim();
+//				        airlineBuilder.append(text);
+//				        if (i != airlineElements.size() - 1) airlineBuilder.append(", ");
+//				    }
+//				    String returnairlinetext = airlineBuilder.toString();
+//
+//				    // Fare type
+//				    String faretype = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Departfaretype')]")).getText().trim();
+//				    String BookingPagedepartFareText = faretype.replace("Fare", "").trim();
+//
+//				    // Cabin & check-in baggage
+//				    String BookingPageCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[1]")).getText().trim();
+//				    String BookingPageCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[1]")).getText().trim();
+//
+//				    // Connecting flights
+//				    List<WebElement> connectingFlightElements = driver.findElements(By.xpath("//h6[contains(@class, 'tg-fbDepartflight')]/ancestor::div[contains(@class,'MuiCardContent-root')]//strong[contains(@class, 'tg-fb-layover-destination')]"));
+//				    StringBuilder connectingFlightsBuilder = new StringBuilder();
+//				    for (int i = 0; i < connectingFlightElements.size(); i++) {
+//				        connectingFlightsBuilder.append(connectingFlightElements.get(i).getText().trim());
+//				        if (i != connectingFlightElements.size() - 1) connectingFlightsBuilder.append(", ");
+//				    }
+//				    String allbookingConnectingFlightsText = connectingFlightsBuilder.toString();
+//
+//				    // Return all details
+//				    return new String[]{
+//				        bookingreturnFromCode,                  // 0
+//				        bookingreturnToCode,                    // 1
+//				        BookingPagereturndepartDate,      // 2
+//				        BookingreturnArrivalDate,         // 3
+//				        BookingreturndepartTime,                // 4
+//				        BookingreturnarrivalTime,               // 5
+//				        BookingPagereturnflightClass,     // 6
+//				        allbookingDurations,              // 7
+//				        returnairlinetext,                // 8
+//				        BookingPagedepartFareText,        // 9
+//				        BookingPageCabinBaggageText,      //10
+//				        BookingPageCheckInBaggageText,    //11
+//				        allbookingConnectingFlightsText   //12
+//				    };
+//				}
+//
+
+			 
+			//get booking page return details   --use this also but only it get 1st and last loc texts
+//			 public String[] getBookingPageFlightReturnCardDetails(String returnStopsText) throws InterruptedException {
+//
+//				    String BookingPagereturnFromText = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbReturnorigin')])[1]")).getText().trim();
+//				    String bookingreturnFromCode = extractLocationCode(BookingPagereturnFromText);
+//
+//				    String BookingPagereturnToText = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbReturndestination')])[last()]")).getText().trim();
+//				    String bookingreturnToCode = extractLocationCode(BookingPagereturnToText);
+//
+//				    String BookingreturndepartDate = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbReturndepdate')])[1]")).getText().trim();
+//
+//				    if (BookingreturndepartDate.toLowerCase().startsWith("on ")) {
+//				    	BookingreturndepartDate = BookingreturndepartDate.substring(3).trim();
+//				    }
+//				    BookingreturndepartDate = BookingreturndepartDate.replaceAll(",$", "").trim();  // Remove trailing comma
+//			    // Format dates with suffix (e.g. "8th Aug")
+//			    String BookingPagereturndepartDate = formatDateWithSuffix(BookingreturndepartDate);
+//			    
+//
+//				    String BookingreturnArrDate = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbReturnarrdate')])[last()]")).getText().trim();
+//
+//				    if (BookingreturnArrDate.toLowerCase().startsWith("on ")) {
+//				    	BookingreturnArrDate = BookingreturnArrDate.substring(3).trim();
+//				    }
+//				    BookingreturnArrDate = BookingreturnArrDate.replaceAll(",$", "").trim();  // Remove trailing comma
+//			    // Format dates with suffix (e.g. "8th Aug")
+//			    String BookingreturnArrivalDate = formatDateWithSuffix(BookingreturnArrDate);
+//			      
+//
+//				    String BookingPagereturndepartTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbReturndeptime')])[1]")).getText().trim();
+//				    String BookingPagereturnarrivalTime = driver.findElement(By.xpath("(//*[contains(@class,'tg-fbReturnarrtime')])[last()]")).getText().trim();
+//
+//				    String BookingPagereturnflightClass = driver.findElement(By.xpath("//*[contains(@class,'tg-fbReturncabinclass')]")).getText().trim();
+//
+//
+//				    // Get all durations
+//				    List<WebElement> bookingreturndurationElements = driver.findElements(By.xpath("//*[contains(@class,'tg-fbReturnduration')]"));
+//				    StringBuilder allDurationsBuilder = new StringBuilder();
+//
+//				    for (int i = 0; i < bookingreturndurationElements.size(); i++) {
+//				        String dur = bookingreturndurationElements.get(i).getText().trim();
+//				        allDurationsBuilder.append(dur);
+//				        if (i != bookingreturndurationElements.size() - 1) {    //this is for donyt add commas/space to last element 
+//				            allDurationsBuilder.append(", ");
+//				        }
+//				    }
+//
+//				    String allreturnbookingDurations = allDurationsBuilder.toString();  //convert to string
+//				    
+//				    
+//				    String bookingpagereturnairlineText = driver.findElement(By.xpath("//*[contains(@class,'tg-fbReturncarriername')]")).getText().trim();
+//
+//				 String returnairlinetext = bookingpagereturnairlineText.split(" -")[0].trim();
+//
+//				 System.out.println("Airline Name: " + returnairlinetext);
+//
+//				    String faretype = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Returnfaretype')]")).getText().trim();
+//				    String BookingPageReturnFareText = faretype.replace("Fare", "").trim();
+//
+//				    String BookingPageReturnCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[2]")).getText().trim();
+//
+//				    String BookingPageReturnCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[2]")).getText().trim();
+//
+//				 // Get all connecting returmn flights text
+//				    List<WebElement> bookingreturnconnectingFlightsText = driver.findElements(By.xpath("//h6[contains(@class, 'tg-fbReturnflight')]/ancestor::div[contains(@class,'MuiCardContent-root')]//strong[contains(@class, 'tg-fb-layover-destination')]"));
+//				    StringBuilder allConnectingFlightsBuilder = new StringBuilder();
+//
+//				    for (int i = 0; i < bookingreturnconnectingFlightsText.size(); i++) {
+//				        String dur = bookingreturnconnectingFlightsText.get(i).getText().trim();
+//				        allConnectingFlightsBuilder.append(dur);
+//				        if (i != bookingreturnconnectingFlightsText.size() - 1) {    //this is for donyt add commas/space to last element 
+//				        	allConnectingFlightsBuilder.append(", ");
+//				        }
+//				    }
+//
+//				    String allreturnbookingConnectingFlightsText = allConnectingFlightsBuilder.toString();  //convert to string
+//
+//				    return new String[]{
+//				    		bookingreturnFromCode,   // 0
+//				    		bookingreturnToCode,      // 1
+//				    		BookingPagereturndepartDate,       
+//				    		BookingreturnArrivalDate,       
+//				    		BookingPagereturndepartTime,     
+//				    		BookingPagereturnarrivalTime,           
+//				    		BookingPagereturnflightClass,         
+//				    		allreturnbookingDurations,         
+//				    		returnairlinetext,
+//				    		BookingPageReturnFareText,
+//				    		BookingPageReturnCabinBaggageText,
+//				    		BookingPageReturnCheckInBaggageText,
+//				    		allreturnbookingConnectingFlightsText
+//				              
+//				    };
+//				}
+			 
+	//get booking page total price sum
+	public String[] bookingPagTotalPrice() {
+		String BookingPagePriceText=driver.findElement(By.xpath("//*[contains(@class,'tg-fbtotal')]")).getText().trim();
+		  return new String[]{
+				  BookingPagePriceText
+		  };    		
+	}
+	
+	
+	
+	
+//	------------------------------------------------------------------------
+
+	                                        //validations 
+	
+	public void validateFlightDetailsfromTopbarToDeprtflightIndex(String[] topBarDetails, String[] flightResultDetails,Log log, ScreenShots screenshots) {
+	    String fromCode = topBarDetails[0];
+	    String toCode = topBarDetails[1];
+	    String journeyDate = topBarDetails[2];
+	    // String returnDate = topBarDetails[3];
+	    // String flightClass = topBarDetails[4];
+
+	    String departFromCode = flightResultDetails[0];
+	    String departToCode = flightResultDetails[1];
+	    String departDate = flightResultDetails[2];
+	    // String arrivalDate = flightResultDetails[9];
+	    String resultFlightClass = flightResultDetails[5];
+
+	    // Comparison validations
+	    if (!fromCode.equalsIgnoreCase(departFromCode)) {
+	        System.out.println("Mismatch in From Code with TopBar Depart from  Loc : Expected " + fromCode + " but found " + departFromCode);
+	        log.ReportEvent("FAIL", "Mismatch in From Code with TopBarfrom Depart Loc: Expected '" + fromCode + "' but found '" + departFromCode + "'");
+	        screenshots.takeScreenShot1();
+	    } else {
+	        log.ReportEvent("PASS", "From Code matched with TopBar from Depart Loc: " + fromCode);
+	    }
+
+	    if (!toCode.equalsIgnoreCase(departToCode)) {
+	        System.out.println("Mismatch in To Code with TopBar to Depart Loc: Expected " + toCode + " but found " + departToCode);
+	        log.ReportEvent("FAIL", "Mismatch in To Code with TopBar To Depart Loc: Expected '" + toCode + "' but found '" + departToCode + "'");
+	        screenshots.takeScreenShot1();
+	    } else {
+	        log.ReportEvent("PASS", "To Code matched with TopBar To Depart Loc: " + toCode);
+	    }
+
+	    if (!journeyDate.equalsIgnoreCase(departDate)) {
+	        System.out.println("Mismatch in Journey Date with TopBar To Depart Journey Date: Expected " + journeyDate + " but found " + departDate);
+	        log.ReportEvent("FAIL", "Mismatch in Mismatch in Journey Date with TopBar To Depart Journey Date : Expected '" + journeyDate + "' but found '" + departDate + "'");
+	        screenshots.takeScreenShot1();
+	    } else {
+	        log.ReportEvent("PASS", "Journey Date matched with TopBar To Depart journeydate: " + journeyDate);
+	    }
+
+	    /*
+	    if (!flightClass.equalsIgnoreCase(resultFlightClass)) {
+	        System.out.println("Mismatch in Flight Class: Expected " + flightClass + " but found " + resultFlightClass);
+	        log.ReportEvent("FAIL", "Mismatch in Flight Class: Expected '" + flightClass + "' but found '" + resultFlightClass + "'");
+	        screenshots.takeScreenShot1();
+	    } else {
+	        log.ReportEvent("PASS", "Flight Class matched: " + flightClass);
+	    }
+	    */
+	}
+//-------------------------------------------------------------
+	
+	public void validatetopbarwithReturnFlightDetails(String[] topBarDetails, String[] returnFlightDetails,Log log, ScreenShots screenshots) {
+	    String fromCode = topBarDetails[0];
+	    String toCode = topBarDetails[1];
+	    String returnDate = topBarDetails[3];
+	    // String flightClass = topBarDetails[4];
+
+	    String returnFromCode = returnFlightDetails[2];
+	    String returnToCode = returnFlightDetails[3];
+	    String returndepartDate = returnFlightDetails[4];
+	    String resultFlightClass = returnFlightDetails[8];
+
+	    System.out.println("----- Validating Return Flight Details -----");
+
+	    // 1. Validate From (TopBar → Return To)
+	    if (fromCode.equalsIgnoreCase(returnToCode)) {
+	        System.out.println(" Return 'To' Code matches with TopBar From loc: " + fromCode);
+	        log.ReportEvent("PASS", "Return 'To' Code matches with TopBar from loc: " + fromCode);
+	    } else {
+	        System.out.println(" Mismatch in Return 'To' Code with TopBar from loc: Expected " + fromCode + ", but found " + returnToCode);
+	        log.ReportEvent("FAIL", "Mismatch in Return 'To' Code with TopBar from loc: Expected '" + fromCode + "', but found '" + returnToCode + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // 2. Validate To (TopBar → Return From)
+	    if (toCode.equalsIgnoreCase(returnFromCode)) {
+	        System.out.println(" Return 'From' Code matches with TopBar To return loc: " + toCode);
+	        log.ReportEvent("PASS", "Return 'From' Code matches with TopBar To return loc: " + toCode);
+	    } else {
+	        System.out.println(" Mismatch in Return 'From' Code with TopBar To return loc: Expected " + toCode + ", but found " + returnFromCode);
+	        log.ReportEvent("FAIL", "Mismatch in Return 'From' Code with TopBar To return loc: Expected '" + toCode + "', but found '" + returnFromCode + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // 3. Validate Return Date
+	    if (returnDate.equalsIgnoreCase(returndepartDate)) {
+	        System.out.println(" Return Date matches with TopBar To return date : " + returnDate);
+	        log.ReportEvent("PASS", "Return Date matches with TopBar To return date: " + returnDate);
+	    } else {
+	        System.out.println(" Mismatch in Return Date with TopBar To return date: Expected " + returnDate + ", but found " + returndepartDate);
+	        log.ReportEvent("FAIL", "Mismatch in Return Date with TopBar To return date: Expected '" + returnDate + "', but found '" + returndepartDate + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    /*
+	    // 4. Validate Flight Class
+	    if (flightClass.equalsIgnoreCase(resultFlightClass)) {
+	        System.out.println(" Flight Class matches: " + flightClass);
+	        log.ReportEvent("PASS", "Flight Class matches: " + flightClass);
+	    } else {
+	        System.out.println(" Mismatch in Flight Class: Expected " + flightClass + ", but found " + resultFlightClass);
+	        log.ReportEvent("FAIL", "Mismatch in Flight Class: Expected '" + flightClass + "', but found '" + resultFlightClass + "'");
+	        screenshots.takeScreenShot1();
+	    }
+	    */
+
+	    System.out.println("----- Return Flight Validation Completed -----\n");
+	}
+
+	//---------------------------------------------------------
+	
+	public void validateDepartureFlightwithBottomBar(String[] departFlightDetails, String[] bottomBarDetails, Log log, ScreenShots screenshots) {
+	    System.out.println("----- Validating Departure Flight Bottom Bar Details -----");
+
+	    // From Location
+	    if (departFlightDetails[0].equalsIgnoreCase(bottomBarDetails[0])) {
+	        System.out.println("Depart From Code matches with bottom bar : " + bottomBarDetails[0]);
+	        log.ReportEvent("PASS", "Depart From Code matches  with bottom bar : " + bottomBarDetails[0]);
+	    } else {
+	        System.out.println("Mismatch in Depart From Code location with bottom bar : Expected " + departFlightDetails[0] + ", but found " + bottomBarDetails[0]);
+	        log.ReportEvent("FAIL", "Mismatch in Depart From Code location with bottom bar : Expected '" + departFlightDetails[0] + "', but found '" + bottomBarDetails[0] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // To Location
+	    if (departFlightDetails[1].equalsIgnoreCase(bottomBarDetails[1])) {
+	        System.out.println(" Depart To Code matches with bottom bar: " + bottomBarDetails[1]);
+	        log.ReportEvent("PASS", "Depart To Code matches with bottom bar : " + bottomBarDetails[1]);
+	    } else {
+	        System.out.println(" Mismatch in Depart To Code location with bottom bar : Expected " + departFlightDetails[1] + ", but found " + bottomBarDetails[1]);
+	        log.ReportEvent("FAIL", "Mismatch in Depart To Code location with bottom bar : Expected '" + departFlightDetails[1] + "', but found '" + bottomBarDetails[1] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Departure Time
+	    if (departFlightDetails[3].equalsIgnoreCase(bottomBarDetails[2])) {
+	        System.out.println(" Departure Time matches with bottom bar : " + bottomBarDetails[2]);
+	        log.ReportEvent("PASS", "Departure Time matches with bottom bar : " + bottomBarDetails[2]);
+	    } else {
+	        System.out.println(" Mismatch in Departure Time with bottom bar : Expected " + departFlightDetails[3] + ", but found " + bottomBarDetails[2]);
+	        log.ReportEvent("FAIL", "Mismatch in Departure Time with bottom bar : Expected '" + departFlightDetails[3] + "', but found '" + bottomBarDetails[2] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Arrival Time
+	    if (departFlightDetails[4].equalsIgnoreCase(bottomBarDetails[3])) {
+	        System.out.println(" Arrival Time matches with bottom bar : " + bottomBarDetails[3]);
+	        log.ReportEvent("PASS", "Arrival Time matches with bottom bar : " + bottomBarDetails[3]);
+	    } else {
+	        System.out.println(" Mismatch in Arrival Time with bottom bar : Expected " + departFlightDetails[4] + ", but found " + bottomBarDetails[3]);
+	        log.ReportEvent("FAIL", "Mismatch in Arrival Time with bottom bar : Expected '" + departFlightDetails[4] + "', but found '" + bottomBarDetails[3] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Duration
+	    if (departFlightDetails[6].equalsIgnoreCase(bottomBarDetails[4])) {
+	        System.out.println("Depart Duration matches with bottom bar : " + bottomBarDetails[4]);
+	        log.ReportEvent("PASS", "Depart Duration matches with bottom bar : " + bottomBarDetails[4]);
+	    } else {
+	        System.out.println(" Mismatch in Depart Duration with bottom bar : Expected " + departFlightDetails[6] + ", but found " + bottomBarDetails[4]);
+	        log.ReportEvent("FAIL", "Mismatch in Depart Duration with bottom bar : Expected '" + departFlightDetails[6] + "', but found '" + bottomBarDetails[4] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Stops
+	    if (departFlightDetails[11].equalsIgnoreCase(bottomBarDetails[6])) {
+	        System.out.println("Depart Stops match with bottom bar : " + bottomBarDetails[6]);
+	        log.ReportEvent("PASS", "Depart Stops match with bottom bar : " + bottomBarDetails[6]);
+	    } else {
+	        System.out.println(" Mismatch in Depart Stops with bottom bar : Expected " + departFlightDetails[11] + ", but found " + bottomBarDetails[6]);
+	        log.ReportEvent("FAIL", "Mismatch in Depart Stops with bottom bar : Expected '" + departFlightDetails[11] + "', but found '" + bottomBarDetails[6] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    System.out.println("----- Departure Flight Bottom Bar Validation Completed -----\n");
+	}
+
+	//--------------------------------------------------------
+	public void validatereturnFlightwithBottomBar(String[] returnFlightDetails, String[] bottomBarDetails, Log log, ScreenShots screenshots) {
+	    System.out.println("----- Validating Departure Flight Bottom Bar Details -----");
+
+	    // From Location
+	    if (returnFlightDetails[0].equalsIgnoreCase(bottomBarDetails[0])) {
+	        System.out.println(" Return From Code location matches with Return bottom bar : " + bottomBarDetails[0]);
+	        log.ReportEvent("PASS", "Return From Code location matches with Return bottom bar: " + bottomBarDetails[0]);
+	    } else {
+	        System.out.println(" Mismatch in return From Code location with Return bottom bar: Expected " + returnFlightDetails[0] + ", but found " + bottomBarDetails[0]);
+	        log.ReportEvent("FAIL", "Mismatch in return From Code location with Return bottom bar: Expected '" + returnFlightDetails[0] + "', but found '" + bottomBarDetails[0] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // To Location
+	    if (returnFlightDetails[1].equalsIgnoreCase(bottomBarDetails[1])) {
+	        System.out.println("Return To Code location matches with Return bottom bar: " + bottomBarDetails[1]);
+	        log.ReportEvent("PASS", "Return To Code location matches with Return bottom bar: " + bottomBarDetails[1]);
+	    } else {
+	        System.out.println(" Mismatch in return To Code location with Return bottom bar: Expected " + returnFlightDetails[1] + ", but found " + bottomBarDetails[1]);
+	        log.ReportEvent("FAIL", "Mismatch in return To Code location with Return bottom bar: Expected '" + returnFlightDetails[1] + "', but found '" + bottomBarDetails[1] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Departure Time
+	    if (returnFlightDetails[3].equalsIgnoreCase(bottomBarDetails[2])) {
+	        System.out.println(" Return Departure Time matches with Return bottom bar: " + bottomBarDetails[2]);
+	        log.ReportEvent("PASS", "Return Departure Time matches with Return bottom bar: " + bottomBarDetails[2]);
+	    } else {
+	        System.out.println(" Mismatch in return Departure Time with Return bottom bar: Expected " + returnFlightDetails[3] + ", but found " + bottomBarDetails[2]);
+	        log.ReportEvent("FAIL", "Mismatch in return Departure Time with Return bottom bar: Expected '" + returnFlightDetails[3] + "', but found '" + bottomBarDetails[2] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Arrival Time
+	    if (returnFlightDetails[4].equalsIgnoreCase(bottomBarDetails[3])) {
+	        System.out.println("Return Arrival Time matches with Return bottom bar: " + bottomBarDetails[3]);
+	        log.ReportEvent("PASS", "Return Arrival Time matches with Return bottom bar: " + bottomBarDetails[3]);
+	    } else {
+	        System.out.println(" Mismatch in return Arrival Time with Return bottom bar: Expected " + returnFlightDetails[4] + ", but found " + bottomBarDetails[3]);
+	        log.ReportEvent("FAIL", "Mismatch in return Arrival Time with Return bottom bar: Expected '" + returnFlightDetails[4] + "', but found '" + bottomBarDetails[3] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Duration
+	    if (returnFlightDetails[6].equalsIgnoreCase(bottomBarDetails[4])) {
+	        System.out.println("return Duration matches with Return bottom bar: " + bottomBarDetails[4]);
+	        log.ReportEvent("PASS", "Return Duration matches with Return bottom bar: " + bottomBarDetails[4]);
+	    } else {
+	        System.out.println(" Mismatch in retrun Duration with Return bottom bar: Expected " + returnFlightDetails[6] + ", but found " + bottomBarDetails[4]);
+	        log.ReportEvent("FAIL", "Mismatch in return Duration with Return bottom bar: Expected '" + returnFlightDetails[6] + "', but found '" + bottomBarDetails[4] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Stops
+	    if (returnFlightDetails[11].equalsIgnoreCase(bottomBarDetails[6])) {
+	        System.out.println("return Stops match with Return bottom bar: " + bottomBarDetails[6]);
+	        log.ReportEvent("PASS", "Return Stops match with Return bottom bar: " + bottomBarDetails[6]);
+	    } else {
+	        System.out.println(" Mismatch in return Stops with Return bottom bar: Expected " + returnFlightDetails[11] + ", but found " + bottomBarDetails[6]);
+	        log.ReportEvent("FAIL", "Mismatch in return Stops with Return bottom bar: Expected '" + returnFlightDetails[11] + "', but found '" + bottomBarDetails[6] + "'");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    System.out.println("----- Departure Flight Bottom Bar Validation Completed -----\n");
+	}
+
+//------------------------------------------------------------------
+	
+	public String[] getDepartfareTypeAndFarePriceAndBaggage(String fareTypeArg, Log log, ScreenShots screenshots) throws InterruptedException {
+	    boolean fareTypeFound = false;
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // Step 2: Find all fare type blocks
+	    List<WebElement> allFareTypes = driver.findElements(By.xpath("//*[@data-tgflfaretype]"));
+	    WebElement selectedFareBlock = null;
+	    String fareTypeText = ""; // Correct variable for fare type
+	    String popupFareText = "";
+	    String cabinBaggageText = "";
+	    String checkInBaggageText = "";
+
+	    for (WebElement fareType : allFareTypes) {
+	        String currentFareTypeText = fareType.getText().trim();
+	        System.out.println("Checking Fare Type: " + currentFareTypeText);
+
+	        if (currentFareTypeText.contains(fareTypeArg)) {
+	            js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", fareType);
+	            log.ReportEvent("PASS", "FareType Found: " + currentFareTypeText);
+	            fareTypeFound = true;
+	            selectedFareBlock = fareType;
+	            fareTypeText = currentFareTypeText;
+	            break;
+	        }
+	    }
+
+	    // Step 3: Fallback if not found
+	    if (!fareTypeFound && !allFareTypes.isEmpty()) {
+	        log.ReportEvent("INFO", "FareType not found. Defaulting to first fare type.");
+	        selectedFareBlock = allFareTypes.get(0);
+	        fareTypeText = selectedFareBlock.getText().trim();
+	    }
+
+	    if (selectedFareBlock == null) {
+	        log.ReportEvent("FAIL", "No fare types found.");
+	        screenshots.takeScreenShot1();
+	        return null;
+	    }
+
+	    // Step 4: Get fare price
+	    wait.until(ExpectedConditions.visibilityOf(selectedFareBlock));
+	    WebElement parent = selectedFareBlock.findElement(By.xpath(".."));
+	    List<WebElement> priceElements = parent.findElements(By.xpath(".//*[contains(@class, 'fare-price')]"));
+	    if (priceElements.isEmpty()) {
+	        log.ReportEvent("FAIL", "No fare price elements found inside selected fare block.");
+	        System.out.println("Selected block HTML: " + selectedFareBlock.getAttribute("outerHTML"));
+	        screenshots.takeScreenShot1();
+	        return null;
+	    }
+
+	    popupFareText = priceElements.get(0).getText().trim();
+	    System.out.println("Popup Fare Price: " + popupFareText);
+	    log.ReportEvent("INFO", "Popup Fare Price: " + popupFareText);
+
+	    // Step 5: Get cabin baggage and check-in baggage text
+	    try {
+	        WebElement cabinBaggageEl = parent.findElement(By.xpath("//*[@data-tgflfaretype][normalize-space()='" + fareTypeText + "']/parent::div/parent::div//*[contains(@class,'tg-fare-cabinbag')]"));
+	        cabinBaggageText = cabinBaggageEl.getText().trim();
+	    } catch (NoSuchElementException e) {
+	        cabinBaggageText = "";
+	        log.ReportEvent("INFO", "Cabin baggage info not found.");
+	    }
+
+	    try {
+	        WebElement checkInBaggageEl = parent.findElement(By.xpath("//*[@data-tgflfaretype][normalize-space()='" + fareTypeText + "']/parent::div/parent::div//*[contains(@class,'tg-fare-checkinbag')]"));
+	        checkInBaggageText = checkInBaggageEl.getText().trim();
+	    } catch (NoSuchElementException e) {
+	        checkInBaggageText = "";
+	        log.ReportEvent("INFO", "Check-in baggage info not found.");
+	    }
+
+	    // Step 6: Scroll to and click "Select" button using fareTypeText
+	    try {
+	        String selectButtonXPath = "//*[@data-tgflfaretype][normalize-space()='" + fareTypeText + "']/parent::div/parent::div//button[2]";
+	        WebElement selectButton = driver.findElement(By.xpath(selectButtonXPath));
+	        js.executeScript("arguments[0].scrollIntoView({block: 'center'});", selectButton);
+	        wait.until(ExpectedConditions.elementToBeClickable(selectButton));
+	        js.executeScript("arguments[0].click();", selectButton);
+	        log.ReportEvent("PASS", "Clicked on Select for FareType");
+	    } catch (Exception e) {
+	        log.ReportEvent("FAIL", "Could not find or click Select button: " + e.getMessage());
+	        screenshots.takeScreenShot1();
+	        return null;
+	    }
+
+	    // Step 7: Get bottom bar fare price
+	    Thread.sleep(3000); // Wait for price update
+	    WebElement bottomBarPriceEl = driver.findElement(By.xpath("//*[@data-tgflprice]"));
+	    String bottomBarText = bottomBarPriceEl.getText().trim();
+	    System.out.println("Bottom Bar From Fare Price: " + bottomBarText);
+	    log.ReportEvent("INFO", "Bottom Bar From Fare Price: " + bottomBarText);
+
+	    // Step 8: Compare prices
+	    String cleanPopupPrice = popupFareText.replaceAll("[^0-9.]", "");
+	    String cleanBottomPrice = bottomBarText.replaceAll("[^0-9.]", "");
+
+	    if (cleanPopupPrice.equals(cleanBottomPrice)) {
+	        log.ReportEvent("PASS", "From Fare price matched: " + popupFareText);
+	        System.out.println("From Fare price matches.");
+	    } else {
+	        log.ReportEvent("FAIL", "From Price mismatch. Popup: " + popupFareText + ", Bottom Bar: " + bottomBarText);
+	        System.out.println("From Fare price mismatch.");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Return selected fare details
+	    return new String[] { fareTypeText, popupFareText, cabinBaggageText, checkInBaggageText };
+	}
+	
+	//--------------------------------------------------------------------
+	
+	public String[] getReturnfareTypeAndFarePriceAndBaggage(String fareTypeArg, Log log, ScreenShots screenshots) throws InterruptedException {
+	    boolean fareTypeFound = false;
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // Step 2: Find all fare type blocks
+	    List<WebElement> allFareTypes = driver.findElements(By.xpath("//*[@data-tgflfaretype]"));
+	    WebElement selectedFareBlock = null;
+	    String fareTypeText = ""; // Correct variable for fare type
+	    String popupFareText = "";
+	    String cabinBaggageText = "";
+	    String checkInBaggageText = "";
+
+	    for (WebElement fareType : allFareTypes) {
+	        String currentFareTypeText = fareType.getText().trim();
+	        System.out.println("Checking Fare Type: " + currentFareTypeText);
+
+	        if (currentFareTypeText.contains(fareTypeArg)) {
+	            js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", fareType);
+	            log.ReportEvent("PASS", "FareType Found: " + currentFareTypeText);
+	            fareTypeFound = true;
+	            selectedFareBlock = fareType;
+	            fareTypeText = currentFareTypeText;
+	            break;
+	        }
+	    }
+
+	    // Step 3: Fallback if not found
+	    if (!fareTypeFound && !allFareTypes.isEmpty()) {
+	        log.ReportEvent("INFO", "FareType not found. Defaulting to first fare type.");
+	        selectedFareBlock = allFareTypes.get(0);
+	        fareTypeText = selectedFareBlock.getText().trim();
+	    }
+
+	    if (selectedFareBlock == null) {
+	        log.ReportEvent("FAIL", "No fare types found.");
+	        screenshots.takeScreenShot1();
+	        return null;
+	    }
+
+	    // Step 4: Get fare price
+	    
+	    wait.until(ExpectedConditions.visibilityOf(selectedFareBlock));
+	    WebElement parent = selectedFareBlock.findElement(By.xpath(".."));
+	    List<WebElement> priceElements = parent.findElements(By.xpath(".//*[contains(@class, 'fare-price')]"));
+	    if (priceElements.isEmpty()) {
+	        log.ReportEvent("FAIL", "No fare price elements found inside selected fare block.");
+	        System.out.println("Selected block HTML: " + selectedFareBlock.getAttribute("outerHTML"));
+	        screenshots.takeScreenShot1();
+	        return null;
+	    }
+
+	    popupFareText = priceElements.get(0).getText().trim();
+	    System.out.println("Popup Fare Price: " + popupFareText);
+	    log.ReportEvent("INFO", "Popup Fare Price: " + popupFareText);
+
+	    // Step 5: Get cabin baggage and check-in baggage text
+	    try {
+	        WebElement cabinBaggageEl = parent.findElement(By.xpath("//*[@data-tgflfaretype][normalize-space()='" + fareTypeText + "']/parent::div/parent::div//*[contains(@class,'tg-fare-cabinbag')]"));
+	        cabinBaggageText = cabinBaggageEl.getText().trim();
+	    } catch (NoSuchElementException e) {
+	        cabinBaggageText = "";
+	        log.ReportEvent("INFO", "Cabin baggage info not found.");
+	    }
+
+	    try {
+	        WebElement checkInBaggageEl = parent.findElement(By.xpath("//*[@data-tgflfaretype][normalize-space()='" + fareTypeText + "']/parent::div/parent::div//*[contains(@class,'tg-fare-checkinbag')]"));
+	        checkInBaggageText = checkInBaggageEl.getText().trim();
+	    } catch (NoSuchElementException e) {
+	        checkInBaggageText = "";
+	        log.ReportEvent("INFO", "Check-in baggage info not found.");
+	    }
+
+	    // Step 6: Scroll to and click "Select" button using fareTypeText
+	    try {
+	        String selectButtonXPath = "//*[@data-tgflfaretype][normalize-space()='" + fareTypeText + "']/parent::div/parent::div//button[2]";
+	        WebElement selectButton = driver.findElement(By.xpath(selectButtonXPath));
+	        js.executeScript("arguments[0].scrollIntoView({block: 'center'});", selectButton);
+	        wait.until(ExpectedConditions.elementToBeClickable(selectButton));
+	        js.executeScript("arguments[0].click();", selectButton);
+	        log.ReportEvent("PASS", "Clicked on Select for FareType");
+	    } catch (Exception e) {
+	        log.ReportEvent("FAIL", "Could not find or click Select button: " + e.getMessage());
+	        screenshots.takeScreenShot1();
+	        return null;
+	    }
+
+	    // Step 7: Get bottom bar fare price
+	    Thread.sleep(3000); // Wait for price update
+	    WebElement bottomBarPriceEl = driver.findElement(By.xpath("//*[@data-tgfltoprice]"));
+	    String bottomBarText = bottomBarPriceEl.getText().trim();
+	    System.out.println("Bottom Bar From Fare Price: " + bottomBarText);
+	    log.ReportEvent("INFO", "Bottom Bar From Fare Price: " + bottomBarText);
+
+	    // Step 8: Compare prices
+	    String cleanPopupPrice = popupFareText.replaceAll("[^0-9.]", "");
+	    String cleanBottomPrice = bottomBarText.replaceAll("[^0-9.]", "");
+
+	    if (cleanPopupPrice.equals(cleanBottomPrice)) {
+	        log.ReportEvent("PASS", "From Fare price matched: " + popupFareText);
+	        System.out.println("From Fare price matches.");
+	    } else {
+	        log.ReportEvent("FAIL", "From Price mismatch. Popup: " + popupFareText + ", Bottom Bar: " + bottomBarText);
+	        System.out.println("From Fare price mismatch.");
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Return selected fare details
+	    return new String[] { fareTypeText, popupFareText, cabinBaggageText, checkInBaggageText };
+	}
+	
+	//--------------------------------------------------------------------
+	
+	//Method to validate depart flight details with booking depart details
+	
+	public void validateFlightDetailsFromResultToBooking(String[] resultDetails, String[] bookingDetails, Log log, ScreenShots screenshots) {
+	    String departFromCodeResult = resultDetails[0];
+	    String departToCodeResult = resultDetails[1];
+	    String departDateResult = resultDetails[2];
+	//    String arrivalDateResult = resultDetails[9];
+	    String departTimeResult = resultDetails[3];
+	    String arrivalTimeResult = resultDetails[4];
+	    String flightClassResult = resultDetails[5];
+	    String durationResult = resultDetails[6];
+	    String airlineResult = resultDetails[7];
+	    String ConnectingFlightsResult = resultDetails[11];
+
+
+	    String departFromCodeBooking = bookingDetails[0];
+	    String departToCodeBooking = bookingDetails[1];
+	    String departDateBooking = bookingDetails[2];
+	  //  String arrivalDateBooking = bookingDetails[3];
+	    String departTimeBooking = bookingDetails[4];
+	    String arrivalTimeBooking = bookingDetails[5];
+	    String flightClassBooking = bookingDetails[6];
+	    String durationBooking = bookingDetails[7];
+
+	    String airlineBooking = bookingDetails[8];
+	    String ConnectingFlightsBooking = bookingDetails[12];
+
+	    // From Code
+	    if (departFromCodeResult.equalsIgnoreCase(departFromCodeBooking)) {
+	        System.out.println("PASS: Booking From Code matched with resultpg Depart from : " + departFromCodeResult);
+	        log.ReportEvent("PASS", "Booking From Code matched with resultpg Depart from: " + departFromCodeResult);
+	    } else {
+	        System.out.println("FAIL: Booking From Code mismatch. Result Page: " + departFromCodeResult + " | Booking Page: " + departFromCodeBooking);
+	        log.ReportEvent("FAIL", "Booking From Code mismatch. Result Page: " + departFromCodeResult + " | Booking Page: " + departFromCodeBooking);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // To Code
+	    if (departToCodeResult.equalsIgnoreCase(departToCodeBooking)) {
+	        System.out.println("PASS: Booking To Code matched with resultpg Depart to: " + departToCodeResult);
+	        log.ReportEvent("PASS", "Booking To Code matched with resultpg Depart to: " + departToCodeResult);
+	    } else {
+	        System.out.println("FAIL: Booking To Code mismatch. Result Page: " + departToCodeResult + " | Booking Page: " + departToCodeBooking);
+	        log.ReportEvent("FAIL", "Booking To Code mismatch. Result Page: " + departToCodeResult + " | Booking Page: " + departToCodeBooking);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Departure Date
+	    if (departDateResult.equalsIgnoreCase(departDateBooking)) {
+	        System.out.println("PASS: Booking Departure Date matched with resultpg Depart date: " + departDateResult);
+	        log.ReportEvent("PASS", "Booking Departure Date matched with resultpg Depart date: " + departDateResult);
+	    } else {
+	        System.out.println("FAIL: Booking Departure Date mismatch with resultpg Depart date. Result Page: " + departDateResult + " | Booking Page: " + departDateBooking);
+	        log.ReportEvent("FAIL", "Booking Departure Date mismatch. Result Page with resultpg Depart date: " + departDateResult + " | Booking Page: " + departDateBooking);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Arrival Date
+	/*    if (arrivalDateResult.equalsIgnoreCase(arrivalDateBooking)) {
+	        System.out.println("PASS:Booking Arrival Date matched with resultpg arrival date: " + arrivalDateResult);
+	        log.ReportEvent("PASS", "Booking Arrival Date matched with resultpg arrival date: " + arrivalDateResult);
+	    } else {
+	        System.out.println("FAIL: Booking  Arrival Date mismatch . Result Page: " + arrivalDateResult + " | Booking Page: " + arrivalDateBooking);
+	        log.ReportEvent("FAIL", "Booking Arrival Date mismatch. Result Page: " + arrivalDateResult + " | Booking Page: " + arrivalDateBooking);
+	        screenshots.takeScreenShot1();
+	    }*/
+
+	    // Departure Time
+	    if (departTimeResult.equalsIgnoreCase(departTimeBooking)) {
+	        System.out.println("PASS:Booking Departure Time matched with resultpg Depart time: " + departTimeResult);
+	        log.ReportEvent("PASS", "Booking Departure Time matched with resultpg Depart time: " + departTimeResult);
+	    } else {
+	        System.out.println("FAIL: Booking Departure Time mismatch. Result Page: " + departTimeResult + " | Booking Page: " + departTimeBooking);
+	        log.ReportEvent("FAIL", "Booking Departure Time mismatch. Result Page: " + departTimeResult + " | Booking Page: " + departTimeBooking);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Arrival Time
+	    if (arrivalTimeResult.equalsIgnoreCase(arrivalTimeBooking)) {
+	        System.out.println("PASS: Booking Arrival Time matched with resultpg arrival time: " + arrivalTimeResult);
+	        log.ReportEvent("PASS", "Booking Arrival Time matched with resultpg arrival time: " + arrivalTimeResult);
+	    } else {
+	        System.out.println("FAIL: Booking Arrival Time mismatch. Result Page: " + arrivalTimeResult + " | Booking Page: " + arrivalTimeBooking);
+	        log.ReportEvent("FAIL", "Booking Arrival Time mismatch. Result Page: " + arrivalTimeResult + " | Booking Page: " + arrivalTimeBooking);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Flight Class
+	    if (flightClassResult.equalsIgnoreCase(flightClassBooking)) {
+	        System.out.println("PASS: Booking Flight Class matched with resultpg Depart class: " + flightClassResult);
+	        log.ReportEvent("PASS", "Booking Flight Class matched with resultpg Depart class: " + flightClassResult);
+	    } else {
+	        System.out.println("FAIL: Booking Flight Class mismatch with resultpg Depart class. Result Page: " + flightClassResult + " | Booking Page: " + flightClassBooking);
+	        log.ReportEvent("FAIL", "Booking Flight Class mismatch with resultpg Depart class. Result Page: " + flightClassResult + " | Booking Page: " + flightClassBooking);
+	        screenshots.takeScreenShot1();
+	    }
+
+	
+	    // Airline Name
+	    if (airlineResult.equalsIgnoreCase(airlineBooking)) {
+	        System.out.println("PASS:Booking Airline Name matched with resultpg airline: " + airlineResult);
+	        log.ReportEvent("PASS", "Booking Airline Name matched  with resultpg airline: " + airlineResult);
+	    } else {
+	        System.out.println("FAIL:Booking Airline Name mismatch  with resultpg airline. Result Page: " + airlineResult + " | Booking Page: " + airlineBooking);
+	        log.ReportEvent("FAIL", "Booking Airline Name mismatch with resultpg airline. Result Page: " + airlineResult + " | Booking Page: " + airlineBooking);
+	        screenshots.takeScreenShot1();
+	    }
+	    
+	    // Duration validation - handles 1 or multiple durations
+	    String[] durationResultParts = durationResult.split(",\\s*");
+	    String[] durationBookingParts = durationBooking.split(",\\s*");
+
+	    boolean durationMatch = true;
+
+	    if (durationResultParts.length != durationBookingParts.length) {
+	        durationMatch = false;
+	    } else {
+	        for (int i = 0; i < durationResultParts.length; i++) {
+	            if (!durationResultParts[i].equalsIgnoreCase(durationBookingParts[i])) {
+	                durationMatch = false;
+	                break;
+	            }
+	        }
+	    }
+
+	    if (durationMatch) {
+	        System.out.println("PASS: Duration matched between Result and Booking: " + durationResult);
+	        log.ReportEvent("PASS", "Duration matched between Result and Booking: " + durationResult);
+	    } else {
+	        System.out.println("FAIL: Duration mismatch. Result Page: " + durationResult + " | Booking Page: " + durationBooking);
+	        log.ReportEvent("FAIL", "Duration mismatch. Result Page: " + durationResult + " | Booking Page: " + durationBooking);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Connecting flights validation - handles 1 or multiple connecting flights
+	    String[] connectingResultParts = ConnectingFlightsResult.split(",\\s*");
+	    String[] connectingBookingParts = ConnectingFlightsResult.split(",\\s*");
+
+	    boolean connectingMatch = true;
+
+	    if (connectingResultParts.length != connectingBookingParts.length) {
+	        connectingMatch = false;
+	    } else {
+	        for (int i = 0; i < connectingResultParts.length; i++) {
+	            if (!connectingResultParts[i].equalsIgnoreCase(connectingBookingParts[i])) {
+	                connectingMatch = false;
+	                break;
+	            }
+	        }
+	    }
+
+	    if (connectingMatch) {
+	        System.out.println("PASS: Connecting Flights matched between Result and Booking: " + ConnectingFlightsResult);
+	        log.ReportEvent("PASS", "Connecting Flights matched between Result and Booking: " + ConnectingFlightsResult);
+	    } else {
+	        System.out.println("FAIL: Connecting Flights mismatch. Result Page: " + ConnectingFlightsResult + " | Booking Page: " + ConnectingFlightsBooking);
+	        log.ReportEvent("FAIL", "Connecting Flights mismatch. Result Page: " + ConnectingFlightsResult + " | Booking Page: " + ConnectingFlightsBooking);
+	        screenshots.takeScreenShot1();
+	    }
+	}
+	
+
+	//------------------------------------------------------
+	
+	public void validateReturnFlightDetailsFromResultToBooking(String[] returnResultDetails, String[] bookingReturnDetails, Log log, ScreenShots screenshots) {
+	    String returnFromCodeResult = returnResultDetails[0];
+	    String returnToCodeResult = returnResultDetails[1];
+	    // String returnDepartDateResult = returnResultDetails[4];
+	    String returnArrivalDateResult = returnResultDetails[2];
+	    String returnDepartTimeResult = returnResultDetails[3];
+	    String returnArrivalTimeResult = returnResultDetails[4];
+	    String returnFlightClassResult = returnResultDetails[5];
+	    String returnDurationResult = returnResultDetails[6];
+	    String returnAirlineResult = returnResultDetails[7];
+	    String returnConnectingFlights = returnResultDetails[11];
+
+	    String bookingReturnFromCode = bookingReturnDetails[0];
+	    String bookingReturnToCode = bookingReturnDetails[1];
+	    // String bookingReturnDepartDate = bookingReturnDetails[2];
+	    String bookingReturnArrivalDate = bookingReturnDetails[3];
+	    String bookingReturnDepartTime = bookingReturnDetails[4];
+	    String bookingReturnArrivalTime = bookingReturnDetails[5];
+	    String bookingReturnFlightClass = bookingReturnDetails[6];
+	    String bookingReturnDuration = bookingReturnDetails[7];
+	    String bookingReturnAirline = bookingReturnDetails[8];
+	    String bookingReturnConnectingFlights = bookingReturnDetails[12];
+
+	    // From Code
+	    if (returnFromCodeResult.equalsIgnoreCase(bookingReturnFromCode)) {
+	        log.ReportEvent("PASS", "Booking Return From Code matched with result to: " + returnFromCodeResult);
+	        System.out.println("PASS: Booking Return From Code matched with result to: " + returnFromCodeResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Booking Return From Code mismatch. Result Page: " + returnFromCodeResult + " | Booking Page: " + bookingReturnFromCode);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Booking Return From Code mismatch. Result Page: " + returnFromCodeResult + " | Booking Page: " + bookingReturnFromCode);
+	    }
+
+	    // To Code
+	    if (returnToCodeResult.equalsIgnoreCase(bookingReturnToCode)) {
+	        log.ReportEvent("PASS", "Booking Return To Code matched with result from: " + returnToCodeResult);
+	        System.out.println("PASS: Booking Return To Code matched with result from: " + returnToCodeResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Booking Return To Code mismatch. Result Page: " + returnToCodeResult + " | Booking Page: " + bookingReturnToCode);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Booking Return To Code mismatch. Result Page: " + returnToCodeResult + " | Booking Page: " + bookingReturnToCode);
+	    }
+
+	    // Arrival Date
+	    if (returnArrivalDateResult.equalsIgnoreCase(bookingReturnArrivalDate)) {
+	        log.ReportEvent("PASS", "Booking Return Arrival Date matched with return arrival date: " + returnArrivalDateResult);
+	        System.out.println("PASS: Booking Return Arrival Date matched with return arrival date: " + returnArrivalDateResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Booking Return Arrival Date mismatch. Result Page: " + returnArrivalDateResult + " | Booking Page: " + bookingReturnArrivalDate);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Booking Return Arrival Date mismatch. Result Page: " + returnArrivalDateResult + " | Booking Page: " + bookingReturnArrivalDate);
+	    }
+
+	    // Departure Time
+	    if (returnDepartTimeResult.equalsIgnoreCase(bookingReturnDepartTime)) {
+	        log.ReportEvent("PASS", "Booking Return Departure Time matched with return depart time: " + returnDepartTimeResult);
+	        System.out.println("PASS: Booking Return Departure Time matched with return depart time: " + returnDepartTimeResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Booking Return Departure Time mismatch. Result Page: " + returnDepartTimeResult + " | Booking Page: " + bookingReturnDepartTime);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Booking Return Departure Time mismatch. Result Page: " + returnDepartTimeResult + " | Booking Page: " + bookingReturnDepartTime);
+	    }
+
+	    // Arrival Time
+	    if (returnArrivalTimeResult.equalsIgnoreCase(bookingReturnArrivalTime)) {
+	        log.ReportEvent("PASS", "Booking Return Arrival Time matched with return arrival time: " + returnArrivalTimeResult);
+	        System.out.println("PASS: Booking Return Arrival Time matched with return arrival time: " + returnArrivalTimeResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Booking Return Arrival Time mismatch. Result Page: " + returnArrivalTimeResult + " | Booking Page: " + bookingReturnArrivalTime);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Booking Return Arrival Time mismatch. Result Page: " + returnArrivalTimeResult + " | Booking Page: " + bookingReturnArrivalTime);
+	    }
+
+	    // Flight Class
+	    if (returnFlightClassResult.equalsIgnoreCase(bookingReturnFlightClass)) {
+	        log.ReportEvent("PASS", "Booking Return Flight Class matched with return class: " + returnFlightClassResult);
+	        System.out.println("PASS: Booking Return Flight Class matched with return class: " + returnFlightClassResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Booking Return Flight Class mismatch. Result Page: " + returnFlightClassResult + " | Booking Page: " + bookingReturnFlightClass);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Booking Return Flight Class mismatch. Result Page: " + returnFlightClassResult + " | Booking Page: " + bookingReturnFlightClass);
+	    }
+
+	    // Airline Name
+	    if (returnAirlineResult.equalsIgnoreCase(bookingReturnAirline)) {
+	        log.ReportEvent("PASS", "Booking Return Airline matched with return airline: " + returnAirlineResult);
+	        System.out.println("PASS: Booking Return Airline matched with return airline: " + returnAirlineResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Booking Return Airline mismatch. Result Page: " + returnAirlineResult + " | Booking Page: " + bookingReturnAirline);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Booking Return Airline mismatch. Result Page: " + returnAirlineResult + " | Booking Page: " + bookingReturnAirline);
+	    }
+
+	    // Duration validation
+	    String[] resultDurations = returnDurationResult.split(",\\s*");
+	    String[] bookingDurations = bookingReturnDuration.split(",\\s*");
+
+	    boolean durationMatch = resultDurations.length == bookingDurations.length;
+	    if (durationMatch) {
+	        for (int i = 0; i < resultDurations.length; i++) {
+	            if (!resultDurations[i].equalsIgnoreCase(bookingDurations[i])) {
+	                durationMatch = false;
+	                break;
+	            }
+	        }
+	    }
+
+	    if (durationMatch) {
+	        log.ReportEvent("PASS", "Return Duration matched: " + returnDurationResult);
+	        System.out.println("PASS: Return Duration matched: " + returnDurationResult);
+	    } else {
+	        log.ReportEvent("FAIL", "Return Duration mismatch. Result: " + returnDurationResult + " | Booking: " + bookingReturnDuration);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Return Duration mismatch. Result: " + returnDurationResult + " | Booking: " + bookingReturnDuration);
+	    }
+
+	    // Connecting Flights validation
+	    String[] resultConnecting = returnConnectingFlights.split(",\\s*");
+	    String[] bookingConnecting = bookingReturnConnectingFlights.split(",\\s*");
+
+	    boolean connectingMatch = resultConnecting.length == bookingConnecting.length;
+	    if (connectingMatch) {
+	        for (int i = 0; i < resultConnecting.length; i++) {
+	            if (!resultConnecting[i].equalsIgnoreCase(bookingConnecting[i])) {
+	                connectingMatch = false;
+	                break;
+	            }
+	        }
+	    }
+
+	    if (connectingMatch) {
+	        log.ReportEvent("PASS", "Return Connecting Flights matched: " + returnConnectingFlights);
+	        System.out.println("PASS: Return Connecting Flights matched: " + returnConnectingFlights);
+	    } else {
+	        log.ReportEvent("FAIL", "Return Connecting Flights mismatch. Result: " + returnConnectingFlights + " | Booking: " + bookingReturnConnectingFlights);
+	        screenshots.takeScreenShot1();
+	        System.out.println("FAIL: Return Connecting Flights mismatch. Result: " + returnConnectingFlights + " | Booking: " + bookingReturnConnectingFlights);
+	    }
+	}
+
+	//---------------------------------------------------------
+	//Method to validate fare and baggage for depart flights
+	
+	public void validateDepartFareAndBaggageDetails(String[] bookingPageDetails, String[] ResultScreenpopupFareDetails, Log log, ScreenShots screenshots) {
+
+	    // Extracting Booking Page values
+	    String bookingFareType = bookingPageDetails[0];         // BookingPagedepartFareText
+	    String bookingCabinBaggage = bookingPageDetails[1];     // BookingPageCabinBaggageText
+	    String bookingCheckinBaggage = bookingPageDetails[2];   // BookingPageCheckInBaggageText
+
+	    // Extracting Popup Fare Block values
+	    String popupFareType = ResultScreenpopupFareDetails[0];              // fareTypeText
+	    String popupCabinBaggage = ResultScreenpopupFareDetails[2];          // cabinBaggageText
+	    String popupCheckinBaggage = ResultScreenpopupFareDetails[3];        // checkInBaggageText
+
+	    // Fare Type Validation
+	    if (bookingFareType.equalsIgnoreCase(popupFareType)) {
+	        log.ReportEvent("PASS", " Fare Type matched. Booking: " + bookingFareType + " | Popup: " + popupFareType);
+	    } else {
+	        log.ReportEvent("FAIL", " Fare Type mismatch. Booking: " + bookingFareType + " | Popup: " + popupFareType);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Cabin Baggage Validation
+	    if (bookingCabinBaggage.equalsIgnoreCase(popupCabinBaggage)) {
+	        log.ReportEvent("PASS", " Cabin baggage matched. Booking: " + bookingCabinBaggage + " | Popup: " + popupCabinBaggage);
+	    } else {
+	        log.ReportEvent("FAIL", " Cabin baggage mismatch. Booking: " + bookingCabinBaggage + " | Popup: " + popupCabinBaggage);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Check-in Baggage Validation
+	    String bookingValue = bookingCheckinBaggage == null ? "" : bookingCheckinBaggage.trim();
+	    String popupValue = popupCheckinBaggage == null ? "" : popupCheckinBaggage.trim();
+
+	    if (!bookingValue.isEmpty() && !popupValue.isEmpty() && bookingValue.equalsIgnoreCase(popupValue)) {
+	        log.ReportEvent("PASS", "Check-in baggage matched. Booking: " + bookingValue + " | Popup: " + popupValue);
+	    } else {
+	        log.ReportEvent("FAIL", "Check-in Baggage mismatch or missing. Booking: " + bookingValue + " | Popup: " + popupValue);
+	        screenshots.takeScreenShot1();
+	    }
+	}
+
+
+	//Method for to validate fare and baggage for return flights 
+	public void validateReturnFareAndBaggagetillBooking(String[] returnBookingDetails, String[] returnPopupDetails, Log log, ScreenShots screenshots) {
+
+	    // Booking Page values (index 10, 11, 12)
+	    String bookingFareType = returnBookingDetails[0];
+	    String bookingCabinBaggage = returnBookingDetails[1];
+	    String bookingCheckinBaggage = returnBookingDetails[2];
+
+	    // Result Page Popup values
+	    String popupFareType = returnPopupDetails[0];
+	    String popupCabinBaggage = returnPopupDetails[2];
+	    String popupCheckinBaggage = returnPopupDetails[3];
+
+	    // Fare Type
+	    if (bookingFareType.equalsIgnoreCase(popupFareType)) {
+	        log.ReportEvent("PASS", "Return Fare Type matched from result to booking pg " + bookingFareType);
+	    } else {
+	        log.ReportEvent("FAIL", "Return Fare Type mismatch from result to booking pg. Booking: " + bookingFareType + " | Popup: " + popupFareType);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Cabin Baggage
+	    if (bookingCabinBaggage.equalsIgnoreCase(popupCabinBaggage)) {
+	        log.ReportEvent("PASS", "Return Cabin Baggage matched from result to booking pg  " + bookingCabinBaggage);
+	    } else {
+	        log.ReportEvent("FAIL", "Return Cabin Baggage mismatch from result to booking pg. Booking: " + bookingCabinBaggage + " | Popup: " + popupCabinBaggage);
+	        screenshots.takeScreenShot1();
+	    }
+
+	    // Check-in Baggage
+	    if (bookingCheckinBaggage.equalsIgnoreCase(popupCheckinBaggage)) {
+	        log.ReportEvent("PASS", "Return Check-in Baggage matched from result to booking pg " + bookingCheckinBaggage);
+	    } else {
+	        log.ReportEvent("FAIL", "Return Check-in Baggage mismatch from result to booking pg. Booking: " + bookingCheckinBaggage + " | Popup: " + popupCheckinBaggage);
+	        screenshots.takeScreenShot1();
+	    }
+	}
+
+
+	//--------------------------------------------------------------
+	
+//Method to add both fare texts and compare with bottom bar toatal price text
+	
+//	public String compareSumOfPopupFaresWithBottomBarTotal(
+//	        String[] fareDetails1,
+//	        String[] fareDetails2,
+//	        Log log,
+//	        ScreenShots screenshots) {
+//
+//	    if (fareDetails1 == null || fareDetails1.length < 2 || fareDetails2 == null || fareDetails2.length < 2) {
+//	        log.ReportEvent("FAIL", "Invalid fare details passed for comparison.");
+//	        screenshots.takeScreenShot1();
+//	        return null;
+//	    }
+//
+//	    try {
+//	        // Extract popup fare prices from both fareDetails (index 1 holds popupFareText)
+//	        String popupFareText1 = fareDetails1[1];
+//	        String popupFareText2 = fareDetails2[1];
+//
+//	        // Clean prices (keep digits and decimal point)
+//	        double price1 = Double.parseDouble(popupFareText1.replaceAll("[^0-9.]", ""));
+//	        double price2 = Double.parseDouble(popupFareText2.replaceAll("[^0-9.]", ""));
+//	        double sumPopupFares = price1 + price2;
+//
+//	        // Get bottom bar total price text
+//	        String bottomBarTotalPriceText = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-totalprice')]")).getText().trim();
+//	        String cleanBottomBarTotalPrice = bottomBarTotalPriceText.replaceAll("[^0-9.]", "");
+//	        double bottomBarTotalPrice = Double.parseDouble(cleanBottomBarTotalPrice);
+//
+//	        System.out.println("Sum of popup fares: " + sumPopupFares);
+//	        System.out.println("Bottom bar total price: " + bottomBarTotalPrice);
+//
+//	        // Compare sum of popup fares with bottom bar total price
+//	        if (Math.abs(sumPopupFares - bottomBarTotalPrice) < 0.01) {  // Using small epsilon for float comparison
+//	            log.ReportEvent("PASS", "Sum of popup fares matches bottom bar total price: " + bottomBarTotalPriceText);
+//	            System.out.println("PASS: Sum of popup fares matches bottom bar total price.");
+//	        } else {
+//	            log.ReportEvent("FAIL", "Sum of popup fares (" + sumPopupFares + ") does NOT match bottom bar total (" + bottomBarTotalPrice + ")");
+//	            System.out.println("FAIL: Sum of popup fares does NOT match bottom bar total price.");
+//	            screenshots.takeScreenShot1();
+//	        }
+//
+//	        // Return cleaned bottom bar total price text
+//	        return cleanBottomBarTotalPrice;
+//
+//	    } catch (Exception e) {
+//	        log.ReportEvent("FAIL", "Exception during comparison: " + e.getMessage());
+//	        screenshots.takeScreenShot1();
+//	        return null;
+//	    }
+//	}
+
+	
+	public String compareSumOfPopupFaresWithBottomBarTotal(
+	        String[] departFareDetails,
+	        String[] returnFareDetails,
+	        Log log,
+	        ScreenShots screenshots) {
+
+	    try {
+	        if (departFareDetails == null || returnFareDetails == null ||
+	            departFareDetails.length < 2 || returnFareDetails.length < 2) {
+	            log.ReportEvent("FAIL", "Invalid fare details for comparison.");
+	            screenshots.takeScreenShot1();
+	            return null; // Early return if data is invalid
+	        }
+
+	        // Extract popup fare texts
+	        String departFareText = departFareDetails[1];
+	        String returnFareText = returnFareDetails[1];
+
+	        // Clean up numeric part (removes ₹, commas, etc.)
+	        String cleanDepartPrice = departFareText.replaceAll("[^0-9]", "");
+	        String cleanReturnPrice = returnFareText.replaceAll("[^0-9]", "");
+
+	        // Parse to integer for easy addition
+	        int departPrice = Integer.parseInt(cleanDepartPrice);
+	        int returnPrice = Integer.parseInt(cleanReturnPrice);
+	        int totalPopup = departPrice + returnPrice;
+
+	        log.ReportEvent("INFO", "Depart Fare: ₹" + departPrice);
+	        log.ReportEvent("INFO", "Return Fare: ₹" + returnPrice);
+	        log.ReportEvent("INFO", "Sum of Popup Fares: ₹" + totalPopup);
+
+	        // Get total price from bottom bar
+	        String bottomBarText = driver.findElement(By.xpath("//*[contains(@class,'tg-bar-totalprice')]")).getText().trim();
+	        String cleanBottomPrice = bottomBarText.replaceAll("[^0-9]", "");
+	        int bottomPrice = Integer.parseInt(cleanBottomPrice);
+
+	        log.ReportEvent("INFO", "Bottom Bar Total: ₹" + bottomPrice);
+
+	        // Compare
+	        if (totalPopup == bottomPrice) {
+	            log.ReportEvent("PASS", "Popup fares match bottom bar total.");
+	        } else {
+	            log.ReportEvent("FAIL", "Mismatch: Popup total ₹" + totalPopup + " ≠ Bottom bar ₹" + bottomPrice);
+	            screenshots.takeScreenShot1();
+	        }
+
+	        // ✅ Return total popup value as a string
+	        return String.valueOf(totalPopup);
+
+	    } catch (Exception e) {
+	        log.ReportEvent("FAIL", "Error comparing popup and bottom bar prices: " + e.getMessage());
+	        screenshots.takeScreenShot1();
+	        return null; // Return null on exception
+	    }
+	}
+
+	
+	
+	//Method to validate bottom bar price with  booking page price
+	public void compareBottomBarTotalWithBookingPageTotal(String bottomBarTotal, Log log, ScreenShots screenshots) {
+	    // Find the element first
+	    WebElement bookingPagePriceElement = driver.findElement(By.xpath("//*[contains(@class,'tg-fbtotal')]"));
+	    
+	    // Scroll to the element
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", bookingPagePriceElement);
+	    
+	    try {
+	        String bookingPagePriceText = bookingPagePriceElement.getText().trim();
+
+	        String BottomBarTotal = bottomBarTotal.replaceAll("[^0-9]", "");
+	        String BookingPageTotal = bookingPagePriceText.replaceAll("[^0-9]", "");
+
+	        System.out.println("Bottom Bar Total Price: " + BottomBarTotal);
+	        System.out.println("Booking Page Grand Total: " + BookingPageTotal);
+
+	        if (BottomBarTotal.equals(BookingPageTotal)) {
+	            log.ReportEvent("PASS", "Bottom bar total matches booking page total: ₹" + BottomBarTotal);
+	        } else {
+	            log.ReportEvent("FAIL", "Price mismatch. Bottom bar: ₹" + BottomBarTotal + ", Booking page: ₹" + BookingPageTotal);
+	            screenshots.takeScreenShot1();
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Error during price comparison: " + e.getMessage());
+	        e.printStackTrace();
+	        log.ReportEvent("FAIL", "Exception occurred: " + e.getMessage());
+	        screenshots.takeScreenShot1();
+	    }
+
+	}
+	
+	//Method to get grnd total from booking screen
+	public String getGrandTotalPriceFromBookingPage(Log log, ScreenShots screenshots) {
+	    String grandTotal = "";
+
+	    try {
+	        WebElement grandTotalElement = driver.findElement(By.xpath("//*[contains(@class,'tg-fbgrandtotal')]"));
+	        grandTotal = grandTotalElement.getText().trim();
+	        log.ReportEvent("PASS", "Grand Total fetched from booking screen: " + grandTotal);
+	    } catch (Exception e) {
+	        log.ReportEvent("FAIL", "Failed to fetch Grand Total from booking screen: " + e.getMessage());
+	        screenshots.takeScreenShot1();
+	        e.printStackTrace();
+	    }
+
+	    return grandTotal;
+	}
+
+	
+	// Method to collect data from the Departing Flight section (Search Screen)
+		public Map<String, List<String>> getDataFromUiForDepartingFlightForDomestic() {
+			Map<String, List<String>> data = new LinkedHashMap<>();
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+			// Class names to extract; layover included
+			List<String> classNames = Arrays.asList(
+					"tg-from-flightorigin",
+					"tg-from-flightdepdate",
+					"tg-from-flightdeptime",
+					"tg-from-flightdestination",
+					"tg-from-flightarrdate",
+					"tg-from-flightarrtime",
+					"tg-from-flightduration",
+					"tg-from-flightcabinclass",
+					"tg-from-layovercity"
+			);
+
+			for (String className : classNames) {
+				List<String> values = new ArrayList<>();
+
+				try {
+					// Wait for presence of at least one visible element with this class
+					wait.until(driver -> {
+						List<WebElement> elements = driver.findElements(By.className(className));
+						return !elements.isEmpty() && elements.stream().anyMatch(el -> !el.getText().trim().isEmpty());
+					});
+
+					// Fetch all elements after wait
+					List<WebElement> elements = driver.findElements(By.className(className));
+					for (WebElement el : elements) {
+						String text = el.getText().trim();
+						if (!text.isEmpty()) {
+							values.add(text);
+						}
+					}
+				} catch (TimeoutException e) {
+					System.out.println("Timeout waiting for elements with class: " + className);
+				} catch (Exception e) {
+					System.out.println("Error fetching data for class: " + className + " - " + e.getMessage());
+				}
+
+				data.put(className, values);
+			}
+
+			System.out.println("Departing Flight UI Data: " + data);
+			return data;
+		}
+
+		// Method to collect data from the Return Flight section (Search Screen)
+		public Map<String, List<String>> getDataFromUiForReturnFlightForDomestic() {
+			Map<String, List<String>> data = new LinkedHashMap<>();
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+			// Class names to extract; layover included
+			List<String> classNames = Arrays.asList(
+					"tg-to-flightorigin",
+					"tg-to-flightdepdate",
+					"tg-to-flightdeptime",
+					"tg-to-flightdestination",
+					"tg-to-flightarrdate",
+					"tg-to-flightarrtime",
+					"tg-to-flightduration",
+					"tg-to-flightcabinclass",
+					"tg-to-layovercity"
+			);
+
+			for (String className : classNames) {
+				List<String> values = new ArrayList<>();
+
+				try {
+					// Wait for presence of at least one visible element with this class
+					wait.until(driver -> {
+						List<WebElement> elements = driver.findElements(By.className(className));
+						return !elements.isEmpty() && elements.stream().anyMatch(el -> !el.getText().trim().isEmpty());
+					});
+
+					// Fetch all elements after wait
+					List<WebElement> elements = driver.findElements(By.className(className));
+					for (WebElement el : elements) {
+						String text = el.getText().trim();
+						if (!text.isEmpty()) {
+							values.add(text);
+						}
+					}
+				} catch (TimeoutException e) {
+					System.out.println("Timeout waiting for elements with class: " + className);
+				} catch (Exception e) {
+					System.out.println("Error fetching data for class: " + className + " - " + e.getMessage());
+				}
+
+				data.put(className, values);
+			}
+
+			System.out.println("Return Flight UI Data: " + data);
+			return data;
+		}
+
+		//Method to get Data from Booking Screen
+		public Map<String, List<String>> getDataFromUiForFbDepartingFlightForDomesticForBookingScreen() {
+		    Map<String, List<String>> data = new LinkedHashMap<>();
+		    List<String> classNames = Arrays.asList(
+		        "tg-fbDepartorigin",
+		        "tg-fbDepartdepdate",
+		        "tg-fbDepartdeptime",
+		        "tg-fbDepartdestination",
+		        "tg-fbDepartarrdate",
+		        "tg-fbDepartarrtime",
+		        "tg-fbDepartcabinclass",
+		        "tg-fbDepartduration",
+		        "tg-fb-Depart-layover-destination"
+		    );
+
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+		    for (String className : classNames) {
+		        List<String> values = new ArrayList<>();
+		        try {
+		            By locator = By.xpath("//*[contains(@class,'" + className + "')]");
+		            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+
+		            List<WebElement> elements = driver.findElements(locator);
+
+		            int idx = 0;
+		            for (WebElement el : elements) {
+		                String text = el.getText().trim();
+		                if (!text.isEmpty()) {
+		                    System.out.println("Class: " + className + " | Index: " + idx + " | Extracted: '" + text + "'");
+		                    values.add(text);
+		                } else {
+		                    System.out.println("Class: " + className + " | Index: " + idx + " | Warning: Empty text found.");
+		                    values.add(""); // still include it to maintain list length
+		                }
+		                idx++;
+		            }
+
+		            
+		        } catch (Exception e) {
+		            System.out.println("Warning: Could not find elements for class: " + className + " - " + e.getMessage());
+		        }
+		        data.put(className, values);
+		    }
+
+		    return data;
+		}
+
+		// Method to get Data from Booking Screen - Return Flight
+		public Map<String, List<String>> getDataFromUiForFbReturnFlightForDomesticForBookingScreen() {
+			Map<String, List<String>> data = new LinkedHashMap<>();
+			List<String> classNames = Arrays.asList(
+					"tg-fbReturnorigin",
+					"tg-fbReturndepdate",
+					"tg-fbReturndeptime",
+					"tg-fbReturndestination",
+					"tg-fbReturnarrdate",
+					"tg-fbReturnarrtime",
+					"tg-fbReturncabinclass",
+					"tg-fbReturnduration",
+					"tg-fb-Return-layover-destination"
+			);
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+			for (String className : classNames) {
+				List<String> values = new ArrayList<>();
+				try {
+					wait.until(ExpectedConditions.presenceOfElementLocated(By.className(className)));
+					List<WebElement> elements = driver.findElements(By.className(className));
+					for (WebElement el : elements) {
+						values.add(el.getText().trim());
+					}
+				} catch (Exception e) {
+					System.out.println("Warning: Could not find elements for class: " + className);
+				}
+				data.put(className, values);
+			}
+
+			return data;
+		}
+
+
+		// Method to validate departing flight details between search and booking screens
+		public void validateDepartingAndFbDepartingDataForDomestic(
+		        Map<String, List<String>> searchScreenData,
+		        Map<String, List<String>> bookingScreenData,
+		        Log log,
+		        ScreenShots screenShots) {
+
+		    // Mapping: Search Screen class name → Booking Screen class name
+		    Map<String, String> fieldMapping = new LinkedHashMap<>();
+		    fieldMapping.put("tg-from-flightorigin", "tg-fbDepartorigin");
+		    fieldMapping.put("tg-from-flightdepdate", "tg-fbDepartdepdate");
+		    fieldMapping.put("tg-from-flightdeptime", "tg-fbDepartdeptime");
+		    fieldMapping.put("tg-from-flightdestination", "tg-fbDepartdestination");
+		    fieldMapping.put("tg-from-flightarrdate", "tg-fbDepartarrdate");
+		    fieldMapping.put("tg-from-flightarrtime", "tg-fbDepartarrtime");
+		    fieldMapping.put("tg-from-flightcabinclass", "tg-fbDepartcabinclass");
+		    fieldMapping.put("tg-from-flightduration", "tg-fbDepartduration");
+		    fieldMapping.put("tg-from-layovercity", "tg-fb-Depart-layover-destination");
+
+		    
+		    
+		 
+		    boolean allMatch = true;
+
+		    for (Map.Entry<String, String> entry : fieldMapping.entrySet()) {
+		        String searchKey = entry.getKey();
+		        String bookingKey = entry.getValue();
+
+		        List<String> searchValues = searchScreenData.getOrDefault(searchKey, Collections.emptyList());
+		        List<String> bookingValues = bookingScreenData.getOrDefault(bookingKey, Collections.emptyList());
+
+		        int max = Math.max(searchValues.size(), bookingValues.size());
+
+		        for (int i = 0; i < max; i++) {
+		            String rawSearchVal = i < searchValues.size() ? searchValues.get(i) : "<missing>";
+		            String rawBookingVal = i < bookingValues.size() ? bookingValues.get(i) : "<missing>";
+
+		            String searchVal = normalize(rawSearchVal);
+		            String bookingVal = normalize(rawBookingVal);
+
+		            if (!searchVal.equalsIgnoreCase(bookingVal)) {
+		                allMatch = false;
+		                log.ReportEvent("FAIL",
+		                        " Mismatch in field '" + searchKey + "' (mapped to '" + bookingKey + "') at index " + (i + 1)
+		                                + ": Search Screen = '" + rawSearchVal + "', Booking Screen = '" + rawBookingVal + "'");
+		            } else {
+		                log.ReportEvent("PASS",
+		                        "Match in field '" + searchKey + "' at index " + (i + 1)
+		                                + ": '" + searchVal + "'");
+		            }
+		        }
+		    }
+
+		    screenShots.takeScreenShot1();
+
+		    if (allMatch) {
+		        log.ReportEvent("PASS", " All departing flight details match between search and booking screens.");
+		    } else {
+		        Assert.fail(" One or more departing flight details do not match between search and booking screens.");
+		    }
+		}
+
+		private String normalize(String value) {
+		    if (value == null) return "";
+		    return value
+		            .trim()
+		            .replaceAll("[,\\s]+$", "")       // remove trailing commas and spaces
+		            .replaceAll("\\s{2,}", " ")       // collapse multiple spaces
+		            .replaceAll("\\s*,\\s*", ",");    // remove spaces around commas
+		}
+
+		// Method to validate return flight details between search and booking screens
+		// Method to validate return flight details between search and booking screens
+		public void validateReturnAndFbReturnDataForDomestic(
+		        Map<String, List<String>> returnFlightData,
+		        Map<String, List<String>> fbReturnFlightData,
+		        Log log,
+		        ScreenShots screenShots) {
+
+		    // Mapping: search screen class name → booking screen class name
+		    Map<String, String> fieldMapping = new LinkedHashMap<>();
+		    fieldMapping.put("tg-to-flightorigin", "tg-fbReturnorigin");
+		    fieldMapping.put("tg-to-flightdepdate", "tg-fbReturndepdate");
+		    fieldMapping.put("tg-to-flightdeptime", "tg-fbReturndeptime");
+		    fieldMapping.put("tg-to-flightdestination", "tg-fbReturndestination");
+		    fieldMapping.put("tg-to-flightarrdate", "tg-fbReturnarrdate");
+		    fieldMapping.put("tg-to-flightarrtime", "tg-fbReturnarrtime");
+		    fieldMapping.put("tg-to-flightcabinclass", "tg-fbReturncabinclass");
+		    fieldMapping.put("tg-to-flightduration", "tg-fbReturnduration");
+		    fieldMapping.put("tg-to-layovercity", "tg-fb-Return-layover-destination"); // for layover
+
+		    boolean allMatch = true;
+
+		    for (Map.Entry<String, String> entry : fieldMapping.entrySet()) {
+		        String searchKey = entry.getKey();
+		        String bookingKey = entry.getValue();
+
+		        List<String> searchValues = returnFlightData.getOrDefault(searchKey, Collections.emptyList());
+		        List<String> bookingValues = fbReturnFlightData.getOrDefault(bookingKey, Collections.emptyList());
+
+		        int max = Math.max(searchValues.size(), bookingValues.size());
+
+		        for (int i = 0; i < max; i++) {
+		            String rawSearchVal = i < searchValues.size() ? searchValues.get(i) : "<missing>";
+		            String rawBookingVal = i < bookingValues.size() ? bookingValues.get(i) : "<missing>";
+
+		            String searchVal = normalize(rawSearchVal);
+		            String bookingVal = normalize(rawBookingVal);
+
+		            if (!searchVal.equalsIgnoreCase(bookingVal)) {
+		                allMatch = false;
+		                log.ReportEvent("FAIL",
+		                        " Mismatch in field '" + searchKey + "' (mapped to '" + bookingKey + "') at index " + (i + 1)
+		                                + ": Search Screen = '" + rawSearchVal + "', Booking Screen = '" + rawBookingVal + "'");
+		            } else {
+		                log.ReportEvent("PASS",
+		                        "Match in field '" + searchKey + "' at index " + (i + 1)
+		                                + ": '" + searchVal + "'");
+		            }
+		        }
+		    }
+
+		    screenShots.takeScreenShot1();
+
+		    if (allMatch) {
+		        log.ReportEvent("PASS", " All return flight details match between search and booking screens.");
+		    } else {
+		        Assert.fail(" One or more return flight details do not match between search and booking screens.");
+		    }
+		}
+
+//		private String normalize(String value) {
+//		    if (value == null) return "";
+//		    return value
+//		            .trim()
+//		            .replaceAll("[,\\s]+$", "")       // remove trailing commas and spaces
+//		            .replaceAll("\\s{2,}", " ")       // collapse multiple spaces
+//		            .replaceAll("\\s*,\\s*", ",");    // remove spaces around commas
+//		}
+
+
+		public void clickOnReturnFlightBasedOnIndex(Log Log,String returnindex) throws InterruptedException {
+		String xpathExpression = "(//div[@class='round-trip-to-results']//button[text()='View Flight'])[" + returnindex + "]";
+	    WebElement button = driver.findElement(By.xpath(xpathExpression));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+	    Thread.sleep(1000);
+	    button.click();
+
+	    Log.ReportEvent("INFO", "Clicked on 'Return View Flight' for index: " + returnindex);
+		}
+
+		public void clickOnDepartFlightBasedOnIndex(Log Log,String departindex) throws InterruptedException {
+			String xpathExpression = "(//div[@class='round-trip-from-results']//button[text()='View Flight'])[" + departindex + "]";
+		    WebElement button = driver.findElement(By.xpath(xpathExpression));
+		    JavascriptExecutor js = (JavascriptExecutor) driver;
+		    js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button);
+		    Thread.sleep(1000);
+		    button.click();
+
+		    Log.ReportEvent("INFO", "Clicked on 'Depart View Flight' for index: " + departindex);
+			}
+
+
+		public String[] getBookingPageReturnFareAndBaggageDetails() {
+		    try {
+		        // Get Fare Type
+		        String fareTypeText = driver.findElement(By.xpath("//*[contains(@class,'tg-fb-Returnfaretype')]")).getText().trim();
+		        String BookingPagereturnFareText = fareTypeText.replace("Fare", "").trim();
+
+		        // Get Cabin Baggage Text
+		        String BookingPageCabinBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[1])[2]")).getText().trim();
+
+		        // Get Check-In Baggage Text
+		        String BookingPageCheckInBaggageText = driver.findElement(By.xpath("(//span[contains(@class,'caption')]//strong[2])[2]")).getText().trim();
+
+		        return new String[] {
+		            BookingPagereturnFareText,       // index 0
+		            BookingPageCabinBaggageText,     // index 1
+		            BookingPageCheckInBaggageText    // index 2
+		        };
+
+		    } catch (Exception e) {
+		        System.out.println("Error retrieving RETURN fare and baggage details: " + e.getMessage());
+		        return new String[] {"", "", ""};  // Fallback in case of issues
+		    }
+		}
+		
+		private static AtomicInteger backEndIssueCount = new AtomicInteger(0);
+
+		public void validateBookingScreenIsDisplayed(Log Log, ScreenShots ScreenShots) {
+			try {
+				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+				WebElement reviewPage = wait.until(
+						ExpectedConditions.visibilityOfElementLocated(By.xpath("//h6[contains(text(), 'Review Your Flight')]"))
+				);
+				Log.ReportEvent("PASS", "Review Your Flight Page is Displayed");
+			} catch (Exception e) {
+				if (isElementPresent(By.xpath("//*[@id='client-snackbar']"))) {
+					// Safely increment and get the count
+					int currentCount = backEndIssueCount.incrementAndGet();
+
+					// Log the current count
+					Log.ReportEvent("FAIL", "Issue from BackEnd: Your operation is unsuccessful. Please contact helpdesk. Count: " + currentCount);
+
+					ScreenShots.takeScreenShot();
+					Assert.fail();
+				} else {
+					Log.ReportEvent("FAIL", "Review Your Flight Page is Not Displayed: " + e.getMessage());
+					ScreenShots.takeScreenShot();
+					Assert.fail("Review Your Flight Page is Not Displayed: " + e.getMessage());
+				}
+			}
+		}
+		// Your existing method for element presence check
+		private boolean isElementPresent(By locator) {
+			try {
+				return driver.findElement(locator).isDisplayed();
+			} catch (NoSuchElementException e) {
+				return false;
+			}
+		}
+
+		public static int getBackEndIssueCount() {
+			return backEndIssueCount.get();
+		}
+
 }

@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_FutureDates;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
@@ -52,70 +53,51 @@ public class TC_92_EntireTestcasesCode1 extends BaseClass{
 
        
         String origin = excelData.get("Origin");
-        System.out.println(origin);
         
         String destination = excelData.get("Destination");
-        System.out.println(destination);
 
         String travelClass = excelData.get("Class");
-        System.out.println(travelClass);
         
         int Adults = Integer.parseInt(excelData.get("Adults"));
-        System.out.println(Adults);
         
         Thread.sleep(15000);
         
         String clickOnWardStops = excelData.get("clickOnWardStops");
-        System.out.println(clickOnWardStops);
 
         
         String roundTripClickReturnStops = excelData.get("roundTripClickReturnStops");
-        System.out.println(roundTripClickReturnStops);
         
 
         int VerifyFlightsDetailsOnResultScreenForLocalIndex = Integer.parseInt(excelData.get("VerifyFlightsDetailsOnResultScreenForLocalIndex"));
-        System.out.println(VerifyFlightsDetailsOnResultScreenForLocalIndex);
         
         String selectAirLines = excelData.get("selectAirLines");
-        System.out.println(selectAirLines);
         
         int selectFromAndToFlightsBasedOnIndex = Integer.parseInt(excelData.get("selectFromAndToFlightsBasedOnIndex"));
-        System.out.println(selectFromAndToFlightsBasedOnIndex);
         
 
         String onwardMealSelect = excelData.get("onwardMealSelect");
         String[] onwardMealSelectSplit = onwardMealSelect.split(",");
-        System.out.println(onwardMealSelect);
 
         
         String returnMealSelect = excelData.get("returnMealSelect");
         String[] returnMealSelectSplit = returnMealSelect.split(",");
-        System.out.println(returnMealSelect);
 
         String selectCurrencyDropDownValues = excelData.get("selectCurrencyDropDownValues");
-        System.out.println(selectCurrencyDropDownValues);
 
         String validateCurrencyRoundTrip = excelData.get("validateCurrencyRoundTrip");
-        System.out.println(validateCurrencyRoundTrip);
 
         String clickAirlineCheckboxesRoundtripDomestic = excelData.get("clickAirlineCheckboxesRoundtripDomestic");
-        System.out.println(clickAirlineCheckboxesRoundtripDomestic);
         
         int FlightCardIndex = Integer.parseInt(excelData.get("FlightCardIndex"));
-        System.out.println(FlightCardIndex);
 
         String validateFlightsStopsOnResultScreen = excelData.get("validateFlightsStopsOnResultScreen");
-        System.out.println(validateFlightsStopsOnResultScreen);
         
 
         String validateFlightsreturnStopsOnResultScreen = excelData.get("validateFlightsreturnStopsOnResultScreen");
-        System.out.println(validateFlightsreturnStopsOnResultScreen);
         
         String flightNames=excelData.get("flightNames");
-        System.out.println(flightNames);
         
         int selectToFlightsBasedOnIndex = Integer.parseInt(excelData.get("selectToFlightsBasedOnIndex"));
-        System.out.println(selectToFlightsBasedOnIndex);
         
         
         String OnwardBaggageSelect = excelData.get("onwardBaggageSelect");
@@ -137,12 +119,15 @@ public class TC_92_EntireTestcasesCode1 extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
 		 
 		//Functions to Search flights on Home Page  
@@ -150,7 +135,8 @@ public class TC_92_EntireTestcasesCode1 extends BaseClass{
         Tripgain_homepage tripgainhomepage = new Tripgain_homepage(driver);
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
         Tripgain_RoundTripResultsScreen trs=new Tripgain_RoundTripResultsScreen(driver);
-		
+        trs.printVersion(Log);
+        Thread.sleep(2000);
 	
         tripgainhomepage.Clickroundtrip();
         tripgainhomepage.searchFlightsOnHomePage(Log, screenShots,origin, destination,  fromDate, fromMonthYear, returnDate, returnMonthYear, travelClass, Adults);

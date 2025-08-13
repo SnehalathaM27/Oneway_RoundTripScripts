@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
 import com.tripgain.collectionofpages.Tripgain_homepage;
@@ -68,19 +69,23 @@ int number=1;
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
         
         //Functions to Search on Home Page     
         Tripgain_homepage tripgainhomepage = new Tripgain_homepage(driver);
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
         Tripgain_RoundTripResultsScreen trs=new Tripgain_RoundTripResultsScreen(driver);
-
+        trs.printVersion(Log);
+        Thread.sleep(2000);
          tripgainhomepage.Clickroundtrip();
         // tripgainhomepage.searchFlightsOnHomePageroundtrip(Log, screenShots, "HYD", "BLR", "12", "June 2025", "14", "June 2025", "Premium Economy",2);
          tripgainhomepage.searchFlightsOnHomePage(Log, screenShots, origin,destination,fromDate,fromMonthYear,returnDate,returnMonthYear,travelClass, adults);
@@ -92,12 +97,12 @@ int number=1;
         //Function to click on  Depart Time 
 trs.selectOnWardDepartTimeroundtrip(times);
 
-screenShots.takeScreenShot1();
 //trs.validateRoundTripOnwardDepartureTimeIsSelected(Log, screenShots, "06 - 12");
 trs.validateFlightsDepartureTimeOnResultScreen(flightStartHour, flightStartMinute, flightEndHour, flightEndMinute, Log, screenShots);
 
 trs.selectOnWardDepartTimeroundtrip(times);
-screenShots.takeScreenShot1();
+
+Log.ReportEvent("PASS", "DESELECTION SUCCESSFULL");
 
 
 

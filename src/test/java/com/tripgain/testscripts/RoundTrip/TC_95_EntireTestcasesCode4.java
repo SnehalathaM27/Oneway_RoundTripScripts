@@ -2,6 +2,7 @@ package com.tripgain.testscripts.RoundTrip;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
@@ -15,6 +16,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_FutureDates;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
@@ -43,7 +45,7 @@ public class TC_95_EntireTestcasesCode4 extends BaseClass{
     private WebDriverWait wait;
 
     @Test(dataProvider = "sheetBasedData", dataProviderClass = DataProviderUtils.class)
-    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException {
+    public void myTest(Map<String, String> excelData) throws InterruptedException, IOException, ParseException {
         System.out.println("Running test with: " + excelData);
 	    String[] data = Getdata.getexceldata();
         String userName = data[0]; 
@@ -84,7 +86,17 @@ public class TC_95_EntireTestcasesCode4 extends BaseClass{
 
 	        String departFare = excelData.get("DepartFare");
 	        
-		
+	        String clickOnWardStops = excelData.get("clickOnWardStops");
+	        String validateFlightsStopsOnResultScreen = excelData.get("validateFlightsStopsOnResultScreen");
+
+	        String times = excelData.get("Times");
+	        int flightStartHour = Integer.parseInt(excelData.get("FlightStartHour"));
+	        int flightStartMinute = Integer.parseInt(excelData.get("FlightStartMinute"));
+	        int flightEndHour = Integer.parseInt(excelData.get("FlightEndHour"));
+	        int flightEndMinute = Integer.parseInt(excelData.get("FlightEndMinute"));
+	        
+			int ReturnIndex = Integer.parseInt(excelData.get("returnIndex"));
+
         
         String[] dates=GenerateDates.GenerateDatesToSelectFlights();
         String fromDate=dates[11];
@@ -95,12 +107,15 @@ public class TC_95_EntireTestcasesCode4 extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
 		 
 		//Functions to Search flights on Home Page  
@@ -109,17 +124,87 @@ public class TC_95_EntireTestcasesCode4 extends BaseClass{
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
         Tripgain_RoundTripResultsScreen trs=new Tripgain_RoundTripResultsScreen(driver);
 		
-	
+        trs.printVersion(Log);
+        Thread.sleep(2000);
         tripgainhomepage.Clickroundtrip();
         tripgainhomepage.searchFlightsOnHomePage(Log, screenShots,origin, destination,  fromDate, fromMonthYear, returnDate, returnMonthYear, travelClass, Adults);
-        Thread.sleep(5000);
+        Thread.sleep(10000);
 
         trs.validateFlightsResultsForRoundTrip(Log, screenShots);
-Thread.sleep(15000); 
-		
-	
+Thread.sleep(5000); 
+
+String[] topBarDetails = trs.getTopBarFlightDetails();
+
+
+
+////Slider
+//double values[] =trs.defaultPriceRangeOfSlider(driver,Log,screenShots);
+//double minValue=values[0];
+//double minimumValue=minValue+3000;
+//trs.adjustMinimumSliderToValue(driver,minimumValue);
+//
+//trs.verifyPriceRangeValuesOnResultScreen(Log,screenShots);
+//
+//System.out.println("MINIMUM SLIDER DONE");
+
+trs.selectReturnDepartTimeroundtrip(times);
+Thread.sleep(2000);
+//trs.validateroundtripreturnDepartureTimeIsSelected(Log, screenShots, "06 - 12");
+trs.validatereturnFlightsDepartureTimeOnResultScreen(flightStartHour, flightStartMinute, flightEndHour, flightEndMinute, Log, screenShots);
+
+System.out.println("RETURN Depart Time DONE");
+
+
+String[] flightResultDetails = trs.getDepartFlightResultCardDetails(index, Log); 
+String departStopsText = flightResultDetails[11];  // stops info from results page
+
+
+//trs.validateFlightDetailsfromTopbarToDeprtflightIndex(topBarDetails, flightResultDetails, Log, screenShots);
+
+//fare prices 
+
+String[] fareAndBaggageDetails = trs.getDepartfareTypeAndFarePriceAndBaggage(departFare, Log, screenShots);
+
+                   //-----------------return -----------------
+String[] flightReturnResultDetails = trs.getReturnFlightResultCardDetails(ReturnIndex, Log);
+String returnStopsText = flightReturnResultDetails[1];
+
+//trs.validatetopbarwithReturnFlightDetails(topBarDetails, flightReturnResultDetails, Log, screenShots);
+
+String[] ReturnfareAndBaggageDetails = trs.getReturnfareTypeAndFarePriceAndBaggage(returnFare, Log, screenShots);
+
+String bottomBarTotalPrice = trs.compareSumOfPopupFaresWithBottomBarTotal(fareAndBaggageDetails, ReturnfareAndBaggageDetails, Log, screenShots);
+
+
+//Method to click OnWardStops
+
+trs.roundTripClickOnWardStops(clickOnWardStops);  
+trs.validateFlightsStopsOnResultScreen(validateFlightsStopsOnResultScreen,Log, screenShots);
+
+System.out.println("ONWARD STOPS DONE");
+
+
+trs.clickOnContinue();
+
+Thread.sleep(5000);
+
+String[] bookingPageDepartDetails = trs.getBookingPageFlightDepartCardDetails(departStopsText);
+trs.validateFlightDetailsFromResultToBooking(flightResultDetails, bookingPageDepartDetails, Log, screenShots);
+
+
+String[] bookingPageReturnDetails =trs.getBookingPageFlightReturnCardDetails(returnStopsText);
+trs.validateReturnFlightDetailsFromResultToBooking(flightReturnResultDetails, bookingPageReturnDetails, Log, screenShots);
+
+
+trs.validateDepartFareAndBaggageDetails(bookingPageDepartDetails, fareAndBaggageDetails, Log, screenShots);
+
+trs.validateReturnFareAndBaggagetillBooking(bookingPageReturnDetails, ReturnfareAndBaggageDetails, Log, screenShots);
+
+trs.compareBottomBarTotalWithBookingPageTotal(bottomBarTotalPrice, Log, screenShots);
+
+
 // -------------------------------------------------------------------------------------------------------
-//  tripgain_resultspage.selectFromAndToFlightsBasedOnIndex(1);
+/*  tripgain_resultspage.selectFromAndToFlightsBasedOnIndex(1);
 trs.validateDepatureFaretypeToBookingPg(departFareIndex, departFare, Log, screenShots);
 Thread.sleep(3000);
 System.out.println("DEPART FARE TYPE DONE");
@@ -128,16 +213,22 @@ System.out.println("DEPART FARE TYPE DONE");
 	System.out.println("BACK TO RESULTS BUTTON CLICKED");
 
 Thread.sleep(5000);
-
 trs.validateReturnFaretypeToBookingPg(returnfareIndex, returnFare, Log, screenShots);
 
-System.out.println("FARE DONE");
+System.out.println("FARE DONE");*/
 //----------------------------------------------------------------------------------------
 
 String[] titles = title1.split(",");
 trs.enterAdultDetailsForInterNational(titles,adults,Log,screenShots);
 
 System.out.println("ADULTS DONE");
+
+//pick seat
+
+tripgainresultspage.selectSeatFormPickSeat(Log, screenShots);
+
+System.out.println("SEAT SELECTION DONE");
+
 
 //----------------------------------------------------------------------------------------s
 
@@ -151,12 +242,16 @@ trs.validateBaggagePrice(addTotalBaggagePrice1);
 
 //----------------------------------------------------------------------------------------
 
-
+    
+    		 
+        
+        
+        
+        
 
 /*trs.selectDepartment();
 trs.selectProject();
 trs.selectCostcenter();*/
-trs.clickOnSendApprovalButton();
 
 
 System.out.println("APPROVAL DONE");
@@ -164,7 +259,7 @@ System.out.println("APPROVAL DONE");
  
        //Function to Logout from Application
     		//tripgainhomepage.logOutFromApplication(Log, screenShots);
-    		driver.quit();
+    		//driver.quit();
          
        }
 	
@@ -188,7 +283,7 @@ System.out.println("APPROVAL DONE");
 	    @AfterMethod
 	    public void tearDown() {
 	       if (driver != null) {
-	          driver.quit();
+	       //   driver.quit();
 	          extantManager.flushReport();
 	       }
 	    }

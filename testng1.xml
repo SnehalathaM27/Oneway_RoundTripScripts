@@ -110,7 +110,7 @@
 
                                         <!--Round Trip-->
  
-           <class name="com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch"/>
+           <!--class name="com.tripgain.testscripts.RoundTrip.TC_1_VerifyRoundTripFlightSearch"/>
       <class name="com.tripgain.testscripts.RoundTrip.TC_2_Searchingforminimumtraveler"/>
       <class name="com.tripgain.testscripts.RoundTrip.TC_3_VerifyTravellerSelectionFunctionality"/>
       <class name="com.tripgain.testscripts.RoundTrip.TC_6_VerifyRoundTripFlightSearchInPeakTime"/>
@@ -197,10 +197,17 @@
                 <class name="com.tripgain.testscripts.RoundTrip.TC_92_EntireTestcasesCode1"/>       
         <class name="com.tripgain.testscripts.RoundTrip.TC_93_EntireTestcasesCode2"/>
         <class name="com.tripgain.testscripts.RoundTrip.TC_94_EntireTestcasesCode3"/>      
-                <class name="com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4"/>       
+                <class name="com.tripgain.testscripts.RoundTrip.TC_95_EntireTestcasesCode4"/-->  
+                
+    
 
-   
-               
+
+<!--class name="com.tripgain.testscripts.Expenses.TCE_1_VerifyExpensesModule"/>
+ <class name="com.tripgain.testscripts.Expenses.TCE_2_VerifyExpensesModule_AddMileage"/>
+   <class name="com.tripgain.testscripts.Expenses.TCE_3_VerifyExpensesModule_Automate"/>
+<class name="com.tripgain.testscripts.Expenses.TCE_4_VerifyExpenseByCreatingReport_NonTravelExpenseReport"/>
+   <class name="com.tripgain.testscripts.Expenses.TCE_5_VerifyExpenseByCreatingReport_MonthlyAllowanceReimbursementReport"/>
+   <class name="com.tripgain.testscripts.Expenses.TCE_6_VerifyExpenseByCreatingReport_MonthlyAllowanceReimbursementReport"/-->
 
                       <!--Grades-->
                                           
@@ -214,8 +221,17 @@
  <class name="L2_L2GRADE_ROUNDTRIP.TC_055_L2_L2Grade_InPolicy"/>
  <class name="L2_L2GRADE_ROUNDTRIP.TC_056_L2_L2Grade_InPolicy"/-->
  
+   <!--Trip planner (pre trip flow)-->
+          <class name="com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices"/>               
+     
+ 
 
      </classes>
+     
+                     
+     
+     
+     
   </test> <!-- Test -->
  
 

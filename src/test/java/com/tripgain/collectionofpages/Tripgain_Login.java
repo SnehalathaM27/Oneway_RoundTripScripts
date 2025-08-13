@@ -50,6 +50,8 @@ public class Tripgain_Login {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(80));
 		wait.until(ExpectedConditions.elementToBeClickable(button));
 		button.click();
+     
+
 	}
 	
 	

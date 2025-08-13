@@ -130,7 +130,6 @@ public class Tripgain_resultspage {
 	       if(flights.isDisplayed())
 	       {
 	          Log.ReportEvent("PASS", "Flights are displayed based on User Search is Successful");
-	          ScreenShots.takeScreenShot1();
 	       }  
 	       else {
 	          Log.ReportEvent("FAIL", "Flights are Not displayed based on User Search Please Change Filter");
@@ -214,7 +213,6 @@ public class Tripgain_resultspage {
            validateFlightPriceIsDisplayed();
            validateFlightFooterDetailsIsDisplayed();
            Log.ReportEvent("PASS", "Flights Basic Details are Displayed on Result Screen");
-           ScreenShots.takeScreenShot1();
         }catch(Exception e){
            Log.ReportEvent("FAIL", "Flights Basic Details are Not Displayed on Result Screen"+e.getMessage());
            ScreenShots.takeScreenShot1();
@@ -265,11 +263,11 @@ public class Tripgain_resultspage {
                 Log.ReportEvent("PASS", "Flights are displayed based on user search dates. User entered: " + userSelectedDate + ", Found: " + formattedUserDate);
             } else {
                 Log.ReportEvent("FAIL", "Flights are not displayed based on user search dates. User entered: " + userSelectedDate + ", Searched: " + formattedUserDate);
+                ScreenShots.takeScreenShot1();
+
             }
 
 
-            // Capture a screenshot of the current state
-            ScreenShots.takeScreenShot1();
 
         } catch (Exception e) {
             // Handle exceptions and log the error
@@ -347,7 +345,6 @@ public class Tripgain_resultspage {
               if(priceOnly.contains(finalBookingPriceOnly) && finalTime.contentEquals(arrivalAndDeparture))
               {
                  Log.ReportEvent("PASS", "Flights Price, Arrival and Departure Time is displaying Same");
-                 ScreenShots.takeScreenShot1();
               }
               else {
                  Log.ReportEvent("FAIL", "Flights Price, Arrival and Departure Time is displaying are Not Same");
@@ -363,7 +360,6 @@ public class Tripgain_resultspage {
               if(origenCode.contains(fromLocationCode) && destinationCode.contentEquals(toLocationCode))
               {
                  Log.ReportEvent("PASS", "Flights Price, Arrival and Departure Time is displaying Same");
-                 ScreenShots.takeScreenShot1();
               }
               else {
                  Log.ReportEvent("FAIL", "Flights Price, Arrival and Departure Time is displaying are Not Same");
@@ -404,7 +400,6 @@ public class Tripgain_resultspage {
   			if(defaultCurrencyDropdownSelected.isDisplayed())
   			{
   				Log.ReportEvent("PASS", "Default Currency INR is Selected on Currency Dropdown is Successful");
-  				ScreenShots.takeScreenShot1();
   			}
   			else {
   				Log.ReportEvent("FAIL", "Default Currency INR is Not Selected on Currency Dropdown");
@@ -471,8 +466,6 @@ public class Tripgain_resultspage {
 			    // Log success with price text
 			    Log.ReportEvent("PASS", "currency price displayed: " + priceText);
 
-			    // Take screenshot
-			    ScreenShots.takeScreenShot1();
 
 			} catch (NoSuchElementException e) {
 			    System.out.println("Element not found: " + e.getMessage());
@@ -505,7 +498,6 @@ public class Tripgain_resultspage {
 
 		        if (currencyValue.contentEquals(currencyCode)) {
 		            Log.ReportEvent("PASS", "Currencies are Displayed Based on User Search " + currencyCode + " is Successful");
-		            ScreenShots.takeScreenShot1();
 		        } else {
 		            Log.ReportEvent("FAIL", "Currencies are Not Displayed Based on User " + currencyCode);
 		            ScreenShots.takeScreenShot1();
@@ -681,7 +673,6 @@ public class Tripgain_resultspage {
             if(value.contentEquals("Cabin Baggage Included")||value.contentEquals("Hand Baggage Only"))
             {
                 Log.ReportEvent("PASS", "Both Check In Baggage and Non Check In flights are displayed on Result Screen is Successful");
-                ScreenShots.takeScreenShot1();
             }
             else {
                 Log.ReportEvent("FAIL", "Both Check In Baggage and Non Check In flights are Not displayed on Result Screen");
@@ -706,7 +697,6 @@ public class Tripgain_resultspage {
 		WebElement fareRules = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Fare Rules']")));
 		fareRules.click();
 
-        ScreenShots.takeScreenShot1(); 	
 		String xpath = "//p[contains(@class, 'MuiTypography-body2') and contains(text(), 'PC')]";
 
         WebElement baggageInfo = driver.findElement(By.xpath(xpath));
@@ -717,11 +707,9 @@ public class Tripgain_resultspage {
 
         if (pcCount == 0) {
             System.out.println("There is no check-in baggage.");        
-            ScreenShots.takeScreenShot1(); 	
 
         } else {
             System.out.println("It has check-in baggage.");
-            ScreenShots.takeScreenShot1(); 	
        }
         driver.findElement(By.xpath("//button[text()='Close']")).click();
     }
@@ -817,7 +805,6 @@ public class Tripgain_resultspage {
 	        // Check if policy text contains "Refundable"
 	        if (refundableText.contains("Refundable")) {
 	            Log.ReportEvent("PASS", "Refundable filter validation passed: Flight card text contains 'Refundable'.");
-	            ScreenShots.takeScreenShot1();
 	        } else {
 	            Log.ReportEvent("FAIL", "Refundable filter validation failed:  Flight card text does not contain 'Refundable'. Text found: " + refundableText);
 	            ScreenShots.takeScreenShot1();
@@ -948,76 +935,6 @@ public class Tripgain_resultspage {
         }
         }
 	
-	  //Method to Validate Stops is Selected on Result Screen
-   /* public void validateStopsSelected(Log Log,ScreenShots ScreenShots,String... stops)
-    {
-        try {
-            for(String stop: stops)
-            {
-                Thread.sleep(5000);
-                WebElement selected=driver.findElement(By.xpath("//div[@class='filter-stops']//button[text()='"+stop+"' and contains(@class,'selected-filter')]"));
-                WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(70));
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='filter-stops']//button[text()='\"+stop+\"' and contains(@class,'selected-filter')]")));
-                if(selected.isDisplayed())
-                {
-                    Log.ReportEvent("PASS", ""+stop+" "+ "Stop are Selected on Result Screen");
-                }
-                else {
-                    Log.ReportEvent("FAIL", ""+stop+" "+ "Stop are Not Selected on Result Screen");
-                    ScreenShots.takeScreenShot1();
-                }
-            }
-            ScreenShots.takeScreenShot1();
-        }
-        catch(Exception e)
-        {
-            Log.ReportEvent("FAIL", "Stop are Not Selected on Result Screen");
-            ScreenShots.takeScreenShot1();
-        }
-        
-    }*/
-	
-/*	//Method to validate flights stops on Result Screen
-	public void validateFlightsStopsOnResultScreen(String numberOfStops,Log Log,ScreenShots ScreenShots)
-	{
-	    try {
-	       Thread.sleep(5000);
-	       List<WebElement> flightStops=driver.findElements(By.xpath("//span[@data-tgstops]"));
-	       boolean stops=true;
-	       for(WebElement flightStop:flightStops)
-	       {
-	          String stop=flightStop.getText();
-	          if(stop.contentEquals(numberOfStops))
-	          {
-	             System.out.println(stop);
-		          Log.ReportEvent("PASS", "Stops are selected based on User Searched is Successful");
-
-	          }
-	          else {
-	             stops=false;
-	             Log.ReportEvent("FAIL", "FAIL are Not displayed based on User Searched");
-	             ScreenShots.takeScreenShot1();
-	             Assert.fail();
-	          }
-	       }
-	       if(stops==true)
-	       {
-	    	   Thread.sleep(3000);
-	          ScreenShots.takeScreenShot1();
-	       }
-	          Log.ReportEvent("PASS", "Flights displayed based on User Searched is Successful");
-
-
-	    }
-	    catch(Exception e)
-	    {
-	       Log.ReportEvent("FAIL", "Flights are Not displayed based on User Searched");
-	       ScreenShots.takeScreenShot1();
-	       Assert.fail();
-	       e.printStackTrace();
-	    }
-
-	}*/
 
 
 	// Method to validate flights stops on Result Screen
@@ -1042,7 +959,6 @@ public class Tripgain_resultspage {
 
 	        if (stops) {
 	            Thread.sleep(3000);
-	            ScreenShots.takeScreenShot1();
 	            Log.ReportEvent("PASS", "All flights have stops as per user selection: " + numberOfStops);
 	        }
 
@@ -1063,7 +979,7 @@ public class Tripgain_resultspage {
 
         for (String time : times) {
             String trimmedTime = time.trim();
-           // String xpath = "//legend[normalize-space()='ONWARD DEPART TIME']/following-sibling::*//small[normalize-space()='" + trimmedTime + "']";
+           // String xpath = "//legend[normalize-space()='ONWARD DEPART TIME']/owinfollg-sibling::*//small[normalize-space()='" + trimmedTime + "']";
             String xpath = "//*[contains(@class,'depart-time tg-onward-dep-time')]//small[text()='" + trimmedTime + "']";
             WebElement departTime = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
             js.executeScript("arguments[0].scrollIntoView({block: 'center'});", departTime);
@@ -1104,7 +1020,6 @@ public class Tripgain_resultspage {
 
                 System.out.println("Valid: " + valid + ", Invalid: " + invalid);
                 log.ReportEvent(invalid == 0 ? "PASS" : "FAIL", invalid == 0 ? "All times in range" +range: "Some times not in range");
-                screenshots.takeScreenShot1();
 
             } catch (Exception e) {
                 System.out.println("ERROR: " + e.getMessage());
@@ -5305,11 +5220,12 @@ Thread.sleep(4000);
                             totalPrice += (int) Math.round(attrPrice);
 
                             log.ReportEvent("INFO", "Select Pick Seat is "+ seatLabel);
-                            screenShots.takeScreenShot1();
 
                         } catch (Exception e) {
                             System.out.println(" Failed to extract seat price: " + e.getMessage());
                             log.ReportEvent("FAIL", "Failed to extract seat price:  "+ e.getMessage());
+                            screenShots.takeScreenShot1();
+
                             Assert.fail();
                         }
 
@@ -5333,6 +5249,8 @@ Thread.sleep(4000);
                 } catch (Exception e) {
                     System.out.println(" Close button not found.");
                     log.ReportEvent("FAIL", "Close button not found. "+ e.getMessage());
+                    screenShots.takeScreenShot1();
+
                     Assert.fail();
                 }
 
@@ -5378,7 +5296,6 @@ Thread.sleep(4000);
                             mealOptions.get(1).click(); // Select 2nd option
                             System.out.println("  Selected meal option: " + mealOptions.get(1).getText());
                             log.ReportEvent("PASS", "Meal option selected: " + mealOptions.get(1).getText());
-                            screenShots.takeScreenShot1();
                         } else {
                             log.ReportEvent("FAIL", "No meal options found.");
                             screenShots.takeScreenShot1();
@@ -6127,7 +6044,7 @@ Thread.sleep(4000);
   	//------------------------------------------------------------------
   	
   //Method to validate Search Results In Result page
-  		public String[] validateResultsInResultPage(String From, String to, String journeyDate, int xpathIndex, Log Log, ScreenShots ScreenShots) throws ParseException {
+  		public String[] validateResultsInResultPage(String From, String to, String journeyDate,  int xpathIndex, Log Log, ScreenShots ScreenShots) throws ParseException {
   		    try {
   		        System.out.println(From);
   		        System.out.println(to);

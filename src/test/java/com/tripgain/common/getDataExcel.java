@@ -18,7 +18,13 @@ public class getDataExcel {
 	public static List<Map<String, String>> getExcelDataFromSheet(String sheetName) {
         List<Map<String, String>> dataList = new ArrayList<>();
         File classpathRoot = new File(System.getProperty("user.dir"));
-         File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\testdatamain1.xlsx");
+        // this is for one way and round trip sheets
+        // File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\testdatamain1.xlsx");     
+        
+        // File app = new File(classpathRoot, "src\\test\\resources\\testdata\\ExpenseSheets.xlsx");
+         
+         File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\preTripFlow.xlsx");     
+
         String fileName = app.toString();
 
         try (FileInputStream fis = new FileInputStream(fileName);

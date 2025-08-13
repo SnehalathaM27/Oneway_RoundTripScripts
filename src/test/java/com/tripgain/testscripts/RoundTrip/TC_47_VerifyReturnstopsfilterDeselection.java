@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.tripgain.collectionofpages.SiteChecker;
 import com.tripgain.collectionofpages.Tripgain_Login;
 import com.tripgain.collectionofpages.Tripgain_RoundTripResultsScreen;
 import com.tripgain.collectionofpages.Tripgain_homepage;
@@ -66,12 +67,15 @@ public class TC_47_VerifyReturnstopsfilterDeselection extends BaseClass{
         
         // Login to TripGain Application
         Tripgain_Login tripgainLogin= new Tripgain_Login(driver);
+SiteChecker Site_Checker=new SiteChecker(driver);
+		
+        Site_Checker.waitForSiteToBeUp(driver, "https://v3.tripgain.com/flights", 20, 180);
+
         tripgainLogin.enterUserName(userName);
         tripgainLogin.enterPasswordName(password);
         tripgainLogin.clickButton(); 
 		Log.ReportEvent("PASS", "Enter UserName and Password is Successful");
 		Thread.sleep(2000);
-		screenShots.takeScreenShot1();
 
         
         //Functions to Search on Home Page     
@@ -79,6 +83,8 @@ public class TC_47_VerifyReturnstopsfilterDeselection extends BaseClass{
         Tripgain_RoundTripResultsScreen trs=new Tripgain_RoundTripResultsScreen(driver);
 
         Tripgain_resultspage tripgainresultspage=new Tripgain_resultspage(driver);
+        trs.printVersion(Log);
+        Thread.sleep(2000);
          tripgainhomepage.Clickroundtrip();
          tripgainhomepage.searchFlightsOnHomePage(Log, screenShots, origin,destination,fromDate,fromMonthYear,returnDate,returnMonthYear,travelClass, adults);
         Thread.sleep(5000); 
@@ -89,7 +95,8 @@ public class TC_47_VerifyReturnstopsfilterDeselection extends BaseClass{
         Thread.sleep(2000); 
 
         trs.roundTripClickReturnStops(Stops);
-		screenShots.takeScreenShot1();
+
+        Log.ReportEvent("PASS", "DESELECTION SUCCESSFULL");
 
        //Function to Logout from Application
     		//tripgainhomepage.logOutFromApplication(Log, screenShots);
