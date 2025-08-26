@@ -4,9 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -23,12 +26,14 @@ import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import com.tripgain.common.Log;
 import com.tripgain.common.ScreenShots;
@@ -1527,6 +1532,1659 @@ ScreenShots.takeScreenShot1();
 //	 			
 //	 			
 	 		
-	 
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		                                          //for buses 
+	 		
+	//Method to click on buses 
+	public void clickBuses() {
+		driver.findElement(By.xpath("//div[contains(@class, 'MuiAccordionSummary-content')]//div[contains(text(), 'BUSES')]")).click();
+	}
+	 		
+//Method to enter from location for buses	 		
+	 @FindBy(xpath = "//*[contains(@id,'react-select-11-input')]")
+	   private WebElement enterFromLocationForBuses;
+
+	 public String enterfromLocForBuses(String location) throws TimeoutException {
+		 enterFromLocationForBuses.clear();
+		 enterFromLocationForBuses.sendKeys(location);
+
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@role='option']")));
+
+		    selectCityto(location);
+
+		    return location;  // return the input location
+		}
+		
+	//Method to enter to location for buses	 		
+		 @FindBy(xpath = "//*[contains(@id,'react-select-12-input')]")
+		   private WebElement enterToLocationForBuses;
+
+		 public String entertoLocForBuses(String location) throws TimeoutException {
+			 enterToLocationForBuses.clear();
+			 enterToLocationForBuses.sendKeys(location);
+
+			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@role='option']")));
+
+			    selectCityto(location);
+
+			    return location;  // return the input location
+			}
+	 		
+	//Method for to select date for buses
+		 @FindBy(xpath = "//label[text()='Select Date']/following-sibling::div")
+		    WebElement selectjourdateForBusses;
+		 
+		 public String selectJourneyDateForBuses(String day, String MonthandYear) {
+			    JavascriptExecutor js = (JavascriptExecutor) driver;
+			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+			    js.executeScript("document.body.style.zoom='80%'");
+			    wait.until(ExpectedConditions.elementToBeClickable(selectjourdate)).click();
+
+			    By monthYearHeader = By.xpath("//h2[@class='react-datepicker__current-month']");
+			    wait.until(ExpectedConditions.visibilityOfElementLocated(monthYearHeader));
+
+			    String currentMonthYear = driver.findElement(monthYearHeader).getText();
+
+			    if (currentMonthYear.equals(MonthandYear)) {
+			        By dayLocator = By.xpath("(//div[@class='react-datepicker__month-container'])[1]//div[text()='" + day + "' and @aria-disabled='false']");
+			        wait.until(ExpectedConditions.elementToBeClickable(dayLocator)).click();
+			    } else {
+			        while (!currentMonthYear.equals(MonthandYear)) {
+			            driver.findElement(By.xpath("//button[@aria-label='Next Month']")).click();
+			            wait.until(ExpectedConditions.textToBe(monthYearHeader, MonthandYear));
+			            currentMonthYear = driver.findElement(monthYearHeader).getText();
+			        }
+			        By dayLocator = By.xpath("//*[@class='react-datepicker__month-container']//*[text()='" + day + "' and @aria-disabled='false']");
+			        wait.until(ExpectedConditions.elementToBeClickable(dayLocator)).click();
+			    }
+
+			    js.executeScript("document.body.style.zoom='100%'");
+
+			    String rawDate = day + " " + MonthandYear;  // e.g., "13 August 2025"
+			    return normalizeDate(rawDate);    	
+			    }
+
+	//Method to click on add to cart button for buses
+			public void clickAddToCartButtonForBuses() {
+		 	    try {
+		 	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		 	        WebElement addToCartButton = wait.until(ExpectedConditions.elementToBeClickable(
+		 	            By.xpath("//button[normalize-space(text())='Add to cart']")
+		 	        ));
+		 	        addToCartButton.click();
+		 	    } catch (Exception e) {
+		 	        e.printStackTrace(); 
+		 	        throw e; 
+		 	    }
+		 	}
+
+	//Method to get sector data for buses 
+			public String[] getSectorDataForBuses(Log Log, ScreenShots ScreenShots) {
+		 	    String originCode = "", destCode = "", classText = "", startDateFormatted = "";
+
+		 	    try {
+		 	        // Extract Sector text and parse codes
+		 	        String routeText = driver.findElement(By.xpath(
+		 	            "//div[contains(@class, 'MuiGrid2-root')]/span[text()='Sector']/following-sibling::h6")).getText();
+
+		 	        Pattern pattern = Pattern.compile("\\((.*?)\\)");
+		 	        Matcher matcher = pattern.matcher(routeText);
+
+		 	        if (matcher.find()) {
+		 	            originCode = matcher.group(1);
+		 	        }
+		 	        if (matcher.find()) {
+		 	            destCode = matcher.group(1);
+		 	        }
+
+		 	        // Extract Journey Type / Class
+		 	        try {
+		 	            classText = driver.findElement(By.xpath(
+		 	                "//span[text()='Journey Type']/following-sibling::h6")).getText();
+		 	        } catch (NoSuchElementException e) {
+		 	            Log.ReportEvent("FAIL", "'Journey Type ' not found.");
+		 	            ScreenShots.takeScreenShot1();
+		 	        }
+
+		 	        // Extract and split journey dates
+		 	        try {
+		 	            String journeyDates = driver.findElement(By.xpath(
+		 	                "//span[text()='Journey Dates']/following-sibling::h6")).getText();
+
+		 	            String[] dates = journeyDates.split("->");
+		 	            if (dates.length == 2) {
+		 	                startDateFormatted = formatDate(dates[0].trim());
+		 	            } else {
+		 	                Log.ReportEvent("FAIL", "Invalid journey dates format: " + journeyDates);
+		 	                ScreenShots.takeScreenShot1();
+		 	            }
+		 	        } catch (NoSuchElementException e) {
+		 	            Log.ReportEvent("FAIL", "'Journey Dates' element not found.");
+		 	            ScreenShots.takeScreenShot1();
+		 	        }
+
+		 	        // Final validation before returning
+		 	        if (originCode.isEmpty() || destCode.isEmpty()) {
+		 	            Log.ReportEvent("FAIL", "Origin or Destination code is missing. Extracted values - Origin: '" + originCode + "', Destination: '" + destCode + "'");
+		 	            ScreenShots.takeScreenShot1();
+		 	            return null;
+		 	        }
+
+		 	        // Summary log
+		 	        Log.ReportEvent("INFO", "Flight Sector Data Extracted:");
+		 	        Log.ReportEvent("INFO", "•Sector Origin Code: " + originCode);
+		 	        Log.ReportEvent("INFO", "•Sector Destination Code: " + destCode);
+		 	        Log.ReportEvent("INFO", "•Sector Class: " + classText);
+		 	        Log.ReportEvent("INFO", "•Sector Start Date: " + startDateFormatted);
+
+		 	        return new String[] {
+		 	            originCode,
+		 	            destCode,
+		 	            classText,
+		 	            startDateFormatted,
+		 	        };
+
+		 	    } catch (Exception e) {
+		 	        Log.ReportEvent("FAIL", "Unexpected error in getDataForvalidateFlightsOnlineOriginData(): " + e.getMessage());
+		 	        ScreenShots.takeScreenShot1();
+		 	        return null;
+		 	    }
+		 	}
+
+	 	//Method to click on search buses button
+			public void clickSearchBusesButton() {
+				driver.findElement(By.xpath("//button[text()='Search Buses']")).click();
+			}
+			
+			
+			//Method to get trip id, locations from flights results screen 
+	 		public String[] getTripIdAndODLocInFlightsResultsScreenForBuses(Log Log,ScreenShots ScreenShots) {
+	 			 JavascriptExecutor js = (JavascriptExecutor) driver;
+	 		   	js.executeScript("window.scrollTo(0, 0);");
+
+
+	 		    String tripId = "";
+	 		    String originCode = "";
+	 		    String destinationCode = "";
+
+	 		    try {
+	 		        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	 		        // Wait for and get Trip ID text
+	 		        WebElement headerTripElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("header_trip_name")));
+	 		        String fullTripText = headerTripElement.getText().trim();
+
+	 		        if (fullTripText.contains("(") && fullTripText.contains(")")) {
+	 		            tripId = fullTripText.substring(fullTripText.indexOf('(') + 1, fullTripText.indexOf(')')).trim();
+	 		        } else if (fullTripText.contains(":")) {
+	 		            // Fallback: "Trip ID: TGTR20250808BT8QFK"
+	 		            tripId = fullTripText.split(":")[1].trim();
+	 		        } else {
+	 		            tripId = fullTripText.trim(); // Last 
+	 		        }
+
+	 		        // Wait for and get trip info locations text 
+	 		        WebElement tripInfoElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("trip_info")));
+	 		        String tripInfoText = tripInfoElement.getText().trim();
+
+	 		        // Extract origin and destination
+	 		        // Expected format: "Route: BLR -> DEL, Class: Economy"
+	 		        if (tripInfoText.contains("->")) {
+	 		            String[] parts = tripInfoText.split(":");
+	 		            if (parts.length > 1) {
+	 		                String routePart = parts[1].split(",")[0].trim(); // "BLR -> DEL"
+	 		                String[] codes = routePart.split("->");
+	 		                if (codes.length == 2) {
+	 		                    originCode = codes[0].trim();
+	 		                    destinationCode = codes[1].trim();
+	 		                }
+	 		            }
+	 		        }
+
+	 		        // Logging extracted values
+	 		        Log.ReportEvent("PASS", "Result screen Extracted Bus Trip ID: " + tripId);
+	 		        Log.ReportEvent("PASS", "Result screen Bus Origin: " + originCode);
+	 		        Log.ReportEvent("PASS", "Result screen Bus Destination: " + destinationCode);
+
+
+	 		    } catch (Exception e) {
+	 		        Log.ReportEvent("FAIL", "Exception in getTripIdAndODLocInFlightsResultsScreenForBuses: " + e.getMessage());
+					ScreenShots.takeScreenShot();
+
+	 		        e.printStackTrace();
+	 		    }
+
+	 		    return new String[]{tripId, originCode, destinationCode};
+	 		}
+
+	 		
+	public void validateResultPageIsDisplayed(Log Log, ScreenShots ScreenShots) {
+				try {
+					WebDriverWait wait = new WebDriverWait(driver, Duration.ofMinutes(2));
+
+					WebElement viewSeatsButton = wait.until(ExpectedConditions
+							.visibilityOfElementLocated(By.xpath("//button[text()='View Seats']")));
+
+					if (viewSeatsButton.isDisplayed()) {
+						Log.ReportEvent("PASS", "Result page is getting displayed successfully.");
+						System.out.println("Result page is getting displayed successfully.");
+					}
+
+				} catch (Exception e) {
+
+					try {
+						WebElement noBusFound = driver.findElement(By.xpath("//h4[text()='Oops! No buses found.']"));
+						if (noBusFound.isDisplayed()) {
+							Log.ReportEvent("FAIL", "No bus found message is displayed.");
+							System.out.println("No bus found message is displayed.");
+							e.printStackTrace();
+							ScreenShots.takeScreenShot();
+							Assert.fail();
+						}
+					} catch (Exception ex) {
+						Log.ReportEvent("FAIL", "Neither result page nor no bus message is displayed.");
+						System.out.println("Neither result page nor no bus message is displayed.");
+						ex.printStackTrace();
+						ScreenShots.takeScreenShot();
+						Assert.fail();
+					}
+				} 
+			}
+			
+			
+			
+	
+			//Method to click on the policy filter
+			public String clickOnPolicyFilter(String userInputPolicy,Log Log, ScreenShots ScreenShots) {
+				try {
+					List<WebElement> policyOptions = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsflt-policy')]//div//span"));
+
+					for (WebElement policyOption : policyOptions) {
+						String policyText = policyOption.getText().trim();
+						if (policyText.equals(userInputPolicy)) {
+							policyOption.click(); 
+
+
+							List<WebElement> policyItems = driver.findElements(By.xpath("//*[contains(@class, 'tg-bsflt-policy')]//li"));
+
+							for (WebElement item : policyItems) {
+								WebElement checkbox = item.findElement(By.xpath(".//input[@type='checkbox']"));
+								WebElement label = item.findElement(By.xpath(".//span[contains(@class, 'MuiListItemText-primary')]"));
+
+								if (checkbox.isSelected()) {
+									String clickedPolicyText = label.getText().trim();
+									System.out.println("✅ Selected Policy: " + clickedPolicyText);
+									Log.ReportEvent("INFO", "Selected Policy: " + clickedPolicyText);
+
+									return clickedPolicyText;
+								}
+							}
+						}
+					}
+
+					System.out.println("❌ No matching policy found or none selected.");
+					return null;
+
+				} catch (Exception e) {
+					System.out.println("❌ Exception while clicking on policy filter: " + e.getMessage());
+					e.printStackTrace();
+					ScreenShots.takeScreenShot1();
+					Assert.fail();
+					return null;
+				}
+			}
+
+			//Method to validate policy filter
+			public void PolicyValidation(String clickedPolicyText, Log Log, ScreenShots ScreenShots) {
+				try {
+					boolean allMatch = true;
+
+					List<WebElement> checkPolicy = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-policy')]"));
+					System.out.println("Total policies found: " + checkPolicy.size());
+
+					for (WebElement policyElement : checkPolicy) {
+						String policyText = policyElement.getText().trim();
+						System.out.println("Result fetched: " + policyText + " | User-entered: " + clickedPolicyText);
+
+						if (!policyText.equals(clickedPolicyText)) {
+							allMatch = false;
+							break;
+						}
+					}
+
+					if (allMatch) {
+						System.out.println("✅ All displayed policies match the selected one ");
+						Log.ReportEvent("PASS", "All displayed policies match the selected one :"+clickedPolicyText);
+					} else {
+						System.out.println("❌ Some displayed policies do not match the selected one.");
+						Log.ReportEvent("FAIL", "Some displayed policies do not match the selected one:"+clickedPolicyText);
+
+					}
+
+				} catch (Exception e) {
+					System.out.println("❌ Exception while validating policy result: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "Exception while validating policy result.");
+					ScreenShots.takeScreenShot1();
+					Assert.fail();
+				}
+			}
+
+
+			//Method to click on Seat Type 
+			public List<String> clickOnSeatType(String[] userInputSeatType,Log Log, ScreenShots ScreenShots) {
+				try {
+					List<String> selectedSeatTypes = new ArrayList<>();
+
+					// Find all bus type filter options
+					List<WebElement> selectedSeatTypeOptions = driver.findElements(
+							By.xpath("//*[contains(normalize-space(@class), 'tg-bsflt-seattype')]//div//span")
+							);
+
+					// Loop through each option and click if it matches any user input
+					for (WebElement getSeatType : selectedSeatTypeOptions) {
+						String getSeatTypetext = getSeatType.getText().trim();
+
+						for (String userInput : userInputSeatType) {
+							if (getSeatTypetext.equalsIgnoreCase(userInput)) {
+								getSeatType.click();
+								// Optional: add a small wait here to ensure UI updates before next click
+								// Thread.sleep(500); or use WebDriverWait until clickable/visible if needed
+								break;  // Break inner loop after clicking current option
+							}
+						}
+					}
+
+					// Now get all checkboxes + labels after clicking filters
+					List<WebElement> seatTypes = driver.findElements(
+							By.xpath("//*[contains(@class, 'tg-bsflt-seattype')]//li")
+							);
+
+					for (WebElement seatType : seatTypes) {
+						WebElement checkbox = seatType.findElement(By.xpath(".//input[@type='checkbox']"));
+						WebElement label = seatType.findElement(By.xpath(".//span[contains(@class, 'MuiListItemText-primary')]"));
+
+						if (checkbox.isSelected()) {
+							String clickedSeatTypeText = label.getText().trim();
+							selectedSeatTypes.add(clickedSeatTypeText);
+							System.out.println("Selected SeatType: " + clickedSeatTypeText);
+							Log.ReportEvent("INFO", "Selected SeatType: " + clickedSeatTypeText);
+
+						}
+					}
+
+					return selectedSeatTypes;
+				}
+				catch (Exception e) {
+					System.out.println("❌ Exception while clicking on SeatType filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "Exception while clicking on SeatType filter");
+					ScreenShots.takeScreenShot1();
+					Assert.fail();
+				}
+				return null;
+			}
+
+			//Method to validate seat Type
+			public void SeatTypeValidation(List<String> clickedSeatTypes,Log Log, ScreenShots ScreenShots) {
+				try {
+					Thread.sleep(3000);
+					System.out.println("User-entered data: " + clickedSeatTypes);
+					boolean textMatched = true; // Assume true initially
+
+					List<WebElement> checkSeatTypes = driver.findElements(
+							By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-operatorname')]//span")
+							);
+
+					System.out.println("Total seat types found: " + checkSeatTypes.size());
+					Log.ReportEvent("INFO", "Total seat types found: " + checkSeatTypes.size());
+
+					for (WebElement checkSeatType : checkSeatTypes) {
+						String checkSeatTypeText = checkSeatType.getText();
+						System.out.println("Result fetched: " + checkSeatTypeText);
+
+						// Normalize the actual text
+						String normalizedText = " " + checkSeatTypeText.toUpperCase().replace("/", " ") + " ";
+
+						// Check if any expected bus type matches this text
+						boolean matchFound = false;
+						for (String expectedSeatType : clickedSeatTypes) {
+							System.out.println(expectedSeatType +" "+ normalizedText);
+							String expectedText = " " + expectedSeatType.toUpperCase() + " ";
+							System.out.println(expectedText);
+							System.out.println(normalizedText);
+							System.out.println(normalizedText.toUpperCase()+""+expectedText.toUpperCase());
+							// Thread.sleep(2000);
+							if (normalizedText.toUpperCase().contains(expectedText.toUpperCase())) {
+								matchFound = true;
+								break;
+							}
+						}
+
+						if (!matchFound) {
+							textMatched = false; // No match found for this bus type
+							break;               // Exit loop early, as mismatch found
+						}
+					}
+
+					if (textMatched) {
+						System.out.println("✅ Matched seat type for all the results with the selected SeatType : " + clickedSeatTypes);
+						Log.ReportEvent("PASS", "✅ Matched seat type for all the results: " + clickedSeatTypes);
+
+					} else {
+						System.out.println("❌ Mismatch found in Seat types.");
+						Log.ReportEvent("FAIL", "❌ Mismatch found in Seat types.");
+
+					}
+				}
+				catch (Exception e) {
+					System.out.println("❌ Exception while clicking on SeatType filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "Exception while clicking on SeatType filter");
+					ScreenShots.takeScreenShot1();
+					Assert.fail();
+				}
+			}
+
+			//Method to click on depart Time filter
+			public List<String> clickOnDepartTime(String[] userInputDepartTime,Log Log, ScreenShots ScreenShots) {
+				try {
+					List<String> selectedDepartTime = new ArrayList<>();
+
+					List<WebElement> selectedDepartTimeOptions = driver.findElements(
+							By.xpath("//*[contains(normalize-space(@class), 'tg-bsflt-deptime')]//div//span")
+							);
+
+					for (WebElement getDepartTime : selectedDepartTimeOptions) {
+						String getDepartTimeText = getDepartTime.getText().trim();
+
+						for (String userInput : userInputDepartTime) {
+							if (getDepartTimeText.equalsIgnoreCase(userInput)) {
+								getDepartTime.click();
+
+								break;  
+							}
+						}
+					}
+
+					List<WebElement> departTimes = driver.findElements(
+							By.xpath("//*[contains(@class, 'tg-bsflt-deptime')]//li")
+							);
+
+					for (WebElement departTime : departTimes) {
+						WebElement checkbox = departTime.findElement(By.xpath(".//input[@type='checkbox']"));
+						WebElement label = departTime.findElement(By.xpath(".//span[contains(@class, 'MuiListItemText-primary')]"));
+
+						if (checkbox.isSelected()) {
+							String clickedDepartTimeText = label.getText().trim();
+							selectedDepartTime.add(clickedDepartTimeText);
+							System.out.println("Selected Depart Time: " + selectedDepartTime);
+							Log.ReportEvent("INFO", "Selected Depart Time: " + selectedDepartTime);
+
+						}
+					}
+
+					return selectedDepartTime;
+				}
+				catch (Exception e) {
+					System.out.println("❌ Exception while clicking on Depart Time filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "Exception while clicking on Depart Time filter");
+					ScreenShots.takeScreenShot1();
+					Assert.fail();
+				}
+				return null;
+			}
+
+			//Method to validate depart time filter
+			public void ValidateDepartTime(List<String> selectedFilters, Log Log, ScreenShots ScreenShots) {
+				System.out.println("Selected Filters: " + selectedFilters);
+
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+				List<WebElement> departElements = driver.findElements(
+						By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-deptime')]")
+						);
+
+				if (departElements.isEmpty()) {
+					Log.ReportEvent("FAIL", "❌ No departure times found on the result page.");
+					ScreenShots.takeScreenShot1();
+					return;
+				}
+
+				// Extract all departure times from the page and convert them to minutes
+				List<Integer> departMinutes = new ArrayList<>();
+				List<String> departTextList = new ArrayList<>();
+
+				for (WebElement element : departElements) {
+					String timeText = element.getText().trim();
+					try {
+						LocalTime time = LocalTime.parse(timeText, formatter);
+						int minutes = time.getHour() * 60 + time.getMinute();
+						departMinutes.add(minutes);
+						departTextList.add(timeText);
+					} catch (DateTimeParseException e) {
+						Log.ReportEvent("FAIL", "❌ Invalid time format: " + timeText);
+						ScreenShots.takeScreenShot1();
+					}
+				}
+
+				// Loop through each selected filter
+				for (String filter : selectedFilters) {
+					int[] range = getFilterRangeInMinutes(filter);
+					int start = range[0];
+					int end = range[1];
+
+					boolean isFilterValid = true;
+
+					Log.ReportEvent("INFO", "🔍 Validating filter: \"" + filter + "\" (Expected range: " + start + " - " + end + " mins)");
+
+					// Check each departure time against the current filter range
+					for (int i = 0; i < departMinutes.size(); i++) {
+						int time = departMinutes.get(i);
+						String timeText = departTextList.get(i);
+
+						if (time >= start && time <= end) {
+							System.out.println("✅ " + timeText + " is valid for \"" + filter + "\"");
+						} else {
+							isFilterValid = false;
+							//       Log.ReportEvent("FAIL", "❌ " + timeText + " is outside range for \"" + filter + "\" (Expected: " + start + " - " + end + ")");
+							System.out.println("❌ " + timeText + " is outside range for \"" + filter + "\" (Expected: " + start + " - " + end + ")");
+						}
+					}
+
+					// Final pass/fail log for each filter
+					if (isFilterValid) {
+						Log.ReportEvent("PASS", "✅ All visible departure times matched filter: \"" + filter + "\"");
+					} else {
+						Log.ReportEvent("FAIL", "❌ Some departure times did not match filter: \"" + filter + "\"");
+						ScreenShots.takeScreenShot1();
+					}
+				}
+			}
+
+			public static int[] getFilterRangeInMinutes(String filter) {
+				filter = filter.toLowerCase().trim();
+
+				if (filter.startsWith("before")) {
+					int end = convertToMinutes(filter.replace("before", "").trim());
+					return new int[]{0, end - 1};
+
+				} else if (filter.startsWith("after")) {
+					int start = convertToMinutes(filter.replace("after", "").trim());
+					return new int[]{start + 1, 1439};
+
+				} else if (filter.contains("to")) {
+					String[] parts = filter.split("to");
+					int start = convertToMinutes(parts[0].trim());
+					int end = convertToMinutes(parts[1].trim());
+					return new int[]{start, end};
+				}
+
+				throw new IllegalArgumentException("Invalid filter: " + filter);
+			}
+			public static int convertToMinutes(String timeText) {
+				timeText = timeText.toLowerCase().trim();
+				String[] parts = timeText.split(" ");
+
+				int hour = Integer.parseInt(parts[0]);
+				String meridian = parts[1];
+
+				if (meridian.equals("am") && hour == 12) hour = 0;
+				else if (meridian.equals("pm") && hour != 12) hour += 12;
+
+				return hour * 60;
+			}
+
+
+			// ✅ Enhanced convertToMinutes method
+			public static int convertToMinutes(String timeText, DateTimeFormatter formatter) {
+				if (timeText != null) {
+					String lower = timeText.toLowerCase().trim();
+
+					if (lower.startsWith("before") || lower.startsWith("after")) {
+						String cleanTime = lower.replace("before", "")
+								.replace("after", "")
+								.trim(); // e.g., "6 am"
+
+						String[] parts = cleanTime.split(" ");
+						if (parts.length != 2) {
+							throw new IllegalArgumentException("Invalid time format: " + timeText);
+						}
+
+						int hour = Integer.parseInt(parts[0]);
+						String meridian = parts[1];
+
+						// Convert to 24-hour format
+						if (meridian.equals("am") && hour == 12) {
+							hour = 0;
+						} else if (meridian.equals("pm") && hour != 12) {
+							hour += 12;
+						}
+
+						return hour * 60;
+					}
+				}
+
+				// Try parsing exact "HH:mm" format
+				try {
+					LocalTime time = LocalTime.parse(timeText, formatter);
+					return time.getHour() * 60 + time.getMinute();
+				} catch (DateTimeParseException e) {
+					throw new IllegalArgumentException("Unexpected time format: " + timeText);
+				}
+			}
+
+
+			// Method to click on the Departure descending sort filter
+			public void DepartDescendingFilter(Log log, ScreenShots screenShots) throws InterruptedException {
+				try {
+					WebElement departTimeSortFilter = driver.findElement(By.xpath("(//button[text()='Departure'])[1]"));
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+
+					js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", departTimeSortFilter);
+
+					Thread.sleep(500); 
+
+					departTimeSortFilter.click();
+					log.ReportEvent("INFO", "Clicked on Departure descending sort filter");
+
+				} catch (Exception e) {
+					System.err.println("❌ Exception while clicking on Departure sort filter: " + e.getMessage());
+					e.printStackTrace();
+					log.ReportEvent("FAIL", "❌ Exception while clicking on Departure sort filter: " + e.getMessage());
+					screenShots.takeScreenShot1();
+					Assert.fail("Exception while clicking on Departure sort filter.");
+				}
+			}
+
+			//Method to check whether depart flights result are appearing in descending order
+			public void TimeOrderCheckInDescendingForDepart(Log Log,ScreenShots ScreenShots) {
+
+
+				try {
+
+					// Find all matching elements
+					List<WebElement> divs = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-deptime')]"));
+
+					// Extract time strings from h3 elements inside each div
+					List<String> timeStrings = new ArrayList<>();
+					for (WebElement div : divs) {
+						String h3 = div.getText();
+						timeStrings.add(h3.trim());
+						System.out.println(timeStrings);
+					}
+
+					// Convert time strings to minutes
+					List<Integer> timesInMinutes = new ArrayList<>();
+					for (String time : timeStrings) {
+						String[] parts = time.split(":");
+						int minutes = Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+						timesInMinutes.add(minutes);
+						System.out.println(timesInMinutes);
+					}
+
+					// Check if times are in ascending order
+					boolean isDescending = true;
+					for (int i = 0; i < timesInMinutes.size() - 1; i++) {
+						if (timesInMinutes.get(i) < timesInMinutes.get(i + 1)) {
+							isDescending = false;
+							break;
+						}
+					}
+					if(isDescending)
+					{
+
+						Log.ReportEvent("PASS", "Flights are displaying in Descending order");
+
+						System.out.println("Flights are displaying in Descending order");
+
+					}
+					else
+					{
+
+						Log.ReportEvent("FAIL", "Flights are Not displaying in Descending order");
+
+						System.out.println("Flights are Not displaying in Descending order");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
+				}
+			}
+			
+			//Method to click on Arrive ascending filter 
+			public void ArrivalAscendingFilter(Log Log, ScreenShots ScreenShots) throws InterruptedException
+			{
+				try {
+					WebElement arrivalTimeSortFilter = driver.findElement(By.xpath("(//button[text()='Arrival'])[1]"));
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+
+					// Scroll the element into the center of the viewport
+					js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", arrivalTimeSortFilter);
+
+					Thread.sleep(500);
+
+					arrivalTimeSortFilter.click();
+					Log.ReportEvent("INFO", " Clicked on arrival ascending sort filter");
+
+				}
+				catch (Exception e) {
+					System.err.println("❌ Exception while clicking on arrival(Ascending) sorting filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "❌ Exception while clicking on arrival(Ascending) sorting filter ");
+					ScreenShots.takeScreenShot1();
+					Assert.fail("Exception while clicking on arrival(Ascending) sorting filter.");
+				}
+			}
+			
+			//method to check whether arrival time of all flights in ascending order From div
+			public void TimeOrderCheckInAscendingForArrival(Log Log,ScreenShots ScreenShots) {
+
+
+				try {
+
+					// Find all matching elements
+					List<WebElement> ArrivalTime = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-arrtime')]"));
+
+					// Extract time strings from h3 elements inside each div
+					List<String> timeStrings = new ArrayList<>();
+					for (WebElement ArrivalTime1 : ArrivalTime) {
+						String h3 = ArrivalTime1.getText();
+						timeStrings.add(h3.trim());
+						System.out.println(timeStrings);
+					}
+
+					// Convert time strings to minutes
+					List<Integer> timesInMinutes = new ArrayList<>();
+					for (String time : timeStrings) {
+						String[] parts = time.split(":");
+						int minutes = Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+						timesInMinutes.add(minutes);
+						System.out.println(timesInMinutes);
+					}
+
+					// Check if times are in ascending order
+					boolean isAscending = true;
+					for (int i = 0; i < timesInMinutes.size() - 1; i++) {
+						if (timesInMinutes.get(i) > timesInMinutes.get(i + 1)) {
+							isAscending = false;
+							break;
+						}
+					}
+					if(isAscending)
+					{
+						System.out.println("Flights are displaying in ascending order");
+						Log.ReportEvent("PASS", "Flights are displaying in Ascending order");
+
+
+					}
+					else
+					{
+						System.out.println("Flights are Not displaying in ascending order");
+						Log.ReportEvent("FAIL", "Flights are Not displaying in ascending order");
+
+					}
+
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
+				}
+			}
+			//Method to click on Duration desending filter
+			public void ArrivalDescendingFilter(Log Log, ScreenShots ScreenShots) throws InterruptedException
+			{
+				try
+				{
+
+					WebElement arrivalTimeSortFilter = driver.findElement(By.xpath("(//button[text()='Arrival'])[1]"));
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+
+					// Scroll the element into the center of the viewport
+					js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", arrivalTimeSortFilter);
+
+					Thread.sleep(500);
+
+					arrivalTimeSortFilter.click();
+					Log.ReportEvent("INFO", "Clicked on arrival descending sort filter");
+
+				}
+				catch (Exception e) {
+					System.err.println("❌ Exception while clicking on arrival(Descending) sorting filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "❌ Exception while clicking on arrival(Descending) sorting filter ");
+					ScreenShots.takeScreenShot1();
+					Assert.fail("Exception while clicking on arrival(Descending) sorting filter.");
+				}
+
+			}
+			
+			//Method to check whether flights result are appearing in descending order for depart
+			public void TimeOrderCheckInDescendingForArrival(Log Log,ScreenShots ScreenShots) {
+
+
+				try {
+
+					// Find all matching elements
+					List<WebElement> ArrivalTime = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-arrtime')]"));
+
+					// Extract time strings from h3 elements inside each div
+					List<String> timeStrings = new ArrayList<>();
+					for (WebElement ArrivalTime1 : ArrivalTime) {
+						String h3 = ArrivalTime1.getText();
+						timeStrings.add(h3.trim());
+						System.out.println(timeStrings);
+					}
+
+					// Convert time strings to minutes
+					List<Integer> timesInMinutes = new ArrayList<>();
+					for (String time : timeStrings) {
+						String[] parts = time.split(":");
+						int minutes = Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+						timesInMinutes.add(minutes);
+					}
+
+					// Check if times are in ascending order
+					boolean isDescending = true;
+					for (int i = 0; i < timesInMinutes.size() - 1; i++) {
+						if (timesInMinutes.get(i) < timesInMinutes.get(i + 1)) {
+							isDescending = false;
+							break;
+						}
+					}
+					if(isDescending)
+					{
+						System.out.println("Flights are displaying in Descending order");
+						Log.ReportEvent("PASS", "Flights are displaying in Descending order");
+
+					}
+					else
+					{
+						System.out.println("Flights are Not displaying in Descending order");
+						Log.ReportEvent("FAIL", "Flights are Not displaying in Descending order");
+
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
+				}
+			}
+			
+			//method to validate Price Filter
+			public void PriceOrderCheckInAscending(Log Log,ScreenShots ScreenShots) {
+				try {
+					// Find price elements using more robust XPath
+					List<WebElement> priceElements = driver.findElements(By.xpath(
+							"//*[contains(normalize-space(@class), 'tg-bsrs-price')]"
+							));
+					System.out.println(priceElements.size());
+					// Extract and clean price strings
+					List<Integer> prices = new ArrayList<>();
+					for (WebElement priceElement : priceElements) {
+						String rawPrice = priceElement.getText().trim();
+						//System.out.println(rawPrice);
+
+						// Remove currency symbols and commas
+						String cleanPrice = rawPrice
+								.replace("â‚¹", "")
+								.replace("₹", "")        
+
+								.replace(",", "")
+								.trim();
+						//System.out.println(cleanPrice);
+						try {
+							int priceValue = Integer.parseInt(cleanPrice);
+							//System.out.println(priceValue);
+							prices.add(priceValue);
+							System.out.println("Cleaned price: " + priceValue);
+						} catch (NumberFormatException e) {
+							System.err.println("Failed to parse: " + rawPrice);
+						}
+					}
+
+					// Check descending order
+					boolean isAscending = true;
+					for (int i = 0; i < prices.size() - 1; i++) {
+						if (prices.get(i) > prices.get(i + 1)) {
+							isAscending = false;
+							break;
+						}
+					}
+					if(isAscending)
+					{
+						System.out.println("Prices are getting displayed in Ascending order");
+						Log.ReportEvent("PASS", "Prices are getting displayed in Ascending order");
+
+					}
+					else
+					{
+						System.out.println("Prices are Not getting displayed in Ascending order");
+						Log.ReportEvent("FAIL", "Prices are Not getting displayed in Ascending order");
+
+
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//Method to click on Price Filter
+			public void PriceDescendingFilter(Log Log, ScreenShots ScreenShots) throws InterruptedException
+			{
+				try {
+					Thread.sleep(1000);
+					WebElement priceDescending = driver.findElement(By.xpath("(//button[text()='Price'])"));
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+
+					// Scroll the element into the center of the viewport
+					js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", priceDescending);
+
+					Thread.sleep(500);
+
+					priceDescending.click();
+					Log.ReportEvent("INFO", " Clicked on price Descending sort filter");
+
+
+				}
+				catch (Exception e) {
+					System.err.println("❌ Exception while clicking on arrival(Descending) sorting filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "❌ Exception while clicking on arrival(Descending) sorting filter ");
+					ScreenShots.takeScreenShot1();
+					Assert.fail("Exception while clicking on arrival(Descending) sorting filter.");
+				}
+			}
+			
+			//Method to click on Price Filter
+			public void PriceAscendingFilter(Log Log, ScreenShots ScreenShots) throws InterruptedException
+			{
+				try {
+					Thread.sleep(1000);
+					WebElement priceDescending = driver.findElement(By.xpath("(//button[text()='Price'])"));
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+
+					// Scroll the element into the center of the viewport
+					js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", priceDescending);
+
+					Thread.sleep(500);
+
+					priceDescending.click();
+					Log.ReportEvent("INFO", " Clicked on price Ascending sort filter");
+
+				}
+				catch (Exception e) {
+					System.err.println("❌ Exception while clicking on arrival(Ascending) sorting filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "❌ Exception while clicking on arrival(Ascending) sorting filter ");
+					ScreenShots.takeScreenShot1();
+					Assert.fail("Exception while clicking on arrival(Ascending) sorting filter.");
+				}
+			}
+			
+			//method to validate Price Filter
+			public void PriceOrderCheckInDescending(Log Log,ScreenShots ScreenShots) {
+				try {
+					Thread.sleep(2000);
+					// 1. Find price elements using more robust XPath
+					List<WebElement> priceElements = driver.findElements(By.xpath(
+							"//*[contains(normalize-space(@class), 'tg-bsrs-price')]"
+							));
+
+					// 2. Extract and clean price strings
+					List<Integer> prices = new ArrayList<>();
+					for (WebElement priceElement : priceElements) {
+						String rawPrice = priceElement.getText().trim();
+
+						// Remove currency symbols and commas
+						String cleanPrice = rawPrice
+								.replace("â‚¹", "")
+								.replace("₹", "")        
+
+								.replace(",", "")
+								.trim();
+
+						try {
+							int priceValue = Integer.parseInt(cleanPrice);
+							prices.add(priceValue);
+							System.out.println("Cleaned price: " + priceValue);
+						} catch (NumberFormatException e) {
+							System.err.println("Failed to parse: " + rawPrice);
+						}
+					}
+
+					// 3. Check descending order
+					boolean isDescending = true;
+					for (int i = 0; i < prices.size() - 1; i++) {
+						if (prices.get(i) < prices.get(i + 1)) {
+							isDescending = false;
+							break;
+						}
+					}
+					if(isDescending)
+					{
+						System.out.println("Prices are getting displayed in descending order");
+						Log.ReportEvent("PASS", "Prices are getting displayed in descending order");
+
+					}
+					else
+					{
+						System.out.println("Prices are Not getting displayed in descending order");
+						Log.ReportEvent("FAIL", "Prices are Not getting displayed in descending order");
+
+
+					}
+					//  System.out.println("Prices in descending order: " + isDescending);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//Method to click on Depart ascending filter
+			public void DepartAscendingFilter(Log Log, ScreenShots ScreenShots) throws InterruptedException{
+				try {
+
+					WebElement departTimeSortFilter = driver.findElement(By.xpath("(//button[text()='Departure'])[1]"));
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+
+					// Scroll the element into the center of the viewport
+					js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", departTimeSortFilter);
+
+					Thread.sleep(500);
+
+					departTimeSortFilter.click();
+					Log.ReportEvent("INFO", "Clicked on depart ascending sorting filter");
+
+				}
+				catch (Exception e) {
+					System.err.println("❌ Exception while clicking on depart sorting filter: " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "❌ Exception while clicking on depart sorting filter ");
+					ScreenShots.takeScreenShot1();
+					Assert.fail("Exception while clicking on depart sorting filter.");
+				}
+			}
+			
+			//method to check whether depart time of all flights are displaying in ascending order
+			public void TimeOrderCheckInAscendingForDepart(Log Log,ScreenShots ScreenShots) {
+
+
+				try {
+
+					// Find all matching elements
+					List<WebElement> departTime = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-deptime')]"));
+
+					// Extract time strings from h3 elements inside each div
+					List<String> timeStrings = new ArrayList<>();
+					for (WebElement departTime1 : departTime) {
+						String h3 = departTime1.getText();
+						timeStrings.add(h3.trim());
+						System.out.println(timeStrings);
+					}
+
+					// Convert time strings to minutes
+					List<Integer> timesInMinutes = new ArrayList<>();
+					for (String time : timeStrings) {
+						String[] parts = time.split(":");
+						int minutes = Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+						timesInMinutes.add(minutes);
+						System.out.println(timesInMinutes);
+					}
+
+					// Check if times are in ascending order
+					boolean isAscending = true;
+					for (int i = 0; i < timesInMinutes.size() - 1; i++) {
+						if (timesInMinutes.get(i) > timesInMinutes.get(i + 1)) {
+							isAscending = false;
+							break;
+						}
+					}
+					if(isAscending)
+					{
+
+						Log.ReportEvent("PASS","Flights are displaying in ascending order");
+
+						System.out.println("Flights are displaying in ascending order");
+
+					}
+					else
+					{
+
+						Log.ReportEvent("FAIL", "Flights are Not displaying in ascending order");
+
+						System.out.println("Flights are Not displaying in ascending order");
+					}
+
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
+				}
+			}
+			
+			//Method to get all operators name on the screen.
+			public void getOperatorsName(Log Log, ScreenShots ScreenShots) {
+				List<String> names = new ArrayList<>();
+
+				try {
+					List<WebElement> listOfOperators = driver.findElements(
+							By.xpath("//h6[text()='OPERATOR NAME']/parent::div//div//span")
+							);
+					for (WebElement operator : listOfOperators) {
+						String operatorName = operator.getText();
+						names.add(operatorName);
+						Log.ReportEvent("INFO", "Operator Name Found: " + operatorName);  
+
+					}
+
+
+				} catch (NoSuchElementException nse) {
+					System.err.println("No operator name elements found on the page: " + nse.getMessage());
+				} catch (WebDriverException wde) {
+					System.err.println("WebDriver encountered an issue while retrieving operator names: " + wde.getMessage());
+				} catch (Exception e) {
+					System.err.println("Unexpected error in getOperatorsName(): " + e.getMessage());
+					Log.ReportEvent("FAIL", "Operator name not found on the screen.");
+					e.printStackTrace();
+					ScreenShots.takeScreenShot();
+					Assert.fail();
+
+				} 
+
+			}
+			//Method to click on view seat button
+			public void clickOnViewSeatButton(Log Log, ScreenShots ScreenShots,int viewBus)
+			{
+				try
+				{
+					driver.findElement(By.xpath("(//button[text()='View Seats'])["+ viewBus +"]")).click();
+					Log.ReportEvent("PASS", "Clicked on view seat button successfully.");
+
+				}
+
+				catch (Exception e) {
+					System.err.println("Unexpected error in clickOnViewSeatButton(): " + e.getMessage());
+					e.printStackTrace();
+					Log.ReportEvent("FAIL", "Failed to click on view seat button.");
+					ScreenShots.takeScreenShot();
+
+					Assert.fail();
+
+				}
+			}
+
+			//Method to click on boarding point dropdown
+			public void clickOnBoardingPoint(int boardingPointIndex,Log Log, ScreenShots ScreenShots) throws InterruptedException
+			{
+				try
+				{
+					Thread.sleep(2000);
+					driver.findElement(By.xpath("(//div[@aria-haspopup='listbox'])[1]")).click();
+					List<WebElement> listOfBoardingPoints = driver.findElements(By.xpath("//ul//div//span"));
+					WebElement indexWiseClickOnBoardingPoint = listOfBoardingPoints.get(boardingPointIndex);
+					Thread.sleep(3000);
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+					js.executeScript("arguments[0].click();", indexWiseClickOnBoardingPoint);
+
+					String boardingPointText = driver.findElement(By.xpath("(//*[contains(normalize-space(@class), 'tg-bsrs-boardingpoint')]//span)[1]")).getText();
+					Log.ReportEvent("PASS", "boarding point selected successfully. " );
+					Log.ReportEvent("INFO", "Selected boarding point: "+ boardingPointText);
+
+				}
+				catch (Exception e) {
+					System.err.println("Unexpected error when clicking on boarding point dropdown: " + e.getMessage());
+					e.printStackTrace();	
+					Log.ReportEvent("FAIL", "Failed to select the boarding point." );
+					ScreenShots.takeScreenShot();
+					Assert.fail();
+				}
+
+			}
+
+			//Method to click on droping point dropdown
+			public void clickOnDropingPoint(int dropingPointIndex,Log Log, ScreenShots ScreenShots) throws InterruptedException
+			{
+				try
+				{
+					Thread.sleep(2000);
+					driver.findElement(By.xpath("(//div[@aria-haspopup='listbox'])[2]")).click();
+					List<WebElement> listOfBoardingPoints = driver.findElements(By.xpath("//ul//div//span"));
+					WebElement indexWiseClickOndropingPoint = listOfBoardingPoints.get(dropingPointIndex);
+					Thread.sleep(3000);
+					JavascriptExecutor js = (JavascriptExecutor) driver;
+					js.executeScript("arguments[0].click();", indexWiseClickOndropingPoint);
+
+					String dropingPointText = driver.findElement(By.xpath("(//*[contains(normalize-space(@class), 'tg-bsrs-droppingpoint')]//span)[1]")).getText();
+
+					Log.ReportEvent("PASS", "Droping point selected successfully. " );
+					Log.ReportEvent("INFO", "Selected Droping point: "+ dropingPointText);
+				}
+				catch (Exception e) {
+					System.err.println("Unexpected error when clicking on droping point dropdown: " + e.getMessage());
+					e.printStackTrace();	
+					Log.ReportEvent("FAIL", "Failed to select the droping point." );
+					ScreenShots.takeScreenShot();
+					Assert.fail();
+				}
+			}
+
+			//Method to pick the seat
+			public void pickSeat(int seatCount,Log Log, ScreenShots ScreenShots)
+			{
+				try
+				{
+					List<WebElement> availableSeat = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-seatavailable')]"));
+					int seat = availableSeat.size();
+					if(seat < seatCount)
+					{
+						System.out.println("User needs "+ seatCount +"No of seats,But in the bus found only "+seat);
+
+					}
+					for(int i=0;i<seatCount;i++)
+					{
+						WebElement clickOnSeat = availableSeat.get(i);
+						System.out.println(clickOnSeat);
+						clickOnSeat.click();
+					}
+					Log.ReportEvent("PASS", "Seat selected succesfully " );
+
+				}
+				catch (Exception e) {
+					System.err.println("Unexpected error when picking the seat: " + e.getMessage());
+					e.printStackTrace();	
+					ScreenShots.takeScreenShot();
+					Assert.fail();
+				}
+			}
+
+
+			//Method to get seat names in result page
+			public List<String> getSeatNames(Log Log, ScreenShots ScreenShots) {
+				List<String> listOfSeat = new ArrayList<>();
+
+				try {
+					List<WebElement> seat = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-seatandprice')]"));
+					for (WebElement seat1 : seat) {
+						String seatText = seat1.getText();
+						String[] seatTextSplit = seatText.split("-");
+						String seatFound = seatTextSplit[0].trim();
+						listOfSeat.add(seatFound);
+						System.out.println(listOfSeat);
+
+						Log.ReportEvent("INFO", "Selected seats are :"+ seatFound); 
+
+					}
+				} catch (Exception e) {
+					System.err.println("Unexpected error while getting SeatNames in result page: " + e.getMessage());
+					e.printStackTrace();
+					ScreenShots.takeScreenShot();
+					Assert.fail();
+
+				}
+
+				return listOfSeat;
+			}
+
+			//Method to getText of data in result page
+			public String[] getTextInResultPage() {
+				try {
+					String boardingPointText = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-boardingpoint')]//p")).getText();
+					System.out.println("Boarding Point: " + boardingPointText);
+
+					String dropingPointText = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-droppingpoint')]//p")).getText();
+					System.out.println("Dropping Point: " + dropingPointText);
+
+					String price = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-totalseatprice')]")).getText();
+					System.out.println("Price: " + price);
+
+					String boardingTime = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-deptime')]")).getText();
+					System.out.println("Boarding Time: " + boardingTime);
+
+					String arrivalTime = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-arrtime')]")).getText();
+					System.out.println("Arrival Time: " + arrivalTime);
+
+					String journeyDuration = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-duration')]")).getText();
+					System.out.println("Journey Duration: " + journeyDuration);
+
+					String operatorName = driver.findElement(By.xpath("(//*[contains(normalize-space(@class), 'tg-bsrs-operatorname')])[1]")).getText();
+					System.out.println("Operator Name: " + operatorName);
+
+					String noOfSeatsAvailable = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsrs-availableseats')]")).getText();
+					System.out.println("Seats Available: " + noOfSeatsAvailable);
+
+					return new String[] {
+							boardingPointText,
+							dropingPointText,
+							price,
+							boardingTime,
+							arrivalTime,
+							journeyDuration,
+							operatorName,
+							noOfSeatsAvailable
+					};
+
+				} catch (Exception e) {
+					String errorMessage = "Exception in getTextInResultPage(): " + e.getMessage();
+					System.err.println(errorMessage);
+					e.printStackTrace();
+					Assert.fail(errorMessage);
+					return new String[0];  // Safe fallback if failure occurs
+				}
+			}
+			
+			
+			public String selectedTotalAmountPrice() {
+				try {
+					String totalAmount = driver.findElement(
+							By.xpath("//*[contains(@class,'tg-bsrs-totalseatprice')]")
+							).getText();
+					return totalAmount;
+				} catch (Exception e) {
+					System.out.println("Exception while fetching total amount: " + e.getMessage());
+					e.printStackTrace();
+					return null; 
+				}
+			}
+
+			//Method to click on confirm seat button
+			public void clickOnConfirmSeat(Log Log, ScreenShots ScreenShots) throws InterruptedException
+			{
+				try
+				{
+					Thread.sleep(2000);
+
+					driver.findElement(By.xpath("//button[text()='Confirm Seat']")).click();
+					Log.ReportEvent("INFO", "Clicked on confirm seat button successfully"); 
+
+				}
+				catch (Exception e) {
+					e.printStackTrace(); 
+					System.err.println("Unexpected error when clicking on confirm seat button in result page : " + e.getMessage());
+					Log.ReportEvent("FAIL", "Unexpected error when clicking on confirm seat button in result page :"+ e.getMessage()); 
+					ScreenShots.takeScreenShot();
+					Assert.fail();
+				}
+
+			}
+
+			//Method to close reason For Selection PopUp
+			public void reasonForSelectionPopUp1(Log Log, ScreenShots ScreenShots) throws InterruptedException {
+				{
+					try
+					{
+						String value = "Personal Preference";
+
+						WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+						Thread.sleep(8000);
+						WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(
+								By.xpath("//*[@id='alert-dialog-title']")
+								));
+
+						if (popup.isDisplayed()) {
+							WebElement reasonOption = driver.findElement(
+									By.xpath("//*[text()='" + value + "']//parent::label")
+									);
+							reasonOption.click();
+							driver.findElement(By.xpath("//button[text()='Proceed to Booking']")).click();
+
+						}
+					}
+					catch (Exception e) {
+						System.err.println("Unable to find the reason pop-up: " + e.getMessage());
+						Log.ReportEvent("FAIL", "Unable to find the reason pop-up.");
+						e.printStackTrace();
+						ScreenShots.takeScreenShot();
+						Assert.fail();
+					}
+				}
+			}
+	
+			//Method to check whether review your trip page is displayed
+			public void validateReviewYourTripPage(Log Log, ScreenShots ScreenShots) {
+				try {
+					Thread.sleep(2000);
+					WebElement reviewPage = driver.findElement(By.xpath("//*[text()='Review Your Trip']"));
+
+					if (reviewPage.isDisplayed()) {
+						Log.ReportEvent("PASS", "Review Page is displayed");
+					} else {
+						Log.ReportEvent("FAIL", "Review Page is not displayed");
+					}
+				} catch (Exception e) {
+					Log.ReportEvent("FAIL", "Exception occurred while validating Review Your Trip page: " + e.getMessage());
+
+				}
+			}
+
+			//Method to get all the seat in booking page
+			public List<String> fetchSeatInBookingPage(Log Log, ScreenShots ScreenShots) {
+				List<String> bookingPageSeatList = new ArrayList<>();
+
+				try {
+					List<WebElement> seatElements = driver.findElements(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-seats')]//span"));
+
+					if (seatElements.isEmpty()) {
+						Log.ReportEvent("INFO", "No seats found on booking page.");
+					}
+
+					for (WebElement seat : seatElements) {
+						String seatText = seat.getText().replace(",", "").trim();
+						if (!seatText.isEmpty()) {
+							bookingPageSeatList.add(seatText);
+						}
+					}
+
+					Log.ReportEvent("PASS", "Selected seats found on booking page are: " + bookingPageSeatList);
+				} catch (NoSuchElementException | WebDriverException e) {
+					Log.ReportEvent("FAIL", "Error fetching seats: " + e.getMessage());
+					e.printStackTrace();
+					Assert.fail("Failed to fetch seat information due to: " + e.getMessage());
+				}
+
+				return bookingPageSeatList;
+			}
+
+
+
+			//Method to get the text of data in booking page
+			public String[] getTextInBookingPage() {
+				try {
+					String boardingCity = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-origin')]")).getText();
+					System.out.println("Boarding City: " + boardingCity);
+
+					String dropingCity = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-destination')]")).getText();
+					System.out.println("Dropping City: " + dropingCity);
+
+					String travellingDate = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-traveldate')]")).getText();
+					String bookingPageTravellingDateText = travellingDate.replace(" ", "-").replace(",", "");
+					System.out.println("Traveling Date: " + bookingPageTravellingDateText);
+
+					String travellingTime = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-duration')]")).getText();
+					System.out.println("Traveling Time: " + travellingTime);
+
+					String boardingPointText = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-boardingpoint')]")).getText();
+					System.out.println("Boarding Point: " + boardingPointText);
+
+					String dropingPointText = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-droppingpoint')]")).getText();
+					System.out.println("Dropping Point: " + dropingPointText);
+
+					String price = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-totalprice')]")).getText();
+					System.out.println("Price: " + price);
+
+					String operatorName = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-operator')]")).getText();
+					System.out.println("Operator: " + operatorName);
+
+					String boardingTimeInBookingPage = driver.findElement(By.xpath("//*[contains(normalize-space(@class), 'tg-bsbk-boardingtime')]")).getText();
+					System.out.println("Boarding Time: " + boardingTimeInBookingPage);
+
+					return new String[] {
+							boardingCity,
+							dropingCity,
+							bookingPageTravellingDateText,
+							travellingTime,
+							boardingPointText,
+							dropingPointText,
+							price,
+							operatorName,
+							boardingTimeInBookingPage
+					};
+
+				} catch (NoSuchElementException | WebDriverException e) {
+					System.err.println("Error in getTextInBookingPage(): " + e.getMessage());
+					e.printStackTrace();
+					Assert.fail("Failed to extract booking page details: " + e.getMessage());
+					return new String[0];  // Return empty array in case of failure
+				}
+			}
+
+
+			//Method to validate result page data with booking page
+			public void validateResultAndBookingPageData(
+					String[] getTextInResultPage, String[] getTextInBookingPage,
+					List<String> getSeatNames, List<String> fetchSeatInBookingPage,
+					Log Log, ScreenShots ScreenShots) {
+
+				try {
+					// Sort and compare seats
+					List<String> sortedExpected = new ArrayList<>(getSeatNames);
+					List<String> sortedActual = new ArrayList<>(fetchSeatInBookingPage);
+					Collections.sort(sortedExpected);
+					Collections.sort(sortedActual);
+
+					// Parse result page data
+					String boardingPoint = getTextInResultPage[0];
+					String dropingPoint = getTextInResultPage[1];
+					String Price = getTextInResultPage[2];
+					String boardingTime = getTextInResultPage[3];
+					String arrivalTime = getTextInResultPage[4];
+					String journeyDuration = getTextInResultPage[5];
+					String operatorNameInResultPage = getTextInResultPage[6];
+					String noOfSeatsAvailable = getTextInResultPage[7];
+
+					// Parse booking page data
+					String boardingCity = getTextInBookingPage[0];
+					String dropingCity = getTextInBookingPage[1];
+					String travellingDate = getTextInBookingPage[2];
+					String travellingTime = getTextInBookingPage[3];
+					String boardingPointText = getTextInBookingPage[4];
+					String dropingPointText = getTextInBookingPage[5];
+					String price = getTextInBookingPage[6];
+					String operatorName = getTextInBookingPage[7];
+					String boardingTimeInBookingPage = getTextInBookingPage[8];
+
+					// Compare booking vs result page
+					if (boardingPoint.equals(boardingPointText)
+							&& dropingPoint.equals(dropingPointText)
+							&& Price.equals(price)
+							&& journeyDuration.equals(travellingTime)
+							&& operatorNameInResultPage.equals(operatorName)) {
+
+						String matchedDetails = String.format(
+								"Booking page details matched with result page details:\n" +
+										"- boardingPoint: %s\n" +
+										"- dropingPoint: %s\n" +
+										"- Price: %s\n" +
+										"- journeyDuration: %s\n" +
+										"- operatorName: %s",
+										boardingPoint, dropingPoint, Price, journeyDuration, operatorNameInResultPage);
+
+						Log.ReportEvent("PASS", matchedDetails);
+						System.out.println(matchedDetails);
+					} else {
+						String mismatchDetails = String.format(
+								"Booking page vs Result page comparison:\n" +
+										"- boardingPoint: expected [%s] | actual [%s]\n" +
+										"- dropingPoint: expected [%s] | actual [%s]\n" +
+										"- Price:         expected [%s] | actual [%s]\n" +
+										"- journeyDuration: expected [%s] | actual [%s]\n" +
+										"- operatorName: expected [%s] | actual [%s]",
+										boardingPointText, boardingPoint,
+										dropingPointText, dropingPoint,
+										price, Price,
+										travellingTime, journeyDuration,
+										operatorName, operatorNameInResultPage);
+
+						Log.ReportEvent("FAIL", mismatchDetails);
+						System.out.println(mismatchDetails);
+					}
+
+					// Seat list comparison
+					if (sortedExpected.equals(sortedActual)) {
+						Log.ReportEvent("PASS", "Seat List Matched: " + sortedExpected + " with " + sortedActual);
+						System.out.println("Seat List Matched: " + sortedExpected + " with " + sortedActual);
+					} else {
+						Log.ReportEvent("FAIL", "Seat List mismatch!: " + sortedExpected + " with " + sortedActual);
+						System.out.println("Seat List mismatch!: " + sortedExpected + " with " + sortedActual);
+					}
+
+				} catch (Exception e) {
+					String errorMessage = "Exception in validateResultAndBookingPageData: " + e.getMessage();
+					Log.ReportEvent("FAIL", errorMessage);
+					System.err.println(errorMessage);
+					e.printStackTrace();
+					Assert.fail(errorMessage);
+				}
+			}
+
+			//Method to get and validate price in booking page
+			public void validatePriceInBookingPage(String price, Log Log, ScreenShots ScreenShots) {
+				try {
+					// Get actual price text from the page and trim it
+					String priceText = driver.findElement(By.xpath("//*[contains(@class,'tg-bsbk-totalprice')]")).getText().trim();
+					price = price.trim();  // Trim expected price
+
+					if (priceText.equals(price)) {
+						Log.ReportEvent("PASS", "Price is matching: " + priceText);
+					} else {
+						Log.ReportEvent("FAIL", "Price is not matching: Expected '" + price + "', Actual '" + priceText + "'");
+						ScreenShots.takeScreenShot1();
+					}
+
+				} catch (Exception e) {
+					Log.ReportEvent("FAIL", "Exception occurred while validating price: " + e.getMessage());
+					ScreenShots.takeScreenShot1();
+				}
+			}
+
+//mETHOD TO ENTER DATA FROM TRAVELLER DETAILS
+	
+public void clickIdCardTypeForBuses(String dropdownValue) {
+	WebElement dropdown = driver.findElement(By.xpath("//label[text()='ID Card Type']/following-sibling::div"));
+	dropdown.click();
+	
+	 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+     System.out.println(dropdownValue);
+     WebElement IdcardValue = wait.until(ExpectedConditions.visibilityOfElementLocated(
+             By.xpath("//li[text()='"+dropdownValue+"']")));
+            
+
+     JavascriptExecutor js = (JavascriptExecutor) driver;
+     js.executeScript("arguments[0].scrollIntoView(true);", IdcardValue);
+
+     wait.until(ExpectedConditions.elementToBeClickable(IdcardValue)).click();
+}
+
+//method to enter id card number
+public void enterIdcardNumberForBuses(String cardnumber) {
+	WebElement idcardnumberField = driver.findElement(By.xpath("//label[text()='ID Card Number']/following-sibling::div/input"));
+	idcardnumberField.clear(); 
+	idcardnumberField.sendKeys(cardnumber);
+}
+
 
 }

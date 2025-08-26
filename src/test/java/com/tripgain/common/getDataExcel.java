@@ -23,7 +23,9 @@ public class getDataExcel {
         
         // File app = new File(classpathRoot, "src\\test\\resources\\testdata\\ExpenseSheets.xlsx");
          
-         File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\preTripFlow.xlsx");     
+     //    File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\preTripFlow.xlsx");   
+         
+         File app = new File(classpathRoot, "\\src\\test\\resources\\testdata\\HotelsScripts_Skytravelers.xlsx");   
 
         String fileName = app.toString();
 

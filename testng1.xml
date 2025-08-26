@@ -222,14 +222,22 @@
  <class name="L2_L2GRADE_ROUNDTRIP.TC_056_L2_L2Grade_InPolicy"/-->
  
    <!--Trip planner (pre trip flow)-->
-          <class name="com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices"/>               
-     
+ <!--class name="com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServicesFlights"/-->     
  
+ 
+                       <!--skytravelers (hotels)-->
+
+    <class name="SkyTravellers_Hotels.TCHO_1_verifyHotelsSearch1"/>
+    <class name="SkyTravellers_Hotels.TCHO_2_verifyHotelsSearchWithLocationDropdown"/>
+    <class name="SkyTravellers_Hotels.TCHO_3_verifyHotelsSearchwithStarRating"/>
+    <class name="SkyTravellers_Hotels.TCHO_4_verifyHotelsSearchwithFacilities"/>
+    
+    
+   
 
      </classes>
      
                      
-     
      
      
   </test> <!-- Test -->

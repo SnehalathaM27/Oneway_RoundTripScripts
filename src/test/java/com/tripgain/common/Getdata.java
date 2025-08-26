@@ -22,9 +22,13 @@ public class Getdata {
 	        File app = new File(classpathRoot.getAbsolutePath() + "\\src\\test\\resources\\testdata\\Logincred.xlsx");
 	        String fileName = app.toString();
 	        
-	        FileInputStream FileInputStream = new FileInputStream(fileName);            
-	        // Open the Excel workbook
-	        XSSFWorkbook workbook = new XSSFWorkbook(fileName);
+//	        FileInputStream FileInputStream = new FileInputStream(fileName);            
+//	        // Open the Excel workbook
+//	        XSSFWorkbook workbook = new XSSFWorkbook(fileName);
+	        
+	        FileInputStream fileInputStream = new FileInputStream(fileName);
+	        XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+
 	        
 	        // Get the sheet named "Sheet1"
 	        XSSFSheet sheet = workbook.getSheet("Sheet1");
@@ -51,7 +55,8 @@ public class Getdata {
 	        
 	        // Close workbook and file input stream
 	        workbook.close();
-	        FileInputStream.close();
+	        fileInputStream.close();
+
 	        
 	        // Return an array with the values for usn, pwd, inusn, inpwd
 	        return new String[] {validUserName, validUserPassword, inValidUserName, inValidUserPassword};
@@ -63,5 +68,3 @@ public class Getdata {
 	    
 	    
 	}
-
-

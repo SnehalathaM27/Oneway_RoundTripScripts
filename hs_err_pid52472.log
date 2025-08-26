@@ -1,0 +1,261 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 262144000 bytes. Error detail: G1 virtual space
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   This process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Zero Based Compressed Oops mode in which the Java heap is
+#     placed in the first 32GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 32GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_windows.cpp:3686), pid=52472, tid=12316
+#
+# JRE version:  (21.0.7+6) (build )
+# Java VM: OpenJDK 64-Bit Server VM (21.0.7+6-LTS, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -ea -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -XX:+ShowCodeDetailsInExceptionMessages org.testng.remote.RemoteTestNG -serport 55616 -protocol json -d C:\AutomationScripts\Auto\test-output C:\AutomationScripts\Auto\testng1.xml
+
+Host: Intel(R) Core(TM) 5 210H, 12 cores, 15G,  Windows 11 , 64 bit Build 26100 (10.0.26100.4484)
+Time: Mon Aug 25 13:07:11 2025 India Standard Time elapsed time: 1.548702 seconds (0d 0h 0m 1s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000001b07e8cd6a0):  JavaThread "Unknown thread" [_thread_in_vm, id=12316, stack(0x00000025bdd00000,0x00000025bde00000) (1024K)]
+
+Stack: [0x00000025bdd00000,0x00000025bde00000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x6ce119]
+V  [jvm.dll+0x8a84a1]
+V  [jvm.dll+0x8aa9ce]
+V  [jvm.dll+0x8ab0b3]
+V  [jvm.dll+0x27f8a6]
+V  [jvm.dll+0x6ca945]
+V  [jvm.dll+0x6bebea]
+V  [jvm.dll+0x355eca]
+V  [jvm.dll+0x35da96]
+V  [jvm.dll+0x3af72e]
+V  [jvm.dll+0x3af9d8]
+V  [jvm.dll+0x32a05c]
+V  [jvm.dll+0x32abbb]
+V  [jvm.dll+0x871719]
+V  [jvm.dll+0x3bc501]
+V  [jvm.dll+0x85a743]
+V  [jvm.dll+0x45080e]
+V  [jvm.dll+0x452451]
+C  [jli.dll+0x5278]
+C  [ucrtbase.dll+0x37b0]
+C  [KERNEL32.DLL+0x2e8d7]
+C  [ntdll.dll+0x3c34c]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007ffb58eaa0c8, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+Total: 0
+
+Other Threads:
+  0x000001b07ecabe00 WorkerThread "GC Thread#0"                     [id=11824, stack(0x00000025bde00000,0x00000025bdf00000) (1024K)]
+  0x000001b07ecbf400 ConcurrentGCThread "G1 Main Marker"            [id=73520, stack(0x00000025bdf00000,0x00000025be000000) (1024K)]
+  0x000001b07ecc0cc0 WorkerThread "G1 Conc#0"                       [id=12952, stack(0x00000025be000000,0x00000025be100000) (1024K)]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffb585ac987]
+VM state: not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007ffb58f1e408] Heap_lock - owner thread: 0x000001b07e8cd6a0
+
+Heap address: 0x0000000707200000, size: 3982 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+
+CDS archive(s) mapped at: [0x0000000000000000-0x0000000000000000-0x0000000000000000), size 0, SharedBaseAddress: 0x0000000800000000, ArchiveRelocationMode: 1.
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0, Narrow klass range: 0x0
+
+GC Precious Log:
+ CardTable entry size: 512
+ Card Set container configuration: InlinePtr #cards 4 size 8 Array Of Cards #cards 16 size 48 Howl #buckets 8 coarsen threshold 3686 Howl Bitmap #cards 512 size 80 coarsen threshold 460 Card regions per heap region 1 cards per card region 4096
+
+Heap:
+ garbage-first heap   total 0K, used 0K [0x0000000707200000, 0x0000000800000000)
+  region size 2048K, 0 young (0K), 0 survivors (0K)
+
+[error occurred during error reporting (printing heap information), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffb58997949]
+GC Heap History (0 events):
+No events
+
+Dll operation events (1 events):
+Event: 0.016 Loaded shared library C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\java.dll
+
+Deoptimization events (0 events):
+No events
+
+Classes loaded (0 events):
+No events
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+ZGC Phase Switch (0 events):
+No events
+
+VM Operations (0 events):
+No events
+
+Memory protections (0 events):
+No events
+
+Nmethod flushes (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff6dc550000 - 0x00007ff6dc55e000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\javaw.exe
+0x00007ffbd3f40000 - 0x00007ffbd41a8000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffbd2c70000 - 0x00007ffbd2d39000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffbd14f0000 - 0x00007ffbd18dd000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffbd1370000 - 0x00007ffbd14bb000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffbc0390000 - 0x00007ffbc03a8000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\jli.dll
+0x00007ffbd2dc0000 - 0x00007ffbd2f8c000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffbd14c0000 - 0x00007ffbd14e7000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffbd3c00000 - 0x00007ffbd3c2b000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffbd1ba0000 - 0x00007ffbd1cd7000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffbd1af0000 - 0x00007ffbd1b93000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffbc04c0000 - 0x00007ffbc04de000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\VCRUNTIME140.dll
+0x00007ffbb18b0000 - 0x00007ffbb1b4a000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.26100.4484_none_3e0e6d4ce32ef3b3\COMCTL32.dll
+0x00007ffbd3920000 - 0x00007ffbd39c9000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffbd3ec0000 - 0x00007ffbd3eef000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffbcbcb0000 - 0x00007ffbcbcbc000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\vcruntime140_1.dll
+0x00007ffb9ab70000 - 0x00007ffb9abfd000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\msvcp140.dll
+0x00007ffb58270000 - 0x00007ffb59000000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\server\jvm.dll
+0x00007ffbd3110000 - 0x00007ffbd31c4000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffbd2170000 - 0x00007ffbd2216000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffbd3a50000 - 0x00007ffbd3b68000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffbd2d40000 - 0x00007ffbd2db4000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffbd0ee0000 - 0x00007ffbd0f3e000 	C:\WINDOWS\SYSTEM32\POWRPROF.dll
+0x00007ffbc8000000 - 0x00007ffbc8035000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffbc1450000 - 0x00007ffbc145b000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffbd0ec0000 - 0x00007ffbd0ed4000 	C:\WINDOWS\SYSTEM32\UMPDC.dll
+0x00007ffbcfdf0000 - 0x00007ffbcfe0b000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ffbca880000 - 0x00007ffbca88a000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\jimage.dll
+0x00007ffbce7b0000 - 0x00007ffbce9f1000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007ffbd2220000 - 0x00007ffbd25a6000 	C:\WINDOWS\System32\combase.dll
+0x00007ffbd2850000 - 0x00007ffbd2930000 	C:\WINDOWS\System32\OLEAUT32.dll
+0x00007ffba53f0000 - 0x00007ffba5433000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007ffbd1090000 - 0x00007ffbd1129000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffbc0130000 - 0x00007ffbc014f000 	C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\java.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.26100.4484_none_3e0e6d4ce32ef3b3;C:\Users\LENOVO\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916\jre\bin\server
+
+VM Arguments:
+jvm_args: -ea -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -XX:+ShowCodeDetailsInExceptionMessages 
+java_command: org.testng.remote.RemoteTestNG -serport 55616 -protocol json -d C:\AutomationScripts\Auto\test-output C:\AutomationScripts\Auto\testng1.xml
+java_class_path (initial): C:\Users\LENOVO\eclipse\java-2025-06\eclipse\configuration\org.eclipse.osgi\525\0\.cp\lib\testng-remote.jar;C:\AutomationScripts\Auto\target\test-classes;C:\AutomationScripts\Auto\target\classes;C:\Users\LENOVO\.p2\pool\plugins\org.testng_7.11.0.r202503091654.jar;C:\Users\LENOVO\.p2\pool\plugins\com.beust.jcommander_1.83.0.jar;C:\Users\LENOVO\.p2\pool\plugins\slf4j.api_2.0.17.jar;C:\Users\LENOVO\.p2\pool\plugins\org.yaml.snakeyaml_2.2.0.jar;C:\Users\LENOVO\.p2\pool\plugins\org.webjars.jquery_3.7.1.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-java\4.29.0\selenium-java-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-api\4.29.0\selenium-api-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\jspecify\jspecify\1.0.0\jspecify-1.0.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-chrome-driver\4.29.0\selenium-chrome-driver-4.29.0.jar;C:\Users\LENOVO\.m2\repository\com\google\auto\service\auto-service-annotations\1.1.1\auto-service-annotations-1.1.1.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-chromium-driver\4.29.0\selenium-chromium-driver-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-json\4.29.0\selenium-json-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-manager\4.29.0\selenium-manager-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v131\4.29.0\selenium-devtools-v131-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v132\4.29.0\selenium-devtools-v132-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v133\4.29.0\selenium-devtools-v133-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-devtools-v85\4.29.0\selenium-devtools-v85-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-edge-driver\4.29.0\selenium-edge-driver-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-firefox-driver\4.29.0\selenium-firefox-driver-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-http\4.29.0\selenium-http-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-ie-driver\4.29.0\selenium-ie-driver-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-remote-driver\4.29.0\selenium-remote-driver-4.29.0.jar;C:\Users\LENOVO\.m2\repository\com\google\guava\guava\33.4.0-jre\guava-33.4.0-jre.jar;C:\Users\LENOVO\.m2\repository\com\google\guava\failureaccess\1.0.2\failureaccess-1.0.2.jar;C:\Users\LENOVO\.m2\repository\com\google\guava\listenablefuture\9999.0-empty-to-avoid-conflict-with-guava\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;C:\Users\LENOVO\.m2\repository\com\google\code\findbugs\jsr305\3.0.2\jsr305-3.0.2.jar;C:\Users\LENOVO\.m2\repository\org\checkerframework\checker-qual\3.43.0\checker-qual-3.43.0.jar;C:\Users\LENOVO\.m2\repository\com\google\j2objc\j2objc-annotations\3.0.0\j2objc-annotations-3.0.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\semconv\opentelemetry-semconv\1.28.0-alpha\opentelemetry-semconv-1.28.0-alpha.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-api\1.46.0\opentelemetry-api-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-context\1.46.0\opentelemetry-context-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-exporter-logging\1.46.0\opentelemetry-exporter-logging-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-sdk-common\1.46.0\opentelemetry-sdk-common-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-sdk-extension-autoconfigure-spi\1.46.0\opentelemetry-sdk-extension-autoconfigure-spi-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-sdk-extension-autoconfigure\1.46.0\opentelemetry-sdk-extension-autoconfigure-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-api-incubator\1.46.0-alpha\opentelemetry-api-incubator-1.46.0-alpha.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-sdk-trace\1.46.0\opentelemetry-sdk-trace-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-sdk\1.46.0\opentelemetry-sdk-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-sdk-metrics\1.46.0\opentelemetry-sdk-metrics-1.46.0.jar;C:\Users\LENOVO\.m2\repository\io\opentelemetry\opentelemetry-sdk-logs\1.46.0\opentelemetry-sdk-logs-1.46.0.jar;C:\Users\LENOVO\.m2\repository\net\bytebuddy\byte-buddy\1.15.11\byte-buddy-1.15.11.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-os\4.29.0\selenium-os-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\apache\commons\commons-exec\1.4.0\commons-exec-1.4.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-safari-driver\4.29.0\selenium-safari-driver-4.29.0.jar;C:\Users\LENOVO\.m2\repository\org\seleniumhq\selenium\selenium-support\4.29.0\selenium-support-4.29.0.jar;C:\Users\LENOVO\.m2\repository\io\github\bonigarcia\webdrivermanager\5.9.2\webdrivermanager-5.9.2.jar;C:\Users\LENOVO\.m2\repository\org\slf4j\slf4j-api\2.0.13\slf4j-api-2.0.13.jar;C:\Users\LENOVO\.m2\repository\com\google\code\gson\gson\2.11.0\gson-2.11.0.jar;C:\Users\LENOVO\.m2\repository\com\google\errorprone\error_prone_annotations\2.27.0\error_prone_annotations-2.27.0.jar;C:\Users\LENOVO\.m2\repository\com\github\docker-java\docker-java\3.4.0\docker-java-3.4.0.jar;C:\Users\LENOVO\.m2\repository\com\github\docker-java\docker-java-core\3.4.0\docker-java-core-3.4.0.jar;C:\Users\LENOVO\.m2\repository\com\github\docker-java\docker-java-api\3.4.0\docker-java-api-3.4.0.jar;C:\Users\LENOVO\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.10.3\jackson-annotations-2.10.3.jar;C:\Users\LENOVO\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.10.3\jackson-databind-2.10.3.jar;C:\Users\LENOVO\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.10.3\jackson-core-2.10.3.jar;C:\Users\LENOVO\.m2\repository\org\slf4j\jcl-over-slf4j\1.7.30\jcl-over-slf4j-1.7.30.jar;C:\Users\LENOVO\.m2\repository\com\github\docker-java\docker-java-transport-httpclient5\3.4.0\docker-java-transport-httpclient5-3.4.0.jar;C:\Users\LENOVO\.m2\repository\com\github\docker-java\docker-java-transport\3.4.0\docker-java-transport-3.4.0.jar;C:\Users\LENOVO\.m2\repository\net\java\dev\jna\jna\5.13.0\jna-5.13.0.jar;C:\Users\LENOVO\.m2\repository\org\brotli\dec\0.1.2\dec-0.1.2.jar;C:\Users\LENOVO\.m2\repository\org\apache\commons\commons-lang3\3.15.0\commons-lang3-3.15.0.jar;C:\Users\LENOVO\.m2\repository\org\apache\commons\commons-compress\1.26.2\commons-compress-1.26.2.jar;C:\Users\LENOVO\.m2\repository\org\apache\httpcomponents\client5\httpclient5\5.2.1\httpclient5-5.2.1.jar;C:\Users\LENOVO\.m2\repository\org\apache\httpcomponents\core5\httpcore5\5.2\httpcore5-5.2.jar;C:\Users\LENOVO\.m2\repository\org\apache\httpcomponents\core5\httpcore5-h2\5.2\httpcore5-h2-5.2.jar;C:\Users\LENOVO\.m2\repository\org\testng\testng\7.11.0\testng-7.11.0.jar;C:\Users\LENOVO\.m2\repository\org\jcommander\jcommander\1.83\jcommander-1.83.jar;C:\Users\LENOVO\.m2\repository\org\webjars\jquery\3.7.1\jquery-3.7.1.jar;C:\Users\LENOVO\.m2\repository\org\apache\poi\poi\5.4.0\poi-5.4.0.jar;C:\Users\LENOVO\.m2\repository\commons-codec\commons-codec\1.17.1\commons-codec-1.17.1.jar;C:\Users\LENOVO\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\LENOVO\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\LENOVO\.m2\repository\commons-io\commons-io\2.18.0\commons-io-2.18.0.jar;C:\Users\LENOVO\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\LENOVO\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\LENOVO\.m2\repository\org\apache\poi\poi-ooxml\5.4.0\poi-ooxml-5.4.0.jar;C:\Users\LENOVO\.m2\repository\org\apache\poi\poi-ooxml-lite\5.4.0\poi-ooxml-lite-5.4.0.jar;C:\Users\LENOVO\.m2\repository\org\apache\xmlbeans\xmlbeans\5.3.0\xmlbeans-5.3.0.jar;C:\Users\LENOVO\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\LENOVO\.m2\repository\com\aventstack\extentreports\5.1.1\extentreports-5.1.1.jar;C:\Users\LENOVO\.m2\repository\io\reactivex\rxjava3\rxjava\3.1.6\rxjava-3.1.6.jar;C:\Users\LENOVO\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\LENOVO\.m2\repository\org\freemarker\freemarker\2.3.32\freemarker-2.3.32.jar;C:\Users\LENOVO\.m2\repository\org\projectlombok\lombok\1.18.26\lombok-1.18.26.jar;C:\Users\LENOVO\.m2\repository\org\apache\logging\log4j\log4j-core\2.24.3\log4j-core-2.24.3.jar;C:\Users\LENOVO\.m2\repository\log4j\log4j\1.2.17\log4j-1.2.17.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 3                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 10                                        {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 2097152                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 262144000                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 4175429632                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 2097152                                   {product} {ergonomic}
+   size_t MinHeapSize                              = 8388608                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5839372                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122909434                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122909434                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool ShowCodeDetailsInExceptionMessages       = true                                   {manageable} {command line}
+   size_t SoftMaxHeapSize                          = 4175429632                             {manageable} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags foldmultilines=false
+ #1: stderr all=off uptime,level,tags foldmultilines=false
+
+Environment Variables:
+PATH=C:/Users/LENOVO/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916/jre/bin/server;C:/Users/LENOVO/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.7.v20250502-0916/jre/bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Java\jdk-21\bin;C:\Users\LENOVO\AppData\Local\Microsoft\WindowsApps;C:\Users\LENOVO\AppData\Local\GitHubDesktop\bin;C:\WINDOWS\System32;
+USERNAME=LENOVO
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 186 Stepping 2, GenuineIntel
+TMP=C:\Users\LENOVO\AppData\Local\Temp
+TEMP=C:\Users\LENOVO\AppData\Local\Temp
+
+
+
+
+Periodic native trim disabled
+
+---------------  S Y S T E M  ---------------
+
+OS:
+ Windows 11 , 64 bit Build 26100 (10.0.26100.4484)
+OS uptime: 14 days 2:06 hours
+Hyper-V role detected
+
+CPU: total 12 (initial active 12) (6 cores per cpu, 2 threads per core) family 6 model 186 stepping 2 microcode 0x5105, cx8, cmov, fxsr, ht, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, erms, clmul, bmi1, bmi2, adx, sha, fma, vzeroupper, clflush, clflushopt, clwb, hv, serialize, rdtscp, rdpid, fsrm, f16c, cet_ibt, cet_ss
+Processor Information for processor 0
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 1
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 2
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 3
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 4
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 5
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 6
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 7
+  Max Mhz: 2200, Current Mhz: 2200, Mhz Limit: 2200
+Processor Information for processor 8
+  Max Mhz: 2200, Current Mhz: 1512, Mhz Limit: 2200
+Processor Information for processor 9
+  Max Mhz: 2200, Current Mhz: 1512, Mhz Limit: 2200
+Processor Information for processor 10
+  Max Mhz: 2200, Current Mhz: 1512, Mhz Limit: 2200
+Processor Information for processor 11
+  Max Mhz: 2200, Current Mhz: 1512, Mhz Limit: 2200
+
+Memory: 4k page, system-wide physical 15926M (593M free)
+TotalPageFile size 48694M (AvailPageFile size 56M)
+current process WorkingSet (physical memory assigned to process): 12M, peak: 12M
+current process commit charge ("private bytes"): 64M, peak: 314M
+
+vm_info: OpenJDK 64-Bit Server VM (21.0.7+6-LTS) for windows-amd64 JRE (21.0.7+6-LTS), built on 2025-04-15T00:00:00Z by "admin" with MS VC++ 17.7 (VS2022)
+
+END.

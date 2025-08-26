@@ -4,13 +4,34 @@
   <test thread-count="5" parallel="tests" name="test(failed)">
     <parameter name="browser" value="chrome"/>
     <classes>
-      <class name="com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices">
+      <class name="SkyTravellers_Hotels.TCHO_3_verifyHotelsSearchwithStarRating">
         <methods>
-          <include name="myTest" invocation-numbers="0"/>
-          <include name="tearDown"/>
           <include name="launchApplication"/>
+          <include name="tearDown"/>
+          <include name="myTest" invocation-numbers="0 1 3 4 5 6"/>
         </methods>
-      </class> <!-- com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices -->
+      </class> <!-- SkyTravellers_Hotels.TCHO_3_verifyHotelsSearchwithStarRating -->
+      <class name="SkyTravellers_Hotels.TCHO_2_verifyHotelsSearchWithLocationDropdown">
+        <methods>
+          <include name="launchApplication"/>
+          <include name="myTest" invocation-numbers="2 8 9"/>
+          <include name="tearDown"/>
+        </methods>
+      </class> <!-- SkyTravellers_Hotels.TCHO_2_verifyHotelsSearchWithLocationDropdown -->
+      <class name="SkyTravellers_Hotels.TCHO_1_verifyHotelsSearch1">
+        <methods>
+          <include name="launchApplication"/>
+          <include name="tearDown"/>
+          <include name="myTest" invocation-numbers="6 7"/>
+        </methods>
+      </class> <!-- SkyTravellers_Hotels.TCHO_1_verifyHotelsSearch1 -->
+      <class name="SkyTravellers_Hotels.TCHO_4_verifyHotelsSearchwithFacilities">
+        <methods>
+          <include name="launchApplication"/>
+          <include name="tearDown"/>
+          <include name="myTest" invocation-numbers="0 1 3 4 6 7 8"/>
+        </methods>
+      </class> <!-- SkyTravellers_Hotels.TCHO_4_verifyHotelsSearchwithFacilities -->
     </classes>
   </test> <!-- test(failed) -->
 </suite> <!-- Failed suite [Suite] -->

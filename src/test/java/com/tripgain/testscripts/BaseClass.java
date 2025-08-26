@@ -35,7 +35,7 @@ public class BaseClass{
 	        } else {
 	            throw new IllegalArgumentException("Unsupported browser: " + browser);
 	        }
-		    driver.get("https://v3.tripgain.com/login");
+		    driver.get("https://uaev2.skytravellers.com/login");
 			driver.manage().window().maximize();
 			driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
 			return driver;

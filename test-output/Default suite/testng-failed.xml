@@ -3,13 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices">
+      <class name="SkyTravellers_Hotels.TCHO_1_verifyHotelsSearch1">
         <methods>
-          <include name="myTest"/>
-          <include name="tearDown"/>
           <include name="launchApplication"/>
+          <include name="tearDown"/>
+          <include name="myTest"/>
         </methods>
-      </class> <!-- com.tripgain.testscripts.TripPlanner.TCTP_01_VerifyCompleteTripCreationWithAllServices -->
+      </class> <!-- SkyTravellers_Hotels.TCHO_1_verifyHotelsSearch1 -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->
